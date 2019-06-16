@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { List } from "react-native-paper"
 
 interface Props {
@@ -16,7 +16,7 @@ class BottomSheetContent extends React.Component<Props> {
     return (
       <View>
         <List.Section>
-          <List.Subheader>Settings</List.Subheader>
+          <List.Subheader style={style.menuItem}>Settings</List.Subheader>
           <List.Item
             title="Edit"
             style={style.menuItem}
@@ -30,6 +30,13 @@ class BottomSheetContent extends React.Component<Props> {
             onPress={() => {}}
           />
         </List.Section>
+        <List.Section>
+          <List.Subheader style={style.menuItem}>Share this hymn</List.Subheader>
+          <ScrollView
+            horizontal={true}>
+
+          </ScrollView>
+        </List.Section>
       </View>
     )
   }
@@ -38,7 +45,6 @@ class BottomSheetContent extends React.Component<Props> {
 const style = StyleSheet.create({
   menuItem: {
     padding: 0,
-    maxHeight: 60
   }
 });
 

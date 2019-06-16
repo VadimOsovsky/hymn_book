@@ -7,7 +7,8 @@ export const lightTheme = {
     ...DefaultTheme.colors,
     primary: Colors.teal500,
     primaryDark: Colors.teal700,
-    accent: Colors.teal500
+    accent: Colors.teal500,
+    danger: Colors.redA200
   }
 };
 
