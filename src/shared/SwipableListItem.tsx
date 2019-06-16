@@ -67,11 +67,13 @@ class SwipeableListItem extends React.Component<Props, State> {
         this.vibrateOnOpen = true;
         // to fix in open position
         // @ts-ignore
-        if (this.panXValue < rightThreshold + 1) stopValue = rightThreshold;
+        if (this.panXValue < rightThreshold / 2) this.panXValue = rightThreshold;
+        else this.panXValue = 0;
         // else if (this.state.itemXPosition.x._value > leftThreshold) stopValue = leftThreshold;
         Animated.spring(this.state.itemXPosition, {
-          toValue: {x: stopValue, y: 0},
-          friction: 30
+          toValue: {x: this.panXValue, y: 0},
+          // friction: 30,
+          speed: 50,
         }).start();
       },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
