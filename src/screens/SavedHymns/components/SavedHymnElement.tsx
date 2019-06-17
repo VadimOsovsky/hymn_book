@@ -29,7 +29,7 @@ class SavedHymnElement extends React.Component<Props> {
       <SwipeableListItem actions={this.actions} vibrateOnOpen={true}>
         <List.Item title={title}
                    style={{backgroundColor: lightTheme.colors.surface}}
-                   onPress={() => this.props.navigation.navigate('HymnView')}
+                   onPress={() => this.props.navigation.navigate('HymnView', {hymnToView: this.props.savedHymn})}
                    description={this.props.savedHymn.formatLyricsForPreview(lyrics)}
                    left={() => <Avatar.Image style={style.authorAvatar} size={54} source={authorSrc}/>}/>
       </SwipeableListItem>

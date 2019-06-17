@@ -1,14 +1,15 @@
 import React from "react";
-import { FlatList, View } from "react-native"
+import {FlatList, View} from "react-native"
 import RBSheet from "react-native-raw-bottom-sheet";
-import { Appbar, Searchbar } from "react-native-paper"
+import {Appbar, Searchbar} from "react-native-paper"
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
-import { connect } from "react-redux";
-import { hymnsInterface } from "../../reducers/hymnsReducer";
-import { NavigationParams } from "react-navigation";
+import {connect} from "react-redux";
+import {hymnsInterface} from "../../reducers/hymnsReducer";
+import {NavigationParams} from "react-navigation";
 import globalStyles from "../../styles/globalStyles";
 import BottomSheetContent from "./components/BottomSheetContent";
 import SavedHymnElement from "./components/SavedHymnElement";
+import StatusBarSafeArea from "../../shared/StatusBarSafeArea";
 
 interface Props {
   // from redux
@@ -25,7 +26,7 @@ interface State {
 
 class SavedHymns extends React.Component<Props, State> {
   static navigationOptions = {
-    header: null
+    header: null,
   };
   private RBSheetRef: RBSheet | null = null;
   private SearchbarRef: Searchbar | null = null;
@@ -39,30 +40,6 @@ class SavedHymns extends React.Component<Props, State> {
     }
   }
 
-  render() {
-    return (
-      <View style={globalStyles.screen}>
-        {this.renderHeader()}
-        <FlatList
-          data={this.props.hymns.savedHymns}
-          keyExtractor={(item => item.hymnId)}
-          renderItem={({item}) => <SavedHymnElement navigation={this.props.navigation} savedHymn={item}/>}
-        />
-        <SavedHymnsFAB/>
-        <RBSheet
-          ref={(ref: RBSheet) => {
-            this.RBSheetRef = ref;
-          }}
-          height={300}
-          closeOnDragDown
-          duration={150}
-        >
-          <BottomSheetContent/>
-        </RBSheet>
-      </View>
-    );
-  }
-
   private openSearch = () => {
     this.setState({isSearchMode: true}, () => {
       this.SearchbarRef && this.SearchbarRef.focus();
@@ -74,22 +51,23 @@ class SavedHymns extends React.Component<Props, State> {
   private renderHeader() {
     if (this.state.isSearchMode) {
       return (
-        <Appbar.Header>
-          <Searchbar
-            icon="arrow-back"
-            placeholder="Search"
-            ref={(ref: Searchbar) => this.SearchbarRef = ref}
-            onIconPress={this.closeSearch}
-            onChangeText={query => this.setState({searchQuery: query})}
-            value={this.state.searchQuery}
-          />
-        </Appbar.Header>
+        <View>
+          <Appbar.Header>
+            <Searchbar
+              icon="arrow-back"
+              placeholder="Search"
+              ref={(ref: Searchbar) => this.SearchbarRef = ref}
+              onIconPress={this.closeSearch}
+              onChangeText={query => this.setState({searchQuery: query})}
+              value={this.state.searchQuery}
+            />
+          </Appbar.Header>
+        </View>
       )
     } else {
       return (
         <Appbar.Header>
-          <Appbar.Action icon="menu" onPress={() => {
-          }}/>
+          <Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>
           <Appbar.Content
             title="My Saved Hymns"
           />
@@ -97,6 +75,30 @@ class SavedHymns extends React.Component<Props, State> {
         </Appbar.Header>
       )
     }
+  }
+
+  render() {
+    return (
+      <View style={globalStyles.screen}>
+        {this.renderHeader()}
+        <FlatList
+          data={this.props.hymns.savedHymns}
+          keyExtractor={(item => item.hymnId)}
+          renderItem={({item}) => <SavedHymnElement navigation={this.props.navigation} savedHymn={item}/>}
+        />
+        <SavedHymnsFAB/>
+        {/*<RBSheet*/}
+        {/*  ref={(ref: RBSheet) => {*/}
+        {/*    this.RBSheetRef = ref;*/}
+        {/*  }}*/}
+        {/*  height={300}*/}
+        {/*  closeOnDragDown*/}
+        {/*  duration={150}*/}
+        {/*>*/}
+        {/*  <BottomSheetContent/>*/}
+        {/*</RBSheet>*/}
+      </View>
+    );
   }
 
 }

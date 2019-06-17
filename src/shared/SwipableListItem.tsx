@@ -73,7 +73,8 @@ class SwipeableListItem extends React.Component<Props, State> {
         Animated.spring(this.state.itemXPosition, {
           toValue: {x: this.panXValue, y: 0},
           // friction: 30,
-          speed: 50,
+          speed: 150,
+          bounciness: 0
         }).start();
       },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
@@ -93,7 +94,6 @@ class SwipeableListItem extends React.Component<Props, State> {
       <View>
         <View style={style.actionsHolder}>
           {this.actions.map((action: SwipeableListItemAction, index: number) => {
-            console.log("action", action);
             return (
               <TouchableRipple
                 key={index}
