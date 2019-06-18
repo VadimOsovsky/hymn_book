@@ -4,7 +4,7 @@ import NavDrawerContent from "./NavDrawerContent";
 
 const drawerNavigator = createDrawerNavigator(
   {
-    SavedHymnsStack: { screen: savedHymnsStack, params: { icon: 'star', label: "Saved hymns" }},
+    SavedHymnsStack: { screen: savedHymnsStack, params: { icon: "star", label: "Saved hymns", showInDrawer: true }},
   },
   {
     // drawerType: 'back',

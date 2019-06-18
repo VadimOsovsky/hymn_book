@@ -1,5 +1,5 @@
 import React from "react";
-import {FlatList, View} from "react-native"
+import {FlatList, StatusBar, View} from "react-native"
 import RBSheet from "react-native-raw-bottom-sheet";
 import {Appbar, Searchbar} from "react-native-paper"
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
@@ -7,9 +7,8 @@ import {connect} from "react-redux";
 import {hymnsInterface} from "../../reducers/hymnsReducer";
 import {NavigationParams} from "react-navigation";
 import globalStyles from "../../styles/globalStyles";
-import BottomSheetContent from "./components/BottomSheetContent";
 import SavedHymnElement from "./components/SavedHymnElement";
-import StatusBarSafeArea from "../../shared/StatusBarSafeArea";
+import HeaderWrapper from "../../shared/HeaderWrapper";
 
 interface Props {
   // from redux
@@ -25,9 +24,11 @@ interface State {
 }
 
 class SavedHymns extends React.Component<Props, State> {
+
   static navigationOptions = {
     header: null,
   };
+
   private RBSheetRef: RBSheet | null = null;
   private SearchbarRef: Searchbar | null = null;
 
@@ -37,43 +38,6 @@ class SavedHymns extends React.Component<Props, State> {
     this.state = {
       isSearchMode: false,
       searchQuery: "",
-    }
-  }
-
-  private openSearch = () => {
-    this.setState({isSearchMode: true}, () => {
-      this.SearchbarRef && this.SearchbarRef.focus();
-    });
-  };
-
-  private closeSearch = () => this.setState({isSearchMode: false});
-
-  private renderHeader() {
-    if (this.state.isSearchMode) {
-      return (
-        <View>
-          <Appbar.Header>
-            <Searchbar
-              icon="arrow-back"
-              placeholder="Search"
-              ref={(ref: Searchbar) => this.SearchbarRef = ref}
-              onIconPress={this.closeSearch}
-              onChangeText={query => this.setState({searchQuery: query})}
-              value={this.state.searchQuery}
-            />
-          </Appbar.Header>
-        </View>
-      )
-    } else {
-      return (
-        <Appbar.Header>
-          <Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>
-          <Appbar.Content
-            title="My Saved Hymns"
-          />
-          <Appbar.Action icon="search" onPress={this.openSearch}/>
-        </Appbar.Header>
-      )
     }
   }
 
@@ -99,6 +63,45 @@ class SavedHymns extends React.Component<Props, State> {
         {/*</RBSheet>*/}
       </View>
     );
+  }
+
+  private openSearch = () => {
+    this.setState({isSearchMode: true}, () => {
+      this.SearchbarRef && this.SearchbarRef.focus();
+    });
+  };
+
+  private closeSearch = () => this.setState({isSearchMode: false});
+
+  private renderHeader() {
+    if (this.state.isSearchMode) {
+      return (
+        <HeaderWrapper>
+          <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
+            <Searchbar
+              icon="arrow-back"
+              placeholder="Search"
+              ref={(ref: Searchbar) => this.SearchbarRef = ref}
+              onIconPress={this.closeSearch}
+              onChangeText={query => this.setState({searchQuery: query})}
+              value={this.state.searchQuery}
+            />
+          </Appbar.Header>
+        </HeaderWrapper>
+      )
+    } else {
+      return (
+        <HeaderWrapper>
+          <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
+            <Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>
+            <Appbar.Content
+              title="My Saved Hymns"
+            />
+            <Appbar.Action icon="search" onPress={this.openSearch}/>
+          </Appbar.Header>
+        </HeaderWrapper>
+      )
+    }
   }
 
 }

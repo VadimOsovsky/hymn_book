@@ -1,10 +1,12 @@
 import React from "react";
-import {Text, View, ScrollView} from "react-native"
+import {Text, View, ScrollView, StatusBar} from "react-native"
 import {Appbar} from "react-native-paper";
 import {NavigationParams} from "react-navigation";
 import globalStyles from "../../styles/globalStyles";
 import HymnItem from "../../models/HymnItem";
 import style from "./style";
+import StatusBarSafeArea from "../../shared/StatusBarSafeArea";
+import HeaderWrapper from "../../shared/HeaderWrapper";
 
 interface Props {
   // default
@@ -28,12 +30,14 @@ class HymnView extends React.Component<Props> {
   render() {
     return (
       <View style={globalStyles.screen}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => this.props.navigation.goBack()}/>
-          <Appbar.Content
-            title={this.hymnToView.title}
-          />
-        </Appbar.Header>
+        <HeaderWrapper>
+          <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
+            <Appbar.BackAction onPress={() => this.props.navigation.goBack()}/>
+            <Appbar.Content
+              title={this.hymnToView.title}
+            />
+          </Appbar.Header>
+        </HeaderWrapper>
 
         <ScrollView>
           <View style={style.lyricsView}>

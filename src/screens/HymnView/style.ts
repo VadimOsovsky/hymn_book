@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
+import {fullWH} from "../../styles/styleVariables";
 
 export default StyleSheet.create({
   lyricsView: {
-    width: '100%',
-    height: '100%',
+    ...fullWH,
     padding: 10,
   },
   lyricsText: {

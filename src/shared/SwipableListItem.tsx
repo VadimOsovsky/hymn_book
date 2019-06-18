@@ -3,6 +3,7 @@ import { Animated, PanResponder, PanResponderInstance, StyleSheet, Text, Vibrati
 import SwipeableListItemAction from "../models/SwipeableListItemAction"
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { TouchableRipple } from "react-native-paper";
+import {fullWH} from "../styles/styleVariables";
 
 interface Props {
   actions: SwipeableListItemAction[]
@@ -119,9 +120,8 @@ class SwipeableListItem extends React.Component<Props, State> {
 
 const style = StyleSheet.create({
   actionsHolder: {
+    ...fullWH,
     position: 'absolute',
-    height: '100%',
-    width: '100%',
     left: 0,
     right: 0,
     top: 0,
@@ -135,8 +135,7 @@ const style = StyleSheet.create({
     height: '80%',
   },
   action: {
-    width: '100%',
-    height: '100%',
+    ...fullWH,
     justifyContent: 'center',
     alignItems: 'center',
   },

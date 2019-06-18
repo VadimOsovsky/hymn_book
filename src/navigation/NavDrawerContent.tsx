@@ -1,25 +1,28 @@
 import React from "react";
-import {View, ScrollView, SafeAreaView} from "react-native";
+import {View, ScrollView} from "react-native";
 import {Drawer} from 'react-native-paper';
+import StatusBarSafeArea from "../shared/StatusBarSafeArea";
 
 function NavDrawerContent(props: any) {
-  console.log("VO: props", props)
+  // console.log("VO: props", props)
 
   return (
-    <SafeAreaView style={{height: '100%', justifyContent: 'space-between'}}>
+    <View style={{height: '100%', justifyContent: 'space-between'}}>
+      <StatusBarSafeArea transparent/>
       <ScrollView>
         <Drawer.Section>
           {props.items.map((navItem: any) => {
-            return (
-              <Drawer.Item
-                key={navItem.key}
-                label={navItem.params.label}
-                icon={navItem.params.icon}
-                active={props.activeItemKey === navItem.key}
-                onPress={() => {
-                }}
-              />
-            )
+            if (navItem.params.showInDrawer) {
+              return (
+                <Drawer.Item
+                  key={navItem.key}
+                  label={navItem.params.label}
+                  icon={navItem.params.icon}
+                  active={props.activeItemKey === navItem.key}
+                  onPress={() => props.navigation.navigate(navItem.key)}
+                />
+              )
+            }
           })}
         </Drawer.Section>
       </ScrollView>
@@ -28,11 +31,10 @@ function NavDrawerContent(props: any) {
         <Drawer.Item
           label="Log in"
           icon="launch"
-          onPress={() => {
-          }}
+          onPress={() => props.navigation.replace("AuthScreen")}
         />
       </Drawer.Section>
-    </SafeAreaView>
+    </View>
   )
 }
 
