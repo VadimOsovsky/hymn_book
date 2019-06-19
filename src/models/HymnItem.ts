@@ -18,6 +18,16 @@ export default class HymnItem {
     return lyrics.replace('\n', ' ')
   }
 
+  static getEmptyHymn(): HymnItem {
+    return new HymnItem(
+      "",
+      "",
+      "Unknown author",
+      "",
+      ""
+    )
+  }
+
   static getDummyHymns(): HymnItem[] {
     const dummyHymns = [];
 

@@ -17,8 +17,21 @@ class SavedHymnElement extends React.Component<Props> {
   private actions: SwipeableListItemAction[] = [];
 
   componentWillMount(): void {
-    this.actions.push(new SwipeableListItemAction('Delete', 'delete', '#FFF', lightTheme.colors.danger,));
-    this.actions.push(new SwipeableListItemAction('Edit', 'edit', '#FFF', lightTheme.colors.primary,));
+    this.actions.push(new SwipeableListItemAction(
+      'Delete',
+      'delete',
+      '#FFF',
+      lightTheme.colors.danger,
+      () => {
+      }
+    ));
+    this.actions.push(new SwipeableListItemAction(
+      'Edit',
+      'edit',
+      '#FFF',
+      lightTheme.colors.primary,
+      () => this.props.navigation.navigate("HymnEditor", {hymnToEdit: this.props.savedHymn})
+    ));
   }
 
   render() {

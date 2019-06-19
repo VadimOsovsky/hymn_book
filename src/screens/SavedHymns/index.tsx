@@ -1,11 +1,10 @@
 import React from "react";
-import {FlatList, StatusBar, View} from "react-native"
-import RBSheet from "react-native-raw-bottom-sheet";
-import {Appbar, Searchbar} from "react-native-paper"
+import { FlatList, StatusBar, View } from "react-native"
+import { Appbar, Searchbar } from "react-native-paper"
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
-import {connect} from "react-redux";
-import {hymnsInterface} from "../../reducers/hymnsReducer";
-import {NavigationParams} from "react-navigation";
+import { connect } from "react-redux";
+import { hymnsInterface } from "../../reducers/hymnsReducer";
+import { NavigationParams } from "react-navigation";
 import globalStyles from "../../styles/globalStyles";
 import SavedHymnElement from "./components/SavedHymnElement";
 import HeaderWrapper from "../../shared/HeaderWrapper";
@@ -14,7 +13,6 @@ interface Props {
   // from redux
   hymns: hymnsInterface
 
-  // default
   navigation: NavigationParams
 }
 
@@ -29,7 +27,6 @@ class SavedHymns extends React.Component<Props, State> {
     header: null,
   };
 
-  private RBSheetRef: RBSheet | null = null;
   private SearchbarRef: Searchbar | null = null;
 
   constructor(props: Props) {
@@ -39,30 +36,6 @@ class SavedHymns extends React.Component<Props, State> {
       isSearchMode: false,
       searchQuery: "",
     }
-  }
-
-  render() {
-    return (
-      <View style={globalStyles.screen}>
-        {this.renderHeader()}
-        <FlatList
-          data={this.props.hymns.savedHymns}
-          keyExtractor={(item => item.hymnId)}
-          renderItem={({item}) => <SavedHymnElement navigation={this.props.navigation} savedHymn={item}/>}
-        />
-        <SavedHymnsFAB/>
-        {/*<RBSheet*/}
-        {/*  ref={(ref: RBSheet) => {*/}
-        {/*    this.RBSheetRef = ref;*/}
-        {/*  }}*/}
-        {/*  height={300}*/}
-        {/*  closeOnDragDown*/}
-        {/*  duration={150}*/}
-        {/*>*/}
-        {/*  <BottomSheetContent/>*/}
-        {/*</RBSheet>*/}
-      </View>
-    );
   }
 
   private openSearch = () => {
@@ -102,6 +75,20 @@ class SavedHymns extends React.Component<Props, State> {
         </HeaderWrapper>
       )
     }
+  }
+
+  render() {
+    return (
+      <View style={globalStyles.screen}>
+        {this.renderHeader()}
+        <FlatList
+          data={this.props.hymns.savedHymns}
+          keyExtractor={(item => item.hymnId)}
+          renderItem={({item}) => <SavedHymnElement navigation={this.props.navigation} savedHymn={item}/>}
+        />
+        <SavedHymnsFAB navigation={this.props.navigation}/>
+      </View>
+    );
   }
 
 }
