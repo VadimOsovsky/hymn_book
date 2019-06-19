@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "react-native run-android",
+    "start": "react-native run-android --deviceId HMNBBCE741802107",
     "test": "jest"
   },
   "dependencies": {
@@ -28,6 +28,7 @@
     "@types/react-native": "^0.57.63",
     "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
+    "lodash": "^4.17.11",
     "metro-react-native-babel-preset": "^0.54.1",
     "react-native-typescript-transformer": "^1.2.12",
     "react-test-renderer": "16.8.3",

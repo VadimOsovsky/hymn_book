@@ -3,7 +3,7 @@ import { Animated, PanResponder, PanResponderInstance, StyleSheet, Text, Vibrati
 import SwipeableListItemAction from "../models/SwipeableListItemAction"
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { TouchableRipple } from "react-native-paper";
-import {fullWH} from "../styles/styleVariables";
+import { fullWH } from "../styles/styleVariables";
 
 interface Props {
   actions: SwipeableListItemAction[]
@@ -99,8 +99,7 @@ class SwipeableListItem extends React.Component<Props, State> {
               <TouchableRipple
                 key={index}
                 style={[style.actionContainer, {backgroundColor: action.backgroundColor, width: this.actionWidth}]}
-                onPress={() => {
-                }}>
+                onPress={() => action.callback()}>
                 <View style={style.action}>
                   <Icon name={action.icon} color={action.iconColor} size={21}/>
                   <Text style={[style.actionText, {color: action.iconColor}]}>{action.actionName}</Text>

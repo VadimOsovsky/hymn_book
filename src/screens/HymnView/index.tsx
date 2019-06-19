@@ -15,7 +15,7 @@ interface Props {
 
 class HymnView extends React.Component<Props> {
 
-  hymnToView: HymnItem = this.props.navigation.getParam('hymnToView');
+  private hymnToView: HymnItem = this.props.navigation.getParam('hymnToView');
 
   constructor(props: Props) {
     super(props);
@@ -44,7 +44,6 @@ class HymnView extends React.Component<Props> {
             <Text style={style.lyricsText}>{this.hymnToView.lyrics}</Text>
           </View>
         </ScrollView>
-
       </View>
     );
   }
