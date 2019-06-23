@@ -21,7 +21,6 @@ class Login extends React.Component<Props, State> {
   }
 
   render() {
-    console.log("VO: this.props", this.props)
     const inputTheme = {
       colors: { primary: "#FFF", text: "#FFF", placeholder: "#FFF" }
     };

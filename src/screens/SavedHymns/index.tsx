@@ -1,20 +1,24 @@
 import React from "react";
-import { FlatList, StatusBar, View } from "react-native"
+import { Text, FlatList, StatusBar, View } from "react-native"
 import { Appbar, Searchbar } from "react-native-paper"
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
 import { connect } from "react-redux";
-import { hymnsInterface } from "../../reducers/hymnsReducer";
+import { HymnsInterface } from "../../reducers/hymnsReducer";
 import { NavigationParams } from "react-navigation";
 import globalStyles from "../../styles/globalStyles";
 import SavedHymnElement from "./components/SavedHymnElement";
 import HeaderWrapper from "../../shared/HeaderWrapper";
+import style from "./style";
 
-interface Props {
-  // from redux
-  hymns: hymnsInterface
+interface ReduxProps {
+  hymns: HymnsInterface
+}
 
+interface OwnProps {
   navigation: NavigationParams
 }
+
+type Props = ReduxProps & OwnProps
 
 interface State {
   isSearchMode: boolean,
@@ -67,9 +71,7 @@ class SavedHymns extends React.Component<Props, State> {
         <HeaderWrapper>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
             <Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>
-            <Appbar.Content
-              title="My Saved Hymns"
-            />
+            <Appbar.Content title="My Saved Hymns"/>
             <Appbar.Action icon="search" onPress={this.openSearch}/>
           </Appbar.Header>
         </HeaderWrapper>
@@ -77,15 +79,27 @@ class SavedHymns extends React.Component<Props, State> {
     }
   }
 
+  private renderSavedHymns = () => {
+    if (this.props.hymns.savedHymns.length) {
+      return (
+        <FlatList
+          data={this.props.hymns.savedHymns}
+          keyExtractor={(item => String(item.hymnId))}
+          renderItem={({item}) => <SavedHymnElement navigation={this.props.navigation} savedHymn={item}/>}
+        />
+      )
+    } else {
+      return (
+        <Text style={style.noHymns}>Empty here</Text>
+      )
+    }
+  };
+
   render() {
     return (
       <View style={globalStyles.screen}>
         {this.renderHeader()}
-        <FlatList
-          data={this.props.hymns.savedHymns}
-          keyExtractor={(item => item.hymnId)}
-          renderItem={({item}) => <SavedHymnElement navigation={this.props.navigation} savedHymn={item}/>}
-        />
+        {this.renderSavedHymns()}
         <SavedHymnsFAB navigation={this.props.navigation}/>
       </View>
     );

@@ -4,7 +4,6 @@ import {Drawer} from 'react-native-paper';
 import StatusBarSafeArea from "../shared/StatusBarSafeArea";
 
 function NavDrawerContent(props: any) {
-  // console.log("VO: props", props)
 
   return (
     <View style={{height: '100%', justifyContent: 'space-between'}}>

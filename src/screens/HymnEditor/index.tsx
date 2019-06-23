@@ -6,10 +6,28 @@ import { Appbar, Button, TextInput } from "react-native-paper";
 import HymnItem from "../../models/HymnItem";
 import { NavigationParams } from "react-navigation";
 import style from "./style";
+import { screens } from "../../navigation/savedHymnsStack";
+import { HymnsInterface } from "../../reducers/hymnsReducer";
+import { AppState } from "../../reducers";
+import { ThunkDispatch } from "redux-thunk";
+import Action from "../../models/Action";
+import { addToSavedHymns, editSavedHymn, getSavedHymnsFromStorage } from "../../actions/hymnActions";
+import { connect } from "react-redux";
 
-interface Props {
+interface OwnProps {
   navigation: NavigationParams
 }
+
+interface ReduxState {
+  hymns: HymnsInterface
+}
+
+interface ReduxDispatch {
+  addToSavedHymns: (newHymn: HymnItem) => void,
+  editSavedHymn: (newHymn: HymnItem) => void,
+}
+
+type Props = ReduxState & ReduxDispatch & OwnProps
 
 interface State {
   hymnTitleInput: string
@@ -25,10 +43,12 @@ class HymnEditor extends React.Component<Props, State> {
   };
 
   // get empty hymn in case of adding new hymn
-  private hymnToEdit: HymnItem = this.props.navigation.getParam('hymnToEdit') || HymnItem.getEmptyHymn();
-  private isAddNew: boolean = !this.hymnToEdit.hymnId;
+  private hymnToEdit: HymnItem = this.props.navigation.getParam('hymnToEdit') || HymnItem.getEmptyHymn(this.props.hymns.savedHymns);
+  private isAddNew: boolean = !this.props.navigation.getParam('hymnToEdit');
 
   private inputToFocusOnOpenRef: TextInput | undefined;
+
+  private navFocusListener: { remove: Function } | undefined;
 
   constructor(props: Props) {
     super(props);
@@ -42,14 +62,40 @@ class HymnEditor extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
-    this.props.navigation.addListener('didFocus', () => {
+    this.navFocusListener = this.props.navigation.addListener('didFocus', () => {
       this.isAddNew && this.inputToFocusOnOpenRef && this.inputToFocusOnOpenRef.focus()
     });
   }
 
+  private onDone = () => {
+    const newHymn = this.getNewHymn();
+    this.isAddNew ? this.props.addToSavedHymns(newHymn) : this.props.editSavedHymn(newHymn);
+    this.props.navigation.goBack();
+  };
+
+  private onPreview = () => {
+    const hymnToPreview = this.getNewHymn();
+
+    this.navFocusListener && this.navFocusListener.remove();
+    this.props.navigation.navigate(screens.HYMN_VIEW, {hymnToView: hymnToPreview, isPreviewMode: true});
+  };
+
+  private getNewHymn(): HymnItem {
+    const {hymnTitleInput, authorNameInput, authorImageUrlInput, lyricsTextEdit} = this.state;
+
+    return new HymnItem(
+      this.hymnToEdit.hymnId,
+      this.hymnToEdit.backendId,
+      hymnTitleInput,
+      authorNameInput,
+      authorImageUrlInput || this.hymnToEdit.authorImage,
+      lyricsTextEdit,
+    );
+  }
+
   render() {
 
-    const {hymnTitleInput, authorNameInput, lyricsTextEdit} = this.state;
+    const {hymnTitleInput, authorNameInput, authorImageUrlInput, lyricsTextEdit} = this.state;
 
     return (
       <View style={globalStyles.screen}>
@@ -76,6 +122,11 @@ class HymnEditor extends React.Component<Props, State> {
               value={authorNameInput}
               onChangeText={(val: string) => this.setState({authorNameInput: val})}/>
             <TextInput
+              label="Author Image URL"
+              style={style.input}
+              value={authorImageUrlInput}
+              onChangeText={(val: string) => this.setState({authorImageUrlInput: val})}/>
+            <TextInput
               label="Lyrics"
               multiline={true}
               mode="outlined"
@@ -83,9 +134,15 @@ class HymnEditor extends React.Component<Props, State> {
               value={lyricsTextEdit}
               onChangeText={(val: string) => this.setState({lyricsTextEdit: val})}/>
 
-            <Button mode="contained" onPress={() => console.log("VO: lyricsTextEdit", {lyrics: lyricsTextEdit})}>
+            <Button mode="contained" style={style.button}
+                    onPress={this.onDone}>
               Done
             </Button>
+
+            <Button style={style.button} onPress={this.onPreview}>
+              Preview
+            </Button>
+
           </View>
 
         </ScrollView>
@@ -94,4 +151,17 @@ class HymnEditor extends React.Component<Props, State> {
   }
 }
 
-export default HymnEditor;
+const mapStateToProps = (state: AppState) => {
+  return {
+    hymns: state.hymns
+  }
+};
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
+  return {
+    addToSavedHymns: (newHymn: HymnItem) => dispatch(addToSavedHymns(newHymn)),
+    editSavedHymn: (newHymn: HymnItem) => dispatch(editSavedHymn(newHymn)),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HymnEditor);

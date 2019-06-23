@@ -1,24 +1,18 @@
-import React, {Component} from 'react';
-import {Provider as PaperProvider} from "react-native-paper";
-import {Provider as StoreProvider} from 'react-redux';
-import {createStore} from "redux";
-import {createAppContainer} from "react-navigation"
+import React from 'react';
+import { Provider as StoreProvider } from 'react-redux';
+import { applyMiddleware, createStore } from "redux";
 import appReducer from "./reducers"
-import {StatusBar} from "react-native";
-import {lightTheme} from "./styles/appTheme";
-import rootStack from "./navigation/rootStack";
+import thunk from "redux-thunk";
+import RootScreen from "./screens/RootScreen";
 
-const store = createStore(appReducer);
-const Navigation = createAppContainer(rootStack);
+const store = createStore(appReducer, applyMiddleware(thunk));
 
-export default class App extends Component {
+export default class App extends React.Component {
+
   render() {
     return (
       <StoreProvider store={store}>
-        <PaperProvider theme={lightTheme}>
-          <StatusBar translucent={true} backgroundColor="transparent" />
-          <Navigation/>
-        </PaperProvider>
+        <RootScreen/>
       </StoreProvider>
     );
   }

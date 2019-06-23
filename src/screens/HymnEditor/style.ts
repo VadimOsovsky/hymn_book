@@ -10,5 +10,8 @@ export default StyleSheet.create({
   },
   textEdit: {
     backgroundColor: lightTheme.colors.surface
+  },
+  button: {
+    marginBottom: 5
   }
 });

@@ -1,25 +1,43 @@
+import _ from "lodash";
+
 export default class HymnItem {
 
-  hymnId: string;
+  hymnId: number;
+  backendId: string;
   title: string;
   author: string;
   authorImage: string;
   lyrics: string;
 
-  constructor(hymnId: string, title: string, author: string, authorImage: string, lyrics: string) {
+  constructor(
+    hymnId: number,
+    backendId: string,
+    title: string,
+    author: string,
+    authorImage: string,
+    lyrics: string
+  ) {
     this.hymnId = hymnId;
+    this.backendId = backendId || "";
     this.title = title;
     this.author = author;
     this.authorImage = authorImage;
     this.lyrics = lyrics;
   }
 
-  formatLyricsForPreview(lyrics: string): string {
-    return lyrics.replace('\n', ' ')
+  static formatLyricsForPreview(lyrics: string): string {
+    return lyrics.replace(/(?:\r\n|\r|\n|\s\s+)/g, " ");
   }
 
-  static getEmptyHymn(): HymnItem {
+  static getEmptyHymn(allSavedHymns: HymnItem[]): HymnItem {
+    // assign an id to the new hymn
+    let hymnId = 1;
+
+    while (_.isObject(_.find(allSavedHymns, {hymnId}))) {
+      hymnId++;
+    }
     return new HymnItem(
+      hymnId,
       "",
       "",
       "Unknown author",
@@ -31,7 +49,7 @@ export default class HymnItem {
   static getDummyHymns(): HymnItem[] {
     const dummyHymns = [];
 
-    dummyHymns.push(new HymnItem('0', 'Awesome God', 'Rich Mullins', '', '[Verse 1]\n' +
+    dummyHymns.push(new HymnItem(1, "", 'Awesome God', 'Rich Mullins', '', '[Verse 1]\n' +
       'When He rolls up His sleeves\n' +
       'He ain\'t just putting on the ritz\n' +
       '(Our God is an awesome God)\n' +
@@ -89,7 +107,7 @@ export default class HymnItem {
       'Our God is an awesome God\n' +
       'Our God is an awesome God'));
 
-    dummyHymns.push(new HymnItem('1', 'Our God is Greater', 'Chris Tomlin', 'https://gaillardcenter.org/wp-content/uploads/Tomlin-Featured-Image.png', 'Water You turned into wine, opened the eyes of the blind\n' +
+    dummyHymns.push(new HymnItem(2, "", 'Our God is Greater', 'Chris Tomlin', 'https://gaillardcenter.org/wp-content/uploads/Tomlin-Featured-Image.png', 'Water You turned into wine, opened the eyes of the blind\n' +
       'there\'s no one like You, none like You!\n' +
       'Into the darkness You shine, out of the ashes we rise\n' +
       'there\'s no one like You, none like You!\n' +

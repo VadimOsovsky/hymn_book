@@ -1,6 +1,7 @@
 import React from 'react';
 import { FAB } from 'react-native-paper';
 import { NavigationParams } from "react-navigation";
+import { ToastAndroid } from "react-native";
 
 interface Props {
   navigation: NavigationParams
@@ -26,7 +27,7 @@ export default class SavedHymnsFAB extends React.Component<Props, State> {
             label: 'Add manually',
             onPress: () => this.props.navigation.navigate("HymnEditor", {hymnToEdit: null})
           },
-          {icon: 'cloud-upload', label: 'Import file', onPress: () => console.log('Import')},
+          {icon: 'cloud-upload', label: 'Import file', onPress: () => ToastAndroid.show('Import WIP', ToastAndroid.SHORT)},
         ]}
         onStateChange={({open: isOpen}) => this.setState({isOpen})}
       />

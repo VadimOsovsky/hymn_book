@@ -8,5 +8,10 @@ export default StyleSheet.create({
     backgroundColor: 'transparent',
     margin: 5,
     alignSelf: 'center',
+  },
+  noHymns: {
+    textAlign: "center",
+    margin: 20,
+    fontSize: 16,
   }
 })
