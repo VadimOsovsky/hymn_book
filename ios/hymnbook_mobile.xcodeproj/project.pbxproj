@@ -63,6 +63,7 @@
 		FE16FB1973E641569C63564C /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EACC6986E9740CFA3C4B072 /* libRNCAsyncStorage.a */; };
 		BA71B269E88A4A98915ACCC5 /* libRNIconic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8656D6EB664359BA532EF5 /* libRNIconic.a */; };
 		29EB1E2DD2C24645929C38EE /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F41A45CE11D436FB0AD0BB7 /* libSplashScreen.a */; };
+		954D5A2853094B8F84236613 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0266C8A903E4CC2895197E2 /* libRNImagePicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -400,6 +401,8 @@
 		DE8656D6EB664359BA532EF5 /* libRNIconic.a */ = {isa = PBXFileReference; name = "libRNIconic.a"; path = "libRNIconic.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		1D7550EA6C204C86BFD16F57 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; name = "SplashScreen.xcodeproj"; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		9F41A45CE11D436FB0AD0BB7 /* libSplashScreen.a */ = {isa = PBXFileReference; name = "libSplashScreen.a"; path = "libSplashScreen.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		CF7A04FD8F974421B4158712 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D0266C8A903E4CC2895197E2 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,6 +437,7 @@
 				FE16FB1973E641569C63564C /* libRNCAsyncStorage.a in Frameworks */,
 				BA71B269E88A4A98915ACCC5 /* libRNIconic.a in Frameworks */,
 				29EB1E2DD2C24645929C38EE /* libSplashScreen.a in Frameworks */,
+				954D5A2853094B8F84236613 /* libRNImagePicker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,6 +635,7 @@
 				E3011A8030414E50BA32ADDC /* RNCAsyncStorage.xcodeproj */,
 				0A2B95E7A6BC40CDAEEDB73E /* RNIconic.xcodeproj */,
 				1D7550EA6C204C86BFD16F57 /* SplashScreen.xcodeproj */,
+				CF7A04FD8F974421B4158712 /* RNImagePicker.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1307,6 +1312,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1316,6 +1322,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 				);
 			};
 			name = Debug;
@@ -1345,6 +1352,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1354,6 +1362,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 				);
 			};
 			name = Release;
@@ -1382,6 +1391,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 				);
 			};
 			name = Debug;
@@ -1409,6 +1419,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 				);
 			};
 			name = Release;
@@ -1446,6 +1457,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1455,6 +1467,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 				);
 			};
 			name = Debug;
@@ -1492,6 +1505,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1501,6 +1515,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 				);
 			};
 			name = Release;
@@ -1537,6 +1552,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1546,6 +1562,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 				);
 			};
 			name = Debug;
@@ -1582,6 +1599,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1591,6 +1609,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 				);
 			};
 			name = Release;

@@ -11,6 +11,10 @@ export default StyleSheet.create({
   textEdit: {
     backgroundColor: lightTheme.colors.surface
   },
+  divider: {
+    marginTop: 10,
+    marginBottom: 20,
+  },
   button: {
     marginBottom: 5
   }

@@ -2,7 +2,7 @@ import React from "react"
 import { ScrollView, StatusBar, View } from "react-native";
 import globalStyles from "../../styles/globalStyles";
 import HeaderWrapper from "../../shared/HeaderWrapper";
-import { Appbar, Button, TextInput } from "react-native-paper";
+import { Appbar, Button, Divider, TextInput } from "react-native-paper";
 import HymnItem from "../../models/HymnItem";
 import { NavigationParams } from "react-navigation";
 import style from "./style";
@@ -11,8 +11,9 @@ import { HymnsInterface } from "../../reducers/hymnsReducer";
 import { AppState } from "../../reducers";
 import { ThunkDispatch } from "redux-thunk";
 import Action from "../../models/Action";
-import { addToSavedHymns, editSavedHymn, getSavedHymnsFromStorage } from "../../actions/hymnActions";
+import { addToSavedHymns, editSavedHymn } from "../../actions/hymnActions";
 import { connect } from "react-redux";
+import ImagePickerModal from "./components/ImagePickerModal";
 
 interface OwnProps {
   navigation: NavigationParams
@@ -94,7 +95,6 @@ class HymnEditor extends React.Component<Props, State> {
   }
 
   render() {
-
     const {hymnTitleInput, authorNameInput, authorImageUrlInput, lyricsTextEdit} = this.state;
 
     return (
@@ -121,11 +121,10 @@ class HymnEditor extends React.Component<Props, State> {
               style={style.input}
               value={authorNameInput}
               onChangeText={(val: string) => this.setState({authorNameInput: val})}/>
-            <TextInput
-              label="Author Image URL"
-              style={style.input}
-              value={authorImageUrlInput}
-              onChangeText={(val: string) => this.setState({authorImageUrlInput: val})}/>
+
+            <ImagePickerModal hymnCoverUri={authorImageUrlInput}/>
+            <Divider style={style.divider} />
+
             <TextInput
               label="Lyrics"
               multiline={true}
