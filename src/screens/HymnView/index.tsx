@@ -41,10 +41,6 @@ class HymnView extends React.Component<Props, State> {
     };
   }
 
-  static navigationOptions = {
-    header: null
-  };
-
   componentDidMount(): void {
     console.log("VO: this.isPreviewMode", this.isPreviewMode)
   }
@@ -79,7 +75,7 @@ class HymnView extends React.Component<Props, State> {
       return (
         <Menu
           visible={this.state.isHeaderMenuVisible}
-          style={{transform: [{translateY: 15}]}}
+          style={{transform: [{translateY: StatusBar.currentHeight || 20}]}}
           onDismiss={this.hideHeaderMenu}
           anchor={
             <Appbar.Action onPress={this.showHeaderMenu} icon="more-vert" color="#FFF"/>
@@ -90,7 +86,7 @@ class HymnView extends React.Component<Props, State> {
         </Menu>
       )
     }
-  }
+  };
 
   render() {
     return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, FlatList, StatusBar, View } from "react-native"
+import { ActivityIndicator, FlatList, StatusBar, Text, View } from "react-native"
 import { Appbar, Searchbar } from "react-native-paper"
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
 import { connect } from "react-redux";
@@ -9,6 +9,7 @@ import globalStyles from "../../styles/globalStyles";
 import SavedHymnElement from "./components/SavedHymnElement";
 import HeaderWrapper from "../../shared/HeaderWrapper";
 import style from "./style";
+import HymnItem from "../../models/HymnItem";
 
 interface ReduxProps {
   hymns: HymnsInterface
@@ -23,13 +24,10 @@ type Props = ReduxProps & OwnProps
 interface State {
   isSearchMode: boolean,
   searchQuery: string,
+  selectedHymns: number,
 }
 
 class SavedHymns extends React.Component<Props, State> {
-
-  static navigationOptions = {
-    header: null,
-  };
 
   private SearchbarRef: Searchbar | null = null;
 
@@ -39,6 +37,7 @@ class SavedHymns extends React.Component<Props, State> {
     this.state = {
       isSearchMode: false,
       searchQuery: "",
+      selectedHymns: 0,
     }
   }
 
@@ -49,6 +48,16 @@ class SavedHymns extends React.Component<Props, State> {
   };
 
   private closeSearch = () => this.setState({isSearchMode: false});
+
+  private filterSavedHymns = () => {
+    if (this.state.searchQuery) {
+      return this.props.hymns.savedHymns.filter((hymn: HymnItem) => {
+        return hymn.title.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+      })
+    } else {
+      return this.props.hymns.savedHymns
+    }
+  };
 
   private renderHeader() {
     if (this.state.isSearchMode) {
@@ -70,7 +79,7 @@ class SavedHymns extends React.Component<Props, State> {
       return (
         <HeaderWrapper>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
-            <Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>
+            {/*<Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>*/}
             <Appbar.Content title="My Saved Hymns"/>
             <Appbar.Action icon="search" onPress={this.openSearch}/>
           </Appbar.Header>
@@ -79,19 +88,37 @@ class SavedHymns extends React.Component<Props, State> {
     }
   }
 
+  private renderSearchQuery = () => {
+    return (
+      <Text style={[style.searchQuery, {display: this.state.searchQuery ? "flex" : "none"}]}>
+        Results found for: {this.state.searchQuery}
+      </Text>
+    )
+  };
+
   private renderSavedHymns = () => {
-    if (this.props.hymns.savedHymns.length) {
+    if (this.props.hymns.isSavedHymnsLoading) {
+      return (
+        <ActivityIndicator size="large" style={style.noHymns}/>
+      )
+    } else if (!this.filterSavedHymns().length) {
+      return (
+        <Text style={style.noHymns}>Empty here</Text>
+      )
+    } else {
       return (
         <FlatList
-          data={this.props.hymns.savedHymns}
+          data={this.filterSavedHymns()}
           keyExtractor={(item => String(item.hymnId))}
           renderItem={({item}) => <SavedHymnElement navigation={this.props.navigation} savedHymn={item}/>}
         />
       )
-    } else {
-      return (
-        <Text style={style.noHymns}>Empty here</Text>
-      )
+    }
+  };
+
+  private renderFAB = () => {
+    if (!this.props.hymns.isSavedHymnsLoading) {
+      return <SavedHymnsFAB navigation={this.props.navigation}/>
     }
   };
 
@@ -99,8 +126,9 @@ class SavedHymns extends React.Component<Props, State> {
     return (
       <View style={globalStyles.screen}>
         {this.renderHeader()}
+        {this.renderSearchQuery()}
         {this.renderSavedHymns()}
-        <SavedHymnsFAB navigation={this.props.navigation}/>
+        {this.renderFAB()}
       </View>
     );
   }

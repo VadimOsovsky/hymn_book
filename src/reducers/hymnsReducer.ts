@@ -11,12 +11,14 @@ import Action from "../models/Action";
 
 
 export interface HymnsInterface {
+  isLaunchingApp: boolean,
   savedHymns: HymnItem[]
   isSavedHymnsLoading: boolean
   error: string
 }
 
 const INITIAL_STATE: HymnsInterface = {
+  isLaunchingApp: true,
   savedHymns: [],
   isSavedHymnsLoading: false,
   error: "",
@@ -35,6 +37,7 @@ export default (state = INITIAL_STATE, action: Action): HymnsInterface => {
     case GET_SAVED_HYMNS_FROM_STORAGE_SUCCESS:
       return {
         ...state,
+        isLaunchingApp: false,
         isSavedHymnsLoading: false,
         savedHymns: action.payload,
       };

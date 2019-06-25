@@ -15,10 +15,6 @@ class AuthScreen extends React.Component<Props> {
     super(props)
   }
 
-  static navigationOptions = {
-    header: null,
-  };
-
   render() {
     return (
       <ImageBackground source={require("../../assets/images/auth_bg.jpg")} style={style.bgPic}>

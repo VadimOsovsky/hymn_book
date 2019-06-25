@@ -62,6 +62,7 @@
 		3B7FE9DBDF414E6AAC34109E /* Caveat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A32822E021EA42FB91444999 /* Caveat.ttf */; };
 		FE16FB1973E641569C63564C /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EACC6986E9740CFA3C4B072 /* libRNCAsyncStorage.a */; };
 		BA71B269E88A4A98915ACCC5 /* libRNIconic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8656D6EB664359BA532EF5 /* libRNIconic.a */; };
+		29EB1E2DD2C24645929C38EE /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F41A45CE11D436FB0AD0BB7 /* libSplashScreen.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -397,6 +398,8 @@
 		7EACC6986E9740CFA3C4B072 /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; name = "libRNCAsyncStorage.a"; path = "libRNCAsyncStorage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		0A2B95E7A6BC40CDAEEDB73E /* RNIconic.xcodeproj */ = {isa = PBXFileReference; name = "RNIconic.xcodeproj"; path = "../node_modules/react-native-iconic/ios/RNIconic.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		DE8656D6EB664359BA532EF5 /* libRNIconic.a */ = {isa = PBXFileReference; name = "libRNIconic.a"; path = "libRNIconic.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		1D7550EA6C204C86BFD16F57 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; name = "SplashScreen.xcodeproj"; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		9F41A45CE11D436FB0AD0BB7 /* libSplashScreen.a */ = {isa = PBXFileReference; name = "libSplashScreen.a"; path = "libSplashScreen.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -430,6 +433,7 @@
 				C5E23EEF5F7B4D5E9031C757 /* libBVLinearGradient.a in Frameworks */,
 				FE16FB1973E641569C63564C /* libRNCAsyncStorage.a in Frameworks */,
 				BA71B269E88A4A98915ACCC5 /* libRNIconic.a in Frameworks */,
+				29EB1E2DD2C24645929C38EE /* libSplashScreen.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,6 +630,7 @@
 				BAE450E9324B479D940760B9 /* BVLinearGradient.xcodeproj */,
 				E3011A8030414E50BA32ADDC /* RNCAsyncStorage.xcodeproj */,
 				0A2B95E7A6BC40CDAEEDB73E /* RNIconic.xcodeproj */,
+				1D7550EA6C204C86BFD16F57 /* SplashScreen.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1301,6 +1306,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1309,6 +1315,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 			};
 			name = Debug;
@@ -1337,6 +1344,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1345,6 +1353,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 			};
 			name = Release;
@@ -1372,6 +1381,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 			};
 			name = Debug;
@@ -1398,6 +1408,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 			};
 			name = Release;
@@ -1434,6 +1445,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1442,6 +1454,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 			};
 			name = Debug;
@@ -1478,6 +1491,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1486,6 +1500,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 			};
 			name = Release;
@@ -1521,6 +1536,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1529,6 +1545,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 			};
 			name = Debug;
@@ -1564,6 +1581,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1572,6 +1590,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-iconic/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 			};
 			name = Release;

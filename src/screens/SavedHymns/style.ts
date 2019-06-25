@@ -11,7 +11,12 @@ export default StyleSheet.create({
   },
   noHymns: {
     textAlign: "center",
-    margin: 20,
+    margin: 30,
     fontSize: 16,
+  },
+  searchQuery: {
+    textAlign: "center",
+    margin: 10,
+    fontSize: 16
   }
 })

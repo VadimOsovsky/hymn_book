@@ -58,8 +58,8 @@ export function editSavedHymn(updatedHymn: HymnItem) {
   return (dispatch: ThunkDispatch<{}, {}, any>, getState: () => AppState) => {
     const savedHymns: HymnItem[] = _.clone(getState().hymns.savedHymns);
 
-    savedHymns.forEach((hymn: HymnItem) => {
-      if (hymn.hymnId === updatedHymn.hymnId) hymn = updatedHymn;
+    savedHymns.forEach((hymn: HymnItem, index: number) => {
+      if (hymn.hymnId === updatedHymn.hymnId) savedHymns[index] = updatedHymn;
     });
 
     dispatch(setSavedHymnToStorage(savedHymns));

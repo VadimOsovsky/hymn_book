@@ -1,7 +1,7 @@
 import React from 'react';
 import { FAB } from 'react-native-paper';
 import { NavigationParams } from "react-navigation";
-import { ToastAndroid } from "react-native";
+import { StyleSheet, ToastAndroid } from "react-native";
 
 interface Props {
   navigation: NavigationParams
@@ -17,20 +17,36 @@ export default class SavedHymnsFAB extends React.Component<Props, State> {
   };
 
   render() {
+    // return (
+    //   <FAB.Group
+    //     open={this.state.isOpen}
+    //     icon={this.state.isOpen ? 'close' : 'add'}
+    //     actions={[
+    //       {
+    //         icon: 'playlist-add',
+    //         label: 'Add manually',
+    //         onPress: () => this.props.navigation.navigate("HymnEditor", {hymnToEdit: null})
+    //       },
+    //       {icon: 'cloud-upload', label: 'Import file', onPress: () => ToastAndroid.show('Import WIP', ToastAndroid.SHORT)},
+    //     ]}
+    //     onStateChange={({open: isOpen}) => this.setState({isOpen})}
+    //   />
+    // )
     return (
-      <FAB.Group
-        open={this.state.isOpen}
+      <FAB
         icon={this.state.isOpen ? 'close' : 'add'}
-        actions={[
-          {
-            icon: 'playlist-add',
-            label: 'Add manually',
-            onPress: () => this.props.navigation.navigate("HymnEditor", {hymnToEdit: null})
-          },
-          {icon: 'cloud-upload', label: 'Import file', onPress: () => ToastAndroid.show('Import WIP', ToastAndroid.SHORT)},
-        ]}
-        onStateChange={({open: isOpen}) => this.setState({isOpen})}
+        style={style.fab}
+        onPress={() => this.props.navigation.navigate("HymnEditor", {hymnToEdit: null})}
       />
     )
   }
 }
+
+const style = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  },
+});

@@ -1,4 +1,5 @@
 import React from "react"
+import SplashScreen from 'react-native-splash-screen'
 import { AppState } from "../reducers";
 import { ThunkDispatch } from "redux-thunk";
 import Action from "../models/Action";
@@ -33,8 +34,16 @@ type Props = StateProps & DispatchProps & OwnProps & OwnState
 
 class RootScreen extends React.Component<Props> {
 
-  componentWillMount(): void {
+  componentDidMount(): void {
     this.props.dispatchGetHymns();
+
+    const {isLaunchingApp, isSavedHymnsLoading} = this.props.hymns;
+    if (!isLaunchingApp && !isSavedHymnsLoading) SplashScreen.hide();
+  }
+
+  componentWillReceiveProps(nextProps: Readonly<StateProps & DispatchProps & OwnProps & OwnState>, nextContext: any): void {
+    const {isLaunchingApp, isSavedHymnsLoading} = nextProps.hymns;
+    if (!isLaunchingApp && !isSavedHymnsLoading) SplashScreen.hide();
   }
 
   render() {
