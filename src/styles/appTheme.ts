@@ -8,7 +8,9 @@ export const lightTheme = {
     primary: Colors.teal500,
     primaryDark: Colors.teal700,
     accent: Colors.teal500,
-    danger: Colors.redA200
+    highlight: "#DDD",
+    surfaceAlt: Colors.black,
+    error: Colors.redA200
   }
 };
 

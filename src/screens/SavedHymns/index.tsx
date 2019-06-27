@@ -1,5 +1,5 @@
 import React from "react";
-import { ActivityIndicator, FlatList, StatusBar, Text, View } from "react-native"
+import { ActivityIndicator, Alert, FlatList, StatusBar, Text, View } from "react-native"
 import { Appbar, Searchbar } from "react-native-paper"
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
 import { connect } from "react-redux";
@@ -10,21 +10,30 @@ import SavedHymnElement from "./components/SavedHymnElement";
 import HeaderWrapper from "../../shared/HeaderWrapper";
 import style from "./style";
 import HymnItem from "../../models/HymnItem";
+import { ThunkDispatch } from "redux-thunk";
+import { AppState } from "../../reducers";
+import Action from "../../models/Action";
+import { removeFromSavedHymns } from "../../actions/hymnActions";
+import { lightTheme } from "../../styles/appTheme";
 
-interface ReduxProps {
+interface ReduxState {
   hymns: HymnsInterface
+}
+
+interface ReduxDispatch {
+  removeFromSavedHymns: (hymnIds: number[]) => void
 }
 
 interface OwnProps {
   navigation: NavigationParams
 }
 
-type Props = ReduxProps & OwnProps
+type Props = ReduxState & ReduxDispatch & OwnProps
 
 interface State {
   isSearchMode: boolean,
   searchQuery: string,
-  selectedHymns: number,
+  selectedHymns: number[], // hymn ids array
 }
 
 class SavedHymns extends React.Component<Props, State> {
@@ -37,7 +46,7 @@ class SavedHymns extends React.Component<Props, State> {
     this.state = {
       isSearchMode: false,
       searchQuery: "",
-      selectedHymns: 0,
+      selectedHymns: [],
     }
   }
 
@@ -59,19 +68,72 @@ class SavedHymns extends React.Component<Props, State> {
     }
   };
 
+  private onHymnPress = (hymn: HymnItem) => {
+    const {selectedHymns} = this.state;
+
+    if (selectedHymns.length) {
+      const newSelectedHymnsArray = [...selectedHymns];
+      if (selectedHymns.includes(hymn.hymnId)) {
+        newSelectedHymnsArray.splice(selectedHymns.indexOf(hymn.hymnId), 1)
+      } else {
+        newSelectedHymnsArray.push(hymn.hymnId);
+      }
+
+      this.setState({selectedHymns: newSelectedHymnsArray})
+    } else {
+      this.props.navigation.navigate('HymnView', {hymnToView: hymn})
+    }
+  };
+
+  private onHymnLongPress = (hymnId: number) => {
+    this.setState({selectedHymns: [...this.state.selectedHymns, hymnId]})
+  };
+
+  private onDeleteSelectedHymns = () => {
+    const {selectedHymns} = this.state;
+    const hymnsNumber = selectedHymns.length === 1 ? `this song` : `these ${selectedHymns.length} songs`;
+
+    Alert.alert(
+      "Delete Hymns",
+      `Are you sure you want to delete ${hymnsNumber} from Saved Hymns?`,
+      [
+        {text: "Cancel"},
+        {
+          text: "Delete", onPress: () => {
+            this.props.removeFromSavedHymns(this.state.selectedHymns);
+            this.setState({selectedHymns: []});
+          }
+        }
+      ]
+    );
+  };
+
   private renderHeader() {
     if (this.state.isSearchMode) {
       return (
         <HeaderWrapper>
-          <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
+          <Appbar.Header statusBarHeight={StatusBar.currentHeight} style={{backgroundColor: lightTheme.colors.surface}}>
             <Searchbar
               icon="arrow-back"
               placeholder="Search"
+              style={{elevation: 0}}
               ref={(ref: Searchbar) => this.SearchbarRef = ref}
               onIconPress={this.closeSearch}
               onChangeText={query => this.setState({searchQuery: query})}
               value={this.state.searchQuery}
             />
+          </Appbar.Header>
+        </HeaderWrapper>
+      )
+    } else if (this.state.selectedHymns.length) {
+      return (
+        <HeaderWrapper>
+          <Appbar.Header statusBarHeight={StatusBar.currentHeight} style={{backgroundColor: lightTheme.colors.primaryDark}}>
+            <Appbar.BackAction onPress={() => this.setState({
+              selectedHymns: []
+            })}/>
+            <Appbar.Content title={"Selected: " + this.state.selectedHymns.length}/>
+            <Appbar.Action icon="delete" onPress={this.onDeleteSelectedHymns}/>
           </Appbar.Header>
         </HeaderWrapper>
       )
@@ -110,14 +172,25 @@ class SavedHymns extends React.Component<Props, State> {
         <FlatList
           data={this.filterSavedHymns()}
           keyExtractor={(item => String(item.hymnId))}
-          renderItem={({item}) => <SavedHymnElement navigation={this.props.navigation} savedHymn={item}/>}
+          extraData={this.state.selectedHymns}
+          renderItem={({item}) => {
+            return (
+              <SavedHymnElement
+                navigation={this.props.navigation}
+                isHymnSelected={this.state.selectedHymns.includes(item.hymnId)}
+                isSwipingDisabled={this.state.selectedHymns.length > 0}
+                onPress={this.onHymnPress}
+                onLongPress={this.onHymnLongPress}
+                savedHymn={item}/>
+            )
+          }}
         />
       )
     }
   };
 
   private renderFAB = () => {
-    if (!this.props.hymns.isSavedHymnsLoading) {
+    if (!this.props.hymns.isSavedHymnsLoading && !this.state.selectedHymns.length) {
       return <SavedHymnsFAB navigation={this.props.navigation}/>
     }
   };
@@ -135,10 +208,15 @@ class SavedHymns extends React.Component<Props, State> {
 
 }
 
-// @ts-ignore
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: AppState) => {
   const {hymns} = state;
   return {hymns}
 };
 
-export default connect(mapStateToProps)(SavedHymns);
+const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
+  return {
+    removeFromSavedHymns: (ids: number[]) => dispatch(removeFromSavedHymns(ids)),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SavedHymns);

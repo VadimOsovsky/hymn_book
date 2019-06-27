@@ -6,7 +6,7 @@ export default class HymnItem {
   backendId: string;
   title: string;
   author: string;
-  authorImage: string;
+  hymnCoverImage: string;
   lyrics: string;
 
   constructor(
@@ -14,14 +14,14 @@ export default class HymnItem {
     backendId: string,
     title: string,
     author: string,
-    authorImage: string,
+    hymnCoverImage: string,
     lyrics: string
   ) {
     this.hymnId = hymnId;
     this.backendId = backendId || "";
     this.title = title;
     this.author = author;
-    this.authorImage = authorImage;
+    this.hymnCoverImage = hymnCoverImage;
     this.lyrics = lyrics;
   }
 
@@ -33,6 +33,7 @@ export default class HymnItem {
     // assign an id to the new hymn
     let hymnId = 1;
 
+    // TODO heavy operation: wrap in promise
     while (_.isObject(_.find(allSavedHymns, {hymnId}))) {
       hymnId++;
     }

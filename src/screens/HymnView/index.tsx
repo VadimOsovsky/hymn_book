@@ -12,6 +12,7 @@ import { AppState } from "../../reducers";
 import Action from "../../models/Action";
 import { connect } from "react-redux";
 import { screens } from "../../navigation/savedHymnsStack";
+import { lightTheme } from "../../styles/appTheme";
 
 interface OwnProps {
   // default
@@ -101,7 +102,7 @@ class HymnView extends React.Component<Props, State> {
 
         <ScrollView>
           <View style={style.lyricsView}>
-            <Text style={style.lyricsText}>{this.hymnToView.lyrics}</Text>
+            <Text style={[style.lyricsText, {color: lightTheme.colors.text}]}>{this.hymnToView.lyrics}</Text>
           </View>
         </ScrollView>
       </View>

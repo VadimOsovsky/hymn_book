@@ -8,6 +8,5 @@ export default StyleSheet.create({
   },
   lyricsText: {
     fontSize: 17,
-    color: "#000",
   }
 })

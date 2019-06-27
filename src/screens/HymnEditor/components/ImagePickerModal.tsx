@@ -1,15 +1,18 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Button, Dialog, Portal, TextInput, Avatar } from "react-native-paper"
+import { Avatar, Button, Dialog, Portal, TextInput } from "react-native-paper"
 import ImagePicker from 'react-native-image-picker';
+import globalStyles from "../../../styles/globalStyles";
+import HymnCoverAvatar from "../../../shared/HymnCoverAvatar";
 
 interface Props {
   hymnCoverUri?: string
+  getNewHymnCoverUri: (hymnCoverUri: string) => void
 }
 
 interface State {
   isDialogShown: boolean,
-  imageSrc: { uri: string },
+  imageSrc: string,
   hymnCoverImageUrlInput: string,
 }
 
@@ -20,19 +23,19 @@ class ImagePickerModal extends React.Component<Props, State> {
 
     this.state = {
       isDialogShown: false,
-      imageSrc: {uri: ""},
+      imageSrc: "",
       hymnCoverImageUrlInput: ""
     }
   }
 
-  componentWillMount(): void {
-    const { hymnCoverUri } = this.props;
+  private initHymnCoverFromProps = () => {
+    const {hymnCoverUri} = this.props;
     if (hymnCoverUri && hymnCoverUri.startsWith("content://")) {
-      this.setState({imageSrc: {uri: hymnCoverUri}})
+      this.setState({imageSrc: hymnCoverUri})
     } else if (hymnCoverUri && hymnCoverUri.startsWith("http")) {
       this.setState({hymnCoverImageUrlInput: hymnCoverUri})
     }
-  }
+  };
 
   private showImagePicker = () => {
     this.hideDialog();
@@ -56,7 +59,7 @@ class ImagePickerModal extends React.Component<Props, State> {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        const source = {uri: response.uri};
+        const source = response.uri;
         // You can also display the image using data:
         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
 
@@ -69,35 +72,46 @@ class ImagePickerModal extends React.Component<Props, State> {
   };
 
   private onImageSelectDone = () => {
+    const {imageSrc, hymnCoverImageUrlInput} = this.state;
+    this.props.getNewHymnCoverUri(imageSrc || hymnCoverImageUrlInput);
     this.hideDialog();
   };
 
   private cancelSelection = () => {
     this.setState({
-      imageSrc: {uri: ""},
+      imageSrc: "",
       hymnCoverImageUrlInput: "",
     })
   };
 
-  private showDialog = () => this.setState({isDialogShown: true});
-  private hideDialog = () => this.setState({isDialogShown: false});
+  private showDialog = () => {
+    this.initHymnCoverFromProps();
+    this.setState({isDialogShown: true});
+  };
+
+  private hideDialog = () => {
+    this.setState({isDialogShown: false});
+    // to compensate closing transition time
+    setTimeout(this.cancelSelection, 300);
+  };
 
   private renderDialogContent = () => {
     const {imageSrc, hymnCoverImageUrlInput} = this.state;
 
-    if (imageSrc.uri) {
+    if (imageSrc) {
       return (
         <Dialog.Content style={style.dialogContent}>
-          <Avatar.Image size={120} source={imageSrc} />
+          <HymnCoverAvatar hymnCoverImage={imageSrc} size={120} />
           <Text style={style.or}>or</Text>
-          <Button onPress={this.cancelSelection}>Select another image</Button>
+          <Text style={[globalStyles.pressableText, globalStyles.textCenter]} onPress={this.cancelSelection}>Select
+            another image</Text>
         </Dialog.Content>
       )
     } else if (hymnCoverImageUrlInput) {
       return (
         <Dialog.Content style={style.dialogContent}>
-          <Avatar.Image size={120} source={{uri: hymnCoverImageUrlInput}} />
-          <Text style={style.or} />
+          <HymnCoverAvatar hymnCoverImage={hymnCoverImageUrlInput} size={120} />
+          <Text style={style.or}/>
           <TextInput
             label="Hymn cover URL"
             style={style.input}
@@ -108,7 +122,8 @@ class ImagePickerModal extends React.Component<Props, State> {
     } else {
       return (
         <Dialog.Content>
-          <Button onPress={this.showImagePicker}>Select image</Button>
+          <Text style={[globalStyles.pressableText, globalStyles.textCenter]} onPress={this.showImagePicker}>Select
+            image</Text>
           <Text style={style.or}>or</Text>
           <TextInput
             label="Hymn cover URL"
@@ -121,11 +136,10 @@ class ImagePickerModal extends React.Component<Props, State> {
   };
 
   render() {
-    const {imageSrc, hymnCoverImageUrlInput} = this.state;
-
     return (
-      <View>
-        <Button onPress={this.showDialog}>Add cover image</Button>
+      <View style={style.container}>
+        <Text style={[globalStyles.pressableText, globalStyles.textCenter]} onPress={this.showDialog}>Edit cover
+          image</Text>
         <Portal>
           <Dialog
             visible={this.state.isDialogShown}
@@ -136,7 +150,7 @@ class ImagePickerModal extends React.Component<Props, State> {
 
             <Dialog.Actions>
               <Button onPress={this.hideDialog}>Cancel</Button>
-              <Button onPress={this.onImageSelectDone} disabled={!imageSrc.uri && !hymnCoverImageUrlInput}>Done</Button>
+              <Button onPress={this.onImageSelectDone}>Done</Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>
@@ -146,6 +160,9 @@ class ImagePickerModal extends React.Component<Props, State> {
 }
 
 const style = StyleSheet.create({
+  container: {
+    marginVertical: 20
+  },
   dialogContent: {
     alignItems: "center",
     width: "100%"

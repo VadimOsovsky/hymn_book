@@ -10,10 +10,12 @@ interface Props {
   actionWidth?: number
   vibrateOnOpen?: boolean
   vibrationLengthMs?: number
+  swipingDisabled?: boolean
 }
 
 interface State {
-  itemXPosition: Animated.ValueXY;
+  itemXPosition: Animated.ValueXY
+  swipingDisabled: boolean
 }
 
 class SwipeableListItem extends React.Component<Props, State> {
@@ -31,7 +33,8 @@ class SwipeableListItem extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      itemXPosition: new Animated.ValueXY()
+      itemXPosition: new Animated.ValueXY(),
+      swipingDisabled: this.props.swipingDisabled || false,
     }
   }
 
@@ -41,6 +44,8 @@ class SwipeableListItem extends React.Component<Props, State> {
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e, gesture) => true,
       onPanResponderMove: (evt, gestureState) => {
+        if (this.state.swipingDisabled) return;
+
         const dxDiff = gestureState.dx - this.prevGestureStateDx;
         this.prevGestureStateDx = gestureState.dx;
 
@@ -63,7 +68,8 @@ class SwipeableListItem extends React.Component<Props, State> {
         }])(evt, {dx: this.panXValue, dy: 0});
       },
       onPanResponderRelease: (e, gesture) => {
-        let stopValue = 0;
+        if (this.state.swipingDisabled) return;
+
         this.prevGestureStateDx = 0;
         this.vibrateOnOpen = true;
         // to fix in open position
@@ -71,19 +77,29 @@ class SwipeableListItem extends React.Component<Props, State> {
         if (this.panXValue < rightThreshold / 2) this.panXValue = rightThreshold;
         else this.panXValue = 0;
         // else if (this.state.itemXPosition.x._value > leftThreshold) stopValue = leftThreshold;
-        Animated.spring(this.state.itemXPosition, {
-          toValue: {x: this.panXValue, y: 0},
-          // friction: 30,
-          speed: 150,
-          bounciness: 0
-        }).start();
+        this.moveItemToValue(this.panXValue);
       },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         const {dx, dy} = gestureState;
         return dx > 2 || dx < -2 || dy > 2 || dy < -2;
       }
     });
+  };
+
+  componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
+    this.setState({
+      swipingDisabled: nextProps.swipingDisabled || false,
+    })
   }
+
+  moveItemToValue = (toValue: number) => {
+    Animated.spring(this.state.itemXPosition, {
+      toValue: {x: toValue, y: 0},
+      // friction: 30,
+      speed: 150,
+      bounciness: 0
+    }).start();
+  };
 
   render() {
 

@@ -1,8 +1,9 @@
 import React from "react"
-import { ScrollView, StatusBar, View } from "react-native";
+import { Alert, ScrollView, StatusBar, View } from "react-native";
+import { connect } from "react-redux";
 import globalStyles from "../../styles/globalStyles";
 import HeaderWrapper from "../../shared/HeaderWrapper";
-import { Appbar, Button, Divider, TextInput } from "react-native-paper";
+import { Appbar, Avatar, Button, Divider, TextInput } from "react-native-paper";
 import HymnItem from "../../models/HymnItem";
 import { NavigationParams } from "react-navigation";
 import style from "./style";
@@ -12,8 +13,8 @@ import { AppState } from "../../reducers";
 import { ThunkDispatch } from "redux-thunk";
 import Action from "../../models/Action";
 import { addToSavedHymns, editSavedHymn } from "../../actions/hymnActions";
-import { connect } from "react-redux";
 import ImagePickerModal from "./components/ImagePickerModal";
+import HymnCoverAvatar from "../../shared/HymnCoverAvatar";
 
 interface OwnProps {
   navigation: NavigationParams
@@ -33,7 +34,7 @@ type Props = ReduxState & ReduxDispatch & OwnProps
 interface State {
   hymnTitleInput: string
   authorNameInput: string
-  authorImageUrlInput: string
+  hymnCoverUri: string
   lyricsTextEdit: string
 }
 
@@ -57,21 +58,48 @@ class HymnEditor extends React.Component<Props, State> {
     this.state = {
       hymnTitleInput: this.hymnToEdit.title,
       authorNameInput: this.hymnToEdit.author,
-      authorImageUrlInput: this.hymnToEdit.authorImage,
+      hymnCoverUri: this.hymnToEdit.hymnCoverImage,
       lyricsTextEdit: this.hymnToEdit.lyrics,
     }
   }
 
   componentDidMount(): void {
     this.navFocusListener = this.props.navigation.addListener('didFocus', () => {
-      this.isAddNew && this.inputToFocusOnOpenRef && this.inputToFocusOnOpenRef.focus()
+      // this.isAddNew && this.inputToFocusOnOpenRef && this.inputToFocusOnOpenRef.focus()
     });
   }
 
   private onDone = () => {
-    const newHymn = this.getNewHymn();
-    this.isAddNew ? this.props.addToSavedHymns(newHymn) : this.props.editSavedHymn(newHymn);
-    this.props.navigation.goBack();
+    if (this.isAddNew) {
+      this.saveAndExit()
+    } else if (!this.checkIfHymnChanged()) {
+      this.discardAndExit()
+    } else {
+      Alert.alert(
+        "Save and exit",
+        "Would you like to save the changes?",
+        [
+          {text: "Cancel"},
+          {text: "Save", onPress: this.saveAndExit},
+        ]
+      )
+    }
+  };
+
+  private onGoBack = () => {
+    if (!this.checkIfHymnChanged()) {
+      this.discardAndExit()
+    } else {
+      Alert.alert(
+        "Attention",
+        "You have made changes to the hymn, would you like to save them?",
+        [
+          {text: "Cancel"},
+          {text: "Discard", onPress: this.discardAndExit},
+          {text: "Save", onPress: this.saveAndExit},
+        ]
+      )
+    }
   };
 
   private onPreview = () => {
@@ -81,35 +109,62 @@ class HymnEditor extends React.Component<Props, State> {
     this.props.navigation.navigate(screens.HYMN_VIEW, {hymnToView: hymnToPreview, isPreviewMode: true});
   };
 
+  private saveAndExit = () => {
+    const newHymn = this.getNewHymn();
+    this.isAddNew ? this.props.addToSavedHymns(newHymn) : this.props.editSavedHymn(newHymn);
+    this.props.navigation.goBack();
+  };
+
+  private discardAndExit = () => {
+    this.props.navigation.goBack()
+  };
+
   private getNewHymn(): HymnItem {
-    const {hymnTitleInput, authorNameInput, authorImageUrlInput, lyricsTextEdit} = this.state;
+    const {hymnTitleInput, authorNameInput, hymnCoverUri, lyricsTextEdit} = this.state;
 
     return new HymnItem(
       this.hymnToEdit.hymnId,
       this.hymnToEdit.backendId,
       hymnTitleInput,
       authorNameInput,
-      authorImageUrlInput || this.hymnToEdit.authorImage,
+      hymnCoverUri || this.hymnToEdit.hymnCoverImage,
       lyricsTextEdit,
     );
-  }
+  };
+
+  private setHymnCoverImage(hymnCoverUri: string) {
+    this.setState({hymnCoverUri})
+  };
+
+  private checkIfHymnChanged = () => {
+    // returns true if changed
+    return JSON.stringify(this.hymnToEdit) !== JSON.stringify(this.getNewHymn());
+  };
 
   render() {
-    const {hymnTitleInput, authorNameInput, authorImageUrlInput, lyricsTextEdit} = this.state;
+    const {hymnTitleInput, authorNameInput, hymnCoverUri, lyricsTextEdit} = this.state;
 
     return (
       <View style={globalStyles.screen}>
         <HeaderWrapper>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
-            <Appbar.BackAction onPress={() => this.props.navigation.goBack()}/>
+            <Appbar.BackAction onPress={this.onGoBack}/>
             <Appbar.Content
               title={this.isAddNew ? "Add New Hymn" : "Edit Hymn"}
             />
+            <Appbar.Action icon={"check"} onPress={this.onDone}/>
           </Appbar.Header>
         </HeaderWrapper>
 
         <ScrollView collapsable={true}>
           <View style={style.container}>
+            <View style={{alignItems: "center"}}>
+              <HymnCoverAvatar hymnCoverImage={hymnCoverUri} size={120} />
+              <ImagePickerModal
+                hymnCoverUri={hymnCoverUri}
+                getNewHymnCoverUri={(newHymnCoverUri) => this.setState({hymnCoverUri: newHymnCoverUri})}/>
+            </View>
+
             <TextInput
               ref={(ref: TextInput) => this.inputToFocusOnOpenRef = ref}
               label="Hymn title"
@@ -122,8 +177,7 @@ class HymnEditor extends React.Component<Props, State> {
               value={authorNameInput}
               onChangeText={(val: string) => this.setState({authorNameInput: val})}/>
 
-            <ImagePickerModal hymnCoverUri={authorImageUrlInput}/>
-            <Divider style={style.divider} />
+            <Divider style={style.divider}/>
 
             <TextInput
               label="Lyrics"
@@ -133,8 +187,7 @@ class HymnEditor extends React.Component<Props, State> {
               value={lyricsTextEdit}
               onChangeText={(val: string) => this.setState({lyricsTextEdit: val})}/>
 
-            <Button mode="contained" style={style.button}
-                    onPress={this.onDone}>
+            <Button mode="contained" style={style.button} onPress={this.onDone}>
               Done
             </Button>
 
