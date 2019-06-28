@@ -28,13 +28,15 @@ export function getSavedHymnsFromStorage() {
 }
 
 export const SET_SAVED_HYMNS_FROM_STORAGE_REQUEST = "SET_SAVED_HYMNS_FROM_STORAGE_REQUEST";
+export const SET_SAVED_HYMNS_FROM_STORAGE_SUCCESS = "SET_SAVED_HYMNS_FROM_STORAGE_SUCCESS";
 export const SET_SAVED_HYMNS_FROM_STORAGE_ERROR = "SET_SAVED_HYMNS_FROM_STORAGE_ERROR";
 
 export function setSavedHymnToStorage(savedHymns: HymnItem[]) {
   return async function (dispatch: ThunkDispatch<{}, {}, any>) {
     dispatch({type: SET_SAVED_HYMNS_FROM_STORAGE_REQUEST, payload: savedHymns});
     try {
-      StorageUtils.setSavedHymns(savedHymns)
+      await StorageUtils.setSavedHymns(savedHymns);
+      dispatch({type: SET_SAVED_HYMNS_FROM_STORAGE_SUCCESS});
     } catch (err) {
       dispatch({type: SET_SAVED_HYMNS_FROM_STORAGE_ERROR, payload: err})
     }

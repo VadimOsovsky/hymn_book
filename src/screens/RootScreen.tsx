@@ -37,8 +37,8 @@ class RootScreen extends React.Component<Props> {
   componentDidMount(): void {
     this.props.dispatchGetHymns();
 
-    const {isLaunchingApp, isSavedHymnsLoading} = this.props.hymns;
-    if (!isLaunchingApp && !isSavedHymnsLoading) SplashScreen.hide();
+    const {isLaunchingApp, isSavedHymnsLoading, isSavingHymnsToStorage} = this.props.hymns;
+    if (!isLaunchingApp && !isSavedHymnsLoading && !isSavingHymnsToStorage) SplashScreen.hide();
   }
 
   componentWillReceiveProps(nextProps: Readonly<StateProps & DispatchProps & OwnProps & OwnState>, nextContext: any): void {
