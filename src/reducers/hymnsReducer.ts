@@ -49,6 +49,7 @@ export default (state = INITIAL_STATE, action: Action): HymnsInterface => {
     case GET_SAVED_HYMNS_FROM_STORAGE_ERROR:
       return {
         ...state,
+        isLaunchingApp: false,
         isSavedHymnsLoading: false,
         error: action.payload,
       };

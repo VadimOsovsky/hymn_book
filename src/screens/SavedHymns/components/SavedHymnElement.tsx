@@ -53,6 +53,8 @@ class SavedHymnElement extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Readonly<OwnProps & ReduxDispatch>, nextContext: any): void {
+    if (nextProps.isSwipingDisabled) this.closeSwipeableItemActions();
+
     this.setState({
       isHymnSelected: nextProps.isHymnSelected,
       isSwipingDisabled: nextProps.isSwipingDisabled,
@@ -115,14 +117,8 @@ class SavedHymnElement extends React.Component<Props, State> {
                        lightTheme.colors.surface
                    }}
                    description={HymnItem.formatLyricsForPreview(lyrics)}
-                   onPress={() => {
-                     this.closeSwipeableItemActions();
-                     this.props.onPress(this.props.savedHymn);
-                   }}
-                   onLongPress={() => {
-                     this.closeSwipeableItemActions();
-                     this.props.onLongPress(this.props.savedHymn.hymnId);
-                   }}
+                   onPress={() => this.props.onPress(this.props.savedHymn)}
+                   onLongPress={() => this.props.onLongPress(this.props.savedHymn.hymnId)}
                    left={() => <HymnCoverAvatar hymnCoverImage={hymnCoverImage}/>}
         />
       </SwipeableListItem>

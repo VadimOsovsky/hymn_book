@@ -1,13 +1,12 @@
 import React from "react";
 import { ActivityIndicator, Alert, FlatList, StatusBar, Text, View } from "react-native"
-import { Appbar, Searchbar } from "react-native-paper"
+import { Appbar, Searchbar, Surface } from "react-native-paper"
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
 import { connect } from "react-redux";
 import { HymnsInterface } from "../../reducers/hymnsReducer";
 import { NavigationParams } from "react-navigation";
 import globalStyles from "../../styles/globalStyles";
 import SavedHymnElement from "./components/SavedHymnElement";
-import HeaderWrapper from "../../shared/HeaderWrapper";
 import style from "./style";
 import HymnItem from "../../models/HymnItem";
 import { ThunkDispatch } from "redux-thunk";
@@ -15,6 +14,7 @@ import { AppState } from "../../reducers";
 import Action from "../../models/Action";
 import { removeFromSavedHymns } from "../../actions/hymnActions";
 import { lightTheme } from "../../styles/appTheme";
+import Transition from "../../shared/Transition";
 
 interface ReduxState {
   hymns: HymnsInterface
@@ -58,7 +58,7 @@ class SavedHymns extends React.Component<Props, State> {
 
   private closeSearch = () => this.setState({isSearchMode: false});
 
-  private filterSavedHymns = () => {
+  private getFilteredSavedHymns = () => {
     if (this.state.searchQuery) {
       return this.props.hymns.savedHymns.filter((hymn: HymnItem) => {
         return hymn.title.toLowerCase().includes(this.state.searchQuery.toLowerCase())
@@ -86,7 +86,9 @@ class SavedHymns extends React.Component<Props, State> {
   };
 
   private onHymnLongPress = (hymnId: number) => {
-    this.setState({selectedHymns: [...this.state.selectedHymns, hymnId]})
+    if (!this.state.isSearchMode) {
+      this.setState({selectedHymns: [...this.state.selectedHymns, hymnId]})
+    }
   };
 
   private onDeleteSelectedHymns = () => {
@@ -108,47 +110,56 @@ class SavedHymns extends React.Component<Props, State> {
     );
   };
 
-  private renderHeader() {
-    if (this.state.isSearchMode) {
-      return (
-        <HeaderWrapper>
-          <Appbar.Header statusBarHeight={StatusBar.currentHeight} style={{backgroundColor: lightTheme.colors.surface}}>
+  private onSelectAll = () => {
+    const savedHymns = this.getFilteredSavedHymns();
+    const allSelectedHymns: number[] = [];
+
+    savedHymns.forEach((hymn: HymnItem) => allSelectedHymns.push(hymn.hymnId));
+
+    this.setState({selectedHymns: allSelectedHymns})
+  };
+
+  private renderHeader = () => {
+    const hymnsLength = this.state.selectedHymns.length;
+    return (
+      <Surface style={{elevation: 4}}>
+        <Transition visible={this.state.isSearchMode} fade swappingHeader>
+          <Appbar.Header statusBarHeight={StatusBar.currentHeight}
+                         style={{backgroundColor: lightTheme.colors.surface}}>
             <Searchbar
               icon="arrow-back"
               placeholder="Search"
-              style={{elevation: 0}}
+              style={{elevation: 0, backgroundColor: "transparent"}}
               ref={(ref: Searchbar) => this.SearchbarRef = ref}
               onIconPress={this.closeSearch}
               onChangeText={query => this.setState({searchQuery: query})}
               value={this.state.searchQuery}
             />
           </Appbar.Header>
-        </HeaderWrapper>
-      )
-    } else if (this.state.selectedHymns.length) {
-      return (
-        <HeaderWrapper>
-          <Appbar.Header statusBarHeight={StatusBar.currentHeight} style={{backgroundColor: lightTheme.colors.primaryDark}}>
-            <Appbar.BackAction onPress={() => this.setState({
+        </Transition>
+
+        <Transition visible={!!hymnsLength} fade swappingHeader>
+          <Appbar.Header statusBarHeight={StatusBar.currentHeight}
+                         style={{backgroundColor: lightTheme.colors.primaryDark}}>
+            <Appbar.Action icon="close" onPress={() => this.setState({
               selectedHymns: []
             })}/>
-            <Appbar.Content title={"Selected: " + this.state.selectedHymns.length}/>
+            <Appbar.Content title={"Selected: " + hymnsLength}/>
             <Appbar.Action icon="delete" onPress={this.onDeleteSelectedHymns}/>
+            <Appbar.Action icon="select-all" onPress={this.onSelectAll}/>
           </Appbar.Header>
-        </HeaderWrapper>
-      )
-    } else {
-      return (
-        <HeaderWrapper>
+        </Transition>
+
+        <Transition visible={!hymnsLength && !this.state.isSearchMode} fade swappingHeader>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
-            {/*<Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>*/}
+            <Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>
             <Appbar.Content title="My Saved Hymns"/>
             <Appbar.Action icon="search" onPress={this.openSearch}/>
           </Appbar.Header>
-        </HeaderWrapper>
-      )
-    }
-  }
+        </Transition>
+      </Surface>
+    )
+  };
 
   private renderSearchQuery = () => {
     return (
@@ -163,14 +174,14 @@ class SavedHymns extends React.Component<Props, State> {
       return (
         <ActivityIndicator size="large" style={style.noHymns}/>
       )
-    } else if (!this.filterSavedHymns().length) {
+    } else if (!this.getFilteredSavedHymns().length) {
       return (
         <Text style={style.noHymns}>Empty here</Text>
       )
     } else {
       return (
         <FlatList
-          data={this.filterSavedHymns()}
+          data={this.getFilteredSavedHymns()}
           keyExtractor={(item => String(item.hymnId))}
           extraData={this.state.selectedHymns}
           renderItem={({item}) => {
@@ -190,7 +201,7 @@ class SavedHymns extends React.Component<Props, State> {
   };
 
   private renderFAB = () => {
-    if (!this.props.hymns.isSavedHymnsLoading && !this.state.selectedHymns.length) {
+    if (!this.props.hymns.isSavedHymnsLoading && !this.state.selectedHymns.length && !this.state.isSearchMode) {
       return <SavedHymnsFAB navigation={this.props.navigation}/>
     }
   };

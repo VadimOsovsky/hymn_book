@@ -6,7 +6,7 @@ import Action from "../models/Action";
 import { getSavedHymnsFromStorage } from "../actions/hymnActions";
 import { connect } from "react-redux";
 import { HymnsInterface } from "../reducers/hymnsReducer";
-import { StatusBar } from "react-native";
+import { StatusBar, ToastAndroid } from "react-native";
 import { createAppContainer } from "react-navigation";
 import rootStack from "../navigation/rootStack";
 import { Provider as PaperProvider } from "react-native-paper";
@@ -36,15 +36,20 @@ class RootScreen extends React.Component<Props> {
 
   componentDidMount(): void {
     this.props.dispatchGetHymns();
-
-    const {isLaunchingApp, isSavedHymnsLoading, isSavingHymnsToStorage} = this.props.hymns;
-    if (!isLaunchingApp && !isSavedHymnsLoading && !isSavingHymnsToStorage) SplashScreen.hide();
-  }
+    this.hideSplashScreen(this.props);
+  };
 
   componentWillReceiveProps(nextProps: Readonly<StateProps & DispatchProps & OwnProps & OwnState>, nextContext: any): void {
-    const {isLaunchingApp, isSavedHymnsLoading} = nextProps.hymns;
-    if (!isLaunchingApp && !isSavedHymnsLoading) SplashScreen.hide();
-  }
+    this.hideSplashScreen(nextProps);
+  };
+
+  private hideSplashScreen = (props: Props) => {
+    const {isLaunchingApp, isSavedHymnsLoading, error} = props.hymns;
+    if (!isLaunchingApp && !isSavedHymnsLoading) {
+      SplashScreen.hide();
+      if (error) ToastAndroid.show(error, ToastAndroid.LONG)
+    }
+  };
 
   render() {
     return (

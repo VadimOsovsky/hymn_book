@@ -1,14 +1,30 @@
 import React from "react";
-import {View, ScrollView} from "react-native";
-import {Drawer} from 'react-native-paper';
+import { ScrollView, View, Text } from "react-native";
+import { Avatar, Drawer, Title } from 'react-native-paper';
 import StatusBarSafeArea from "../shared/StatusBarSafeArea";
 
 function NavDrawerContent(props: any) {
+
+  const firstName = props.firstName || "Guest";
+  const lastName = props.lastName || "User";
+  const email = props.email || "Enter your Wycliffe account";
 
   return (
     <View style={{height: '100%', justifyContent: 'space-between'}}>
       <StatusBarSafeArea transparent/>
       <ScrollView>
+        <Drawer.Section style={{paddingHorizontal: 10, paddingTop: 10}}>
+          {(() => {
+            if (props.profilePicture) {
+              return <Avatar.Image style={{marginVertical: 10}} source={props.profilePicture} />
+            } else {
+              return <Avatar.Text style={{marginVertical: 10}} label={firstName[0] + lastName[0]}/>
+            }
+          })()}
+          <Title>{`${firstName} ${lastName}`}</Title>
+          <Text style={{marginBottom: 10}}>{email}</Text>
+        </Drawer.Section>
+
         <Drawer.Section>
           {props.items.map((navItem: any) => {
             if (navItem.params.showInDrawer) {
@@ -18,7 +34,10 @@ function NavDrawerContent(props: any) {
                   label={navItem.params.label}
                   icon={navItem.params.icon}
                   active={props.activeItemKey === navItem.key}
-                  onPress={() => props.navigation.navigate(navItem.key)}
+                  onPress={() => {
+                    props.navigation.closeDrawer();
+                    props.navigation.navigate(navItem.key);
+                  }}
                 />
               )
             }

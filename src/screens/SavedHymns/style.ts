@@ -13,5 +13,5 @@ export default StyleSheet.create({
     textAlign: "center",
     margin: 10,
     fontSize: 16
-  }
+  },
 })

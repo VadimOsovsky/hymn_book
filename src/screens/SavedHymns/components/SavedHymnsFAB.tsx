@@ -20,6 +20,7 @@ export default class SavedHymnsFAB extends React.Component<Props, State> {
     return (
       <FAB.Group
         open={this.state.isOpen}
+        style={style}
         icon={this.state.isOpen ? 'close' : 'add'}
         actions={[
           {
@@ -45,7 +46,6 @@ export default class SavedHymnsFAB extends React.Component<Props, State> {
 const style = StyleSheet.create({
   fab: {
     position: 'absolute',
-    margin: 16,
     right: 0,
     bottom: 0,
   },

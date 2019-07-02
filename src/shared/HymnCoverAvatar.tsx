@@ -7,10 +7,10 @@ interface Props {
 }
 
 interface State {
-  hymnCoverSrc: ImageSourcePropType | {uri: string}
+  hymnCoverSrc: ImageSourcePropType | { uri: string }
 }
 
-const DEFAULT_HYMN_COVER_PATH = "../assets/images/hymn_default_cover.png";
+const DEFAULT_HYMN_COVER_PATH = "../assets/images/default_hymn_cover.png";
 
 class HymnCoverAvatar extends React.Component<Props, State> {
 
@@ -20,13 +20,26 @@ class HymnCoverAvatar extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      hymnCoverSrc: {uri: this.props.hymnCoverImage} || require(DEFAULT_HYMN_COVER_PATH),
+      // lateinit
+      hymnCoverSrc: {uri: ""},
     };
   }
 
-  componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
-    this.setState({hymnCoverSrc: {uri: nextProps.hymnCoverImage}})
+  componentWillMount(): void {
+    this.setHymnCoverSrc(this.props.hymnCoverImage)
   }
+
+  componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
+    this.setHymnCoverSrc(nextProps.hymnCoverImage)
+  }
+
+  private setHymnCoverSrc = (src: string) => {
+    if (src) {
+      this.setState({hymnCoverSrc: {uri: src}})
+    } else {
+      this.setState({hymnCoverSrc: require(DEFAULT_HYMN_COVER_PATH)})
+    }
+  };
 
   private showDefaultCover = () => {
     this.setState({hymnCoverSrc: require(DEFAULT_HYMN_COVER_PATH)})

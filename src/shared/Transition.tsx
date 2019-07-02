@@ -4,6 +4,7 @@ import { Animated } from 'react-native';
 interface Props {
   visible: boolean
   duration?: number
+  swappingHeader?: boolean
   style?: StyleMedia
   fade?: boolean
   scale?: boolean
@@ -14,10 +15,10 @@ interface State {
   isFadingOut: boolean
 }
 
-class Fade extends React.Component<Props, State> {
+class Transition extends React.Component<Props, State> {
 
   private visibility = new Animated.Value(this.props.visible ? 1 : 0);
-  private duration: number = this.props.duration || 150;
+  private duration: number = this.props.duration || 200;
 
   constructor(props: Props) {
     super(props);
@@ -49,12 +50,12 @@ class Fade extends React.Component<Props, State> {
   }
 
   render() {
-    const {visible, style, fade, scale, children, ...rest} = this.props;
+    const {visible, style, swappingHeader, fade, scale, children, ...rest} = this.props;
 
     const fadeTransition = {
       opacity: this.visibility.interpolate({
         inputRange: [0, 1],
-        outputRange: [0, 1],
+        outputRange: [!this.state.isFadingOut ? 0 : 1, 1],
       }),
     };
 
@@ -75,13 +76,15 @@ class Fade extends React.Component<Props, State> {
       top: 0,
       left: 0,
       right: 0,
+      zIndex: -1,
     };
     const combinedStyle = [];
 
     if (scale) combinedStyle.push(scaleTransition);
     if (fade) combinedStyle.push(fadeTransition);
     if (this.state.visible) combinedStyle.push(style);
-    if (this.state.isFadingOut) combinedStyle.push(fadingOutStyle);
+    if (swappingHeader && this.state.isFadingOut) combinedStyle.push(fadingOutStyle);
+
     return (
       <Animated.View style={combinedStyle} {...rest}>
         {this.state.visible ? children : null}
@@ -90,4 +93,4 @@ class Fade extends React.Component<Props, State> {
   }
 }
 
-export default Fade;
+export default Transition;

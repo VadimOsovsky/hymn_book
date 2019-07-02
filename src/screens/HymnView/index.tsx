@@ -42,10 +42,6 @@ class HymnView extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount(): void {
-    console.log("VO: this.isPreviewMode", this.isPreviewMode)
-  }
-
   private showHeaderMenu = () => this.setState({isHeaderMenuVisible: true});
   private hideHeaderMenu = () => this.setState({isHeaderMenuVisible: false});
 

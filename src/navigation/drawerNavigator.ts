@@ -12,13 +12,13 @@ const drawerNavigator = createDrawerNavigator(
         showInDrawer: true
       },
       // VO: Temporarily disable navigation
-      navigationOptions: {
-        drawerLockMode: 'locked-open',
-      }
+      // navigationOptions: {
+      //   drawerLockMode: 'locked-open',
+      // }
     },
   },
   {
-    // drawerType: 'back',
+    drawerType: 'back',
     contentComponent: NavDrawerContent
   }
 );

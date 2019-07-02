@@ -81,7 +81,7 @@ class SwipeableListItem extends React.Component<Props, State> {
       },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         const {dx, dy} = gestureState;
-        return dx > 2 || dx < -2 || dy > 2 || dy < -2;
+        return dx > 5 || dx < -5 || dy > 5 || dy < -5;
       }
     });
   };
@@ -98,7 +98,8 @@ class SwipeableListItem extends React.Component<Props, State> {
       // friction: 30,
       speed: 150,
       bounciness: 0
-    }).start();
+      // set panXValue in case this function was invoked from outside
+    }).start(() => this.panXValue = toValue);
   };
 
   render() {

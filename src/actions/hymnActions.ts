@@ -19,6 +19,7 @@ export function getSavedHymnsFromStorage() {
       } else {
         // else it's the first launch, prepopulate with dummy hymns
         const dummyHymns: HymnItem[] = HymnItem.getDummyHymns();
+        dispatch({type: GET_SAVED_HYMNS_FROM_STORAGE_SUCCESS, payload: dummyHymns});
         dispatch(setSavedHymnToStorage(dummyHymns))
       }
     } catch (err) {
