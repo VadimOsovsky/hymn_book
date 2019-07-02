@@ -3,25 +3,21 @@ import { Alert, ScrollView, StatusBar, View } from "react-native";
 import { connect } from "react-redux";
 import globalStyles from "../../styles/globalStyles";
 import HeaderWrapper from "../../shared/HeaderWrapper";
-import { Appbar, Avatar, Button, Divider, TextInput } from "react-native-paper";
+import { Appbar, Button, Divider, TextInput } from "react-native-paper";
 import HymnItem from "../../models/HymnItem";
-import { NavigationParams } from "react-navigation";
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import style from "./style";
 import { screens } from "../../navigation/savedHymnsStack";
-import { HymnsInterface } from "../../reducers/hymnsReducer";
 import { AppState } from "../../reducers";
 import { ThunkDispatch } from "redux-thunk";
 import Action from "../../models/Action";
 import { addToSavedHymns, editSavedHymn } from "../../actions/hymnActions";
 import ImagePickerModal from "./components/ImagePickerModal";
 import HymnCoverAvatar from "../../shared/HymnCoverAvatar";
+import ThemedView from "../../shared/ThemedView";
 
 interface OwnProps {
-  navigation: NavigationParams
-}
-
-interface ReduxState {
-  hymns: HymnsInterface
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 interface ReduxDispatch {
@@ -29,7 +25,7 @@ interface ReduxDispatch {
   editSavedHymn: (newHymn: HymnItem) => void,
 }
 
-type Props = ReduxState & ReduxDispatch & OwnProps
+type Props = AppState & ReduxDispatch & OwnProps
 
 interface State {
   hymnTitleInput: string
@@ -145,7 +141,7 @@ class HymnEditor extends React.Component<Props, State> {
     const {hymnTitleInput, authorNameInput, hymnCoverUri, lyricsTextEdit} = this.state;
 
     return (
-      <View style={globalStyles.screen}>
+      <ThemedView style={globalStyles.screen}>
         <HeaderWrapper>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
             <Appbar.BackAction onPress={this.onGoBack}/>
@@ -159,7 +155,7 @@ class HymnEditor extends React.Component<Props, State> {
         <ScrollView collapsable={true}>
           <View style={style.container}>
             <View style={{alignItems: "center"}}>
-              <HymnCoverAvatar hymnCoverImage={hymnCoverUri} size={120} />
+              <HymnCoverAvatar hymnCoverImage={hymnCoverUri} size={120}/>
               <ImagePickerModal
                 hymnCoverUri={hymnCoverUri}
                 getNewHymnCoverUri={(newHymnCoverUri) => this.setState({hymnCoverUri: newHymnCoverUri})}/>
@@ -183,7 +179,7 @@ class HymnEditor extends React.Component<Props, State> {
               label="Lyrics"
               multiline={true}
               mode="outlined"
-              style={[style.input, style.textEdit]}
+              style={[style.input, {backgroundColor: this.props.prefs.theme.colors.background}]}
               value={lyricsTextEdit}
               onChangeText={(val: string) => this.setState({lyricsTextEdit: val})}/>
 
@@ -198,15 +194,14 @@ class HymnEditor extends React.Component<Props, State> {
           </View>
 
         </ScrollView>
-      </View>
+      </ThemedView>
     )
   }
 }
 
 const mapStateToProps = (state: AppState) => {
-  return {
-    hymns: state.hymns
-  }
+  const {hymns, prefs} = state;
+  return {hymns, prefs};
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {

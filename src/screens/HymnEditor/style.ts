@@ -1,5 +1,4 @@
 import {StyleSheet} from "react-native";
-import {lightTheme} from "../../styles/appTheme";
 
 export default StyleSheet.create({
   container: {
@@ -7,9 +6,6 @@ export default StyleSheet.create({
   },
   input: {
     marginBottom: 15
-  },
-  textEdit: {
-    backgroundColor: lightTheme.colors.surface
   },
   divider: {
     marginTop: 10,

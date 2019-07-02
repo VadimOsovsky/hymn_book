@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Avatar, Button, Dialog, Portal, TextInput } from "react-native-paper"
+import { StyleSheet, View } from "react-native";
+import { Button, Dialog, Portal, Text, TextInput } from "react-native-paper"
 import ImagePicker from 'react-native-image-picker';
 import globalStyles from "../../../styles/globalStyles";
 import HymnCoverAvatar from "../../../shared/HymnCoverAvatar";
@@ -101,7 +101,7 @@ class ImagePickerModal extends React.Component<Props, State> {
     if (imageSrc) {
       return (
         <Dialog.Content style={style.dialogContent}>
-          <HymnCoverAvatar hymnCoverImage={imageSrc} size={120} />
+          <HymnCoverAvatar hymnCoverImage={imageSrc} size={120}/>
           <Text style={style.or}>or</Text>
           <Text style={[globalStyles.pressableText, globalStyles.textCenter]} onPress={this.cancelSelection}>Select
             another image</Text>
@@ -110,7 +110,7 @@ class ImagePickerModal extends React.Component<Props, State> {
     } else if (hymnCoverImageUrlInput) {
       return (
         <Dialog.Content style={style.dialogContent}>
-          <HymnCoverAvatar hymnCoverImage={hymnCoverImageUrlInput} size={120} />
+          <HymnCoverAvatar hymnCoverImage={hymnCoverImageUrlInput} size={120}/>
           <Text style={style.or}/>
           <TextInput
             label="Hymn cover URL"

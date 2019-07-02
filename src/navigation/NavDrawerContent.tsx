@@ -1,28 +1,43 @@
 import React from "react";
-import { ScrollView, View, Text } from "react-native";
-import { Avatar, Drawer, Title } from 'react-native-paper';
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Avatar, Drawer, Text, Title } from 'react-native-paper';
 import StatusBarSafeArea from "../shared/StatusBarSafeArea";
+import { DrawerItemsProps } from "react-navigation";
+import { AppState } from "../reducers";
+import { darkTheme, lightTheme, MyTheme } from "../styles/appTheme";
+import { Dispatch } from "redux";
+import { setTheme } from "../actions/preferencesActions";
+import { connect } from "react-redux";
+import MyCheckbox from "../shared/MyCheckbox";
 
-function NavDrawerContent(props: any) {
+interface ReduxDispatch {
+  setTheme: (theme: MyTheme) => void
+}
 
-  const firstName = props.firstName || "Guest";
-  const lastName = props.lastName || "User";
-  const email = props.email || "Enter your Wycliffe account";
+type Props = DrawerItemsProps & ReduxDispatch & AppState
+
+function NavDrawerContent(props: Props) {
+
+  const firstName = "Guest";
+  const lastName = "User";
+  const email = "Enter your Wycliffe account";
+  const profilePicture = "";
 
   return (
-    <View style={{height: '100%', justifyContent: 'space-between'}}>
+    <View
+      style={{backgroundColor: props.prefs.theme.colors.background, height: '100%', justifyContent: 'space-between'}}>
       <StatusBarSafeArea transparent/>
       <ScrollView>
-        <Drawer.Section style={{paddingHorizontal: 10, paddingTop: 10}}>
+        <Drawer.Section style={style.userSection}>
           {(() => {
-            if (props.profilePicture) {
-              return <Avatar.Image style={{marginVertical: 10}} source={props.profilePicture} />
+            if (profilePicture) {
+              return <Avatar.Image style={style.profilePicture} source={{uri: profilePicture}}/>
             } else {
-              return <Avatar.Text style={{marginVertical: 10}} label={firstName[0] + lastName[0]}/>
+              return <Avatar.Text style={style.profilePicture} label={firstName[0] + lastName[0]}/>
             }
           })()}
-          <Title>{`${firstName} ${lastName}`}</Title>
-          <Text style={{marginBottom: 10}}>{email}</Text>
+          <Title style={style.title}>{`${firstName} ${lastName}`}</Title>
+          <Text style={style.caption}>{email}</Text>
         </Drawer.Section>
 
         <Drawer.Section>
@@ -52,8 +67,50 @@ function NavDrawerContent(props: any) {
           onPress={() => props.navigation.replace("AuthScreen")}
         />
       </Drawer.Section>
+      <MyCheckbox
+        value={props.prefs.theme === darkTheme}
+        label="Night Mode"
+        style={{marginBottom: 10}}
+        textStyle={{color: props.prefs.theme.colors.text, fontFamily: "sans-serif-medium"}}
+        onCheckboxChange={() => props.setTheme(props.prefs.theme !== darkTheme ? darkTheme : lightTheme)}
+      />
     </View>
   )
 }
 
-export default NavDrawerContent;
+const mapStateToProps = (state: AppState) => {
+  const {prefs} = state;
+  return {prefs};
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    setTheme: (theme: MyTheme) => dispatch(setTheme(theme)),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavDrawerContent);
+
+const style = StyleSheet.create({
+  userSection: {
+    paddingTop: 10,
+  },
+  profilePicture: {
+    margin: 10,
+  },
+  title: {
+    marginHorizontal: 10,
+  },
+  caption: {
+    opacity: 0.5,
+    marginBottom: 10,
+    marginHorizontal: 10,
+  },
+  switchContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 10,
+  }
+});
+

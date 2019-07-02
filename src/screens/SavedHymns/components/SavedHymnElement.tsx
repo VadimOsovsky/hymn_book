@@ -1,8 +1,7 @@
 import React from "react";
 import HymnItem from "../../../models/HymnItem";
 import { List } from "react-native-paper";
-import { NavigationParams } from "react-navigation";
-import { lightTheme } from "../../../styles/appTheme";
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import SwipeableListItemAction from "../../../models/SwipeableListItemAction";
 import SwipeableListItem from "../../../shared/SwipeableListItem";
 import { Alert } from "react-native";
@@ -15,7 +14,7 @@ import HymnCoverAvatar from "../../../shared/HymnCoverAvatar";
 
 interface OwnProps {
   savedHymn: HymnItem
-  navigation: NavigationParams
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
   isSwipingDisabled: boolean
   isHymnSelected: boolean
   onPress: (hymn: HymnItem) => void
@@ -26,7 +25,7 @@ interface ReduxDispatch {
   removeFromSavedHymns: (ids: number[]) => void
 }
 
-type Props = OwnProps & ReduxDispatch
+type Props = OwnProps & ReduxDispatch & AppState
 
 interface State {
   isHymnSelected: boolean
@@ -62,18 +61,19 @@ class SavedHymnElement extends React.Component<Props, State> {
   }
 
   private initSwipeActions = () => {
+    const {error, primary} = this.props.prefs.theme.colors;
     this.actions.push(new SwipeableListItemAction(
       'Delete',
       'delete',
       '#FFF',
-      lightTheme.colors.error,
+      error,
       this.showDeleteItemAlert
     ));
     this.actions.push(new SwipeableListItemAction(
       'Edit',
       'edit',
       '#FFF',
-      lightTheme.colors.primary,
+      primary,
       this.editHymn
     ));
   };
@@ -102,6 +102,7 @@ class SavedHymnElement extends React.Component<Props, State> {
 
   render() {
     const {title, lyrics, hymnCoverImage} = this.props.savedHymn;
+    const {highlight, background} = this.props.prefs.theme.colors;
 
     return (
       <SwipeableListItem
@@ -111,11 +112,7 @@ class SavedHymnElement extends React.Component<Props, State> {
         swipingDisabled={this.state.isSwipingDisabled}
       >
         <List.Item title={title}
-                   style={{
-                     backgroundColor: this.state.isHymnSelected ?
-                       lightTheme.colors.highlight :
-                       lightTheme.colors.surface
-                   }}
+                   style={{backgroundColor: this.state.isHymnSelected ? highlight : background}}
                    description={HymnItem.formatLyricsForPreview(lyrics)}
                    onPress={() => this.props.onPress(this.props.savedHymn)}
                    onLongPress={() => this.props.onLongPress(this.props.savedHymn.hymnId)}
@@ -126,10 +123,15 @@ class SavedHymnElement extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = (state: AppState) => {
+  const {prefs} = state;
+  return {prefs};
+};
+
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
     removeFromSavedHymns: (ids: number[]) => dispatch(removeFromSavedHymns(ids)),
   }
 };
 
-export default connect(null, mapDispatchToProps)(SavedHymnElement);
+export default connect(mapStateToProps, mapDispatchToProps)(SavedHymnElement as any);

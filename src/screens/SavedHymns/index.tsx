@@ -3,8 +3,7 @@ import { ActivityIndicator, Alert, FlatList, StatusBar, Text, View } from "react
 import { Appbar, Searchbar, Surface } from "react-native-paper"
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
 import { connect } from "react-redux";
-import { HymnsInterface } from "../../reducers/hymnsReducer";
-import { NavigationParams } from "react-navigation";
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import globalStyles from "../../styles/globalStyles";
 import SavedHymnElement from "./components/SavedHymnElement";
 import style from "./style";
@@ -13,22 +12,18 @@ import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../../reducers";
 import Action from "../../models/Action";
 import { removeFromSavedHymns } from "../../actions/hymnActions";
-import { lightTheme } from "../../styles/appTheme";
 import Transition from "../../shared/Transition";
-
-interface ReduxState {
-  hymns: HymnsInterface
-}
+import ThemedView from "../../shared/ThemedView";
 
 interface ReduxDispatch {
   removeFromSavedHymns: (hymnIds: number[]) => void
 }
 
 interface OwnProps {
-  navigation: NavigationParams
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
-type Props = ReduxState & ReduxDispatch & OwnProps
+type Props = AppState & ReduxDispatch & OwnProps
 
 interface State {
   isSearchMode: boolean,
@@ -125,7 +120,7 @@ class SavedHymns extends React.Component<Props, State> {
       <Surface style={{elevation: 4}}>
         <Transition visible={this.state.isSearchMode} fade swappingHeader>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}
-                         style={{backgroundColor: lightTheme.colors.surface}}>
+                         style={{backgroundColor: this.props.prefs.theme.colors.surface}}>
             <Searchbar
               icon="arrow-back"
               placeholder="Search"
@@ -140,7 +135,7 @@ class SavedHymns extends React.Component<Props, State> {
 
         <Transition visible={!!hymnsLength} fade swappingHeader>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}
-                         style={{backgroundColor: lightTheme.colors.primaryDark}}>
+                         style={{backgroundColor: this.props.prefs.theme.colors.primaryDark}}>
             <Appbar.Action icon="close" onPress={() => this.setState({
               selectedHymns: []
             })}/>
@@ -208,20 +203,20 @@ class SavedHymns extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={globalStyles.screen}>
+      <ThemedView style={globalStyles.screen}>
         {this.renderHeader()}
         {this.renderSearchQuery()}
         {this.renderSavedHymns()}
         {this.renderFAB()}
-      </View>
+      </ThemedView>
     );
   }
 
 }
 
 const mapStateToProps = (state: AppState) => {
-  const {hymns} = state;
-  return {hymns}
+  const {hymns, prefs} = state;
+  return {hymns, prefs}
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {

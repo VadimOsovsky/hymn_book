@@ -5,21 +5,15 @@ import { ThunkDispatch } from "redux-thunk";
 import Action from "../models/Action";
 import { getSavedHymnsFromStorage } from "../actions/hymnActions";
 import { connect } from "react-redux";
-import { HymnsInterface } from "../reducers/hymnsReducer";
 import { StatusBar, ToastAndroid } from "react-native";
 import { createAppContainer } from "react-navigation";
 import rootStack from "../navigation/rootStack";
 import { Provider as PaperProvider } from "react-native-paper";
-import { lightTheme } from "../styles/appTheme";
 
 
 const Navigation = createAppContainer(rootStack);
 
-interface StateProps {
-  hymns: HymnsInterface
-}
-
-interface DispatchProps {
+interface ReduxDispatch {
   dispatchGetHymns: () => void
 }
 
@@ -29,7 +23,7 @@ interface OwnProps {
 interface OwnState {
 }
 
-type Props = StateProps & DispatchProps & OwnProps & OwnState
+type Props = AppState & ReduxDispatch & OwnProps & OwnState
 
 
 class RootScreen extends React.Component<Props> {
@@ -39,7 +33,7 @@ class RootScreen extends React.Component<Props> {
     this.hideSplashScreen(this.props);
   };
 
-  componentWillReceiveProps(nextProps: Readonly<StateProps & DispatchProps & OwnProps & OwnState>, nextContext: any): void {
+  componentWillReceiveProps(nextProps: Readonly<AppState & ReduxDispatch & OwnProps & OwnState>, nextContext: any): void {
     this.hideSplashScreen(nextProps);
   };
 
@@ -53,7 +47,7 @@ class RootScreen extends React.Component<Props> {
 
   render() {
     return (
-      <PaperProvider theme={lightTheme}>
+      <PaperProvider theme={this.props.prefs.theme}>
         <StatusBar translucent={true} backgroundColor="rgba(0,0,0,0.15)"/>
         <Navigation/>
       </PaperProvider>
@@ -62,9 +56,8 @@ class RootScreen extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: AppState) => {
-  return {
-    hymns: state.hymns
-  }
+  const {hymns, prefs} = state;
+  return {hymns, prefs};
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {

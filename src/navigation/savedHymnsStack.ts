@@ -30,5 +30,5 @@ export default createStackNavigator({
     navigationOptions: {title: screens.HYMN_EDITOR, header: null}
   },
 }, {
-  initialRouteName: 'SavedHymns',
+  initialRouteName: screens.SAVED_HYMNS,
 })

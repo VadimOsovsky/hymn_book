@@ -1,12 +1,30 @@
-import { Colors, DefaultTheme } from "react-native-paper";
+import { Colors, DefaultTheme, Theme } from "react-native-paper";
 
-export const lightTheme = {
+export interface MyTheme extends Theme {
+  colors: {
+    primary: string
+    primaryDark: string
+    background: string
+    surface: string
+    accent: string
+    error: string
+    text: string
+    disabled: string
+    placeholder: string
+    backdrop: string
+    highlight: string
+    surfaceAlt: string
+  }
+}
+
+export const lightTheme: MyTheme = {
   ...DefaultTheme,
   dark: false,
   colors: {
     ...DefaultTheme.colors,
     primary: Colors.teal500,
-    primaryDark: Colors.teal700,
+    primaryDark: "#34495d",
+    background: "#F9F9F9",
     accent: Colors.teal500,
     highlight: "#DDD",
     surfaceAlt: Colors.black,
@@ -14,6 +32,21 @@ export const lightTheme = {
   }
 };
 
-export const darkTheme = {
-
+export const darkTheme: MyTheme = {
+  ...DefaultTheme,
+  dark: true,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: Colors.teal500,
+    primaryDark: Colors.teal700,
+    background: "#363e4d",
+    surface: "#34495d",
+    accent: Colors.teal500,
+    error: Colors.redA200,
+    text: Colors.white,
+    disabled: Colors.grey500,
+    placeholder: Colors.grey400,
+    highlight: "#435d77",
+    surfaceAlt: Colors.white,
+  }
 };

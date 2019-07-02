@@ -1,7 +1,7 @@
 import React from "react";
-import { Alert, ScrollView, StatusBar, Text, View } from "react-native"
-import { Appbar, Menu } from "react-native-paper";
-import { NavigationParams } from "react-navigation";
+import { Alert, ScrollView, StatusBar, View } from "react-native"
+import { Appbar, Menu, Text } from "react-native-paper";
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import globalStyles from "../../styles/globalStyles";
 import HymnItem from "../../models/HymnItem";
 import style from "./style";
@@ -12,18 +12,17 @@ import { AppState } from "../../reducers";
 import Action from "../../models/Action";
 import { connect } from "react-redux";
 import { screens } from "../../navigation/savedHymnsStack";
-import { lightTheme } from "../../styles/appTheme";
+import ThemedView from "../../shared/ThemedView";
 
 interface OwnProps {
-  // default
-  navigation: NavigationParams
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 interface ReduxDispatch {
   removeFromSavedHymns: (ids: number[]) => void
 }
 
-type Props = OwnProps & ReduxDispatch
+type Props = OwnProps & ReduxDispatch & AppState
 
 interface State {
   isHeaderMenuVisible: boolean
@@ -87,7 +86,7 @@ class HymnView extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={globalStyles.screen}>
+      <ThemedView style={globalStyles.screen}>
         <HeaderWrapper>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
             <Appbar.BackAction onPress={() => this.props.navigation.goBack()}/>
@@ -98,13 +97,18 @@ class HymnView extends React.Component<Props, State> {
 
         <ScrollView>
           <View style={style.lyricsView}>
-            <Text style={[style.lyricsText, {color: lightTheme.colors.text}]}>{this.hymnToView.lyrics}</Text>
+            <Text style={style.lyricsText}>{this.hymnToView.lyrics}</Text>
           </View>
         </ScrollView>
-      </View>
+      </ThemedView>
     );
   }
 }
+
+const mapStateToProps = (state: AppState) => {
+  const {prefs} = state;
+  return {prefs};
+};
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
@@ -112,4 +116,4 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => 
   }
 };
 
-export default connect(null, mapDispatchToProps)(HymnView);
+export default connect(mapStateToProps, mapDispatchToProps)(HymnView);

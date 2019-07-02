@@ -1,13 +1,13 @@
 import React from "react";
-import { View, ImageBackground, Text } from "react-native";
+import { ImageBackground, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient"
 import style from "./style";
 import AppLogo from "../../shared/AppLogo";
 import Login from "./components/Login";
-import {NavigationParams} from "react-navigation";
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 
 interface Props {
-  navigation: NavigationParams
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 class AuthScreen extends React.Component<Props> {
@@ -23,8 +23,8 @@ class AuthScreen extends React.Component<Props> {
           colors={["rgba(0,243,201,0.5)", "rgba(8,111,134,0.8)"]}
           locations={[0, 0.9]}>
           <View style={style.container}>
-            <AppLogo />
-            <Login navigation={this.props.navigation} />
+            <AppLogo/>
+            <Login navigation={this.props.navigation}/>
           </View>
         </LinearGradient>
       </ImageBackground>

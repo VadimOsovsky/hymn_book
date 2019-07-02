@@ -1,10 +1,10 @@
 import React from 'react';
 import { FAB } from 'react-native-paper';
-import { NavigationParams } from "react-navigation";
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { StyleSheet, ToastAndroid } from "react-native";
 
 interface Props {
-  navigation: NavigationParams
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 interface State {

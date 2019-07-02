@@ -1,10 +1,10 @@
 import React from "react"
 import {StyleSheet, View} from "react-native";
 import {Button, Colors, TextInput} from "react-native-paper";
-import {NavigationParams} from "react-navigation";
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 
 interface Props {
-  navigation: NavigationParams
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
 }
 
 interface State {

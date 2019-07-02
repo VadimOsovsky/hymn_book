@@ -8,5 +8,6 @@ export default StyleSheet.create({
   },
   lyricsText: {
     fontSize: 17,
+    opacity: 0.85,
   }
 })
