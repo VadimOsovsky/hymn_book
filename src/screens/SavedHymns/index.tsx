@@ -55,11 +55,11 @@ class SavedHymns extends React.Component<Props, State> {
 
   private getFilteredSavedHymns = () => {
     if (this.state.searchQuery) {
-      return this.props.hymns.savedHymns.filter((hymn: HymnItem) => {
+      return this.props.hymns!.savedHymns.filter((hymn: HymnItem) => {
         return hymn.title.toLowerCase().includes(this.state.searchQuery.toLowerCase())
       })
     } else {
-      return this.props.hymns.savedHymns
+      return this.props.hymns!.savedHymns
     }
   };
 
@@ -120,7 +120,7 @@ class SavedHymns extends React.Component<Props, State> {
       <Surface style={{elevation: 4}}>
         <Transition visible={this.state.isSearchMode} fade swappingHeader>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}
-                         style={{backgroundColor: this.props.prefs.theme.colors.surface}}>
+                         style={{backgroundColor: this.props.prefs!.theme.colors.surface}}>
             <Searchbar
               icon="arrow-back"
               placeholder="Search"
@@ -135,7 +135,7 @@ class SavedHymns extends React.Component<Props, State> {
 
         <Transition visible={!!hymnsLength} fade swappingHeader>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}
-                         style={{backgroundColor: this.props.prefs.theme.colors.primaryDark}}>
+                         style={{backgroundColor: this.props.prefs!.theme.colors.primaryDark}}>
             <Appbar.Action icon="close" onPress={() => this.setState({
               selectedHymns: []
             })}/>
@@ -165,7 +165,7 @@ class SavedHymns extends React.Component<Props, State> {
   };
 
   private renderSavedHymns = () => {
-    if (this.props.hymns.isSavedHymnsLoading) {
+    if (this.props.hymns!.isSavedHymnsLoading) {
       return (
         <ActivityIndicator size="large" style={style.noHymns}/>
       )
@@ -196,7 +196,7 @@ class SavedHymns extends React.Component<Props, State> {
   };
 
   private renderFAB = () => {
-    if (!this.props.hymns.isSavedHymnsLoading && !this.state.selectedHymns.length && !this.state.isSearchMode) {
+    if (!this.props.hymns!.isSavedHymnsLoading && !this.state.selectedHymns.length && !this.state.isSearchMode) {
       return <SavedHymnsFAB navigation={this.props.navigation}/>
     }
   };

@@ -61,7 +61,7 @@ class SavedHymnElement extends React.Component<Props, State> {
   }
 
   private initSwipeActions = () => {
-    const {error, primary} = this.props.prefs.theme.colors;
+    const {error, primary} = this.props.prefs!.theme.colors;
     this.actions.push(new SwipeableListItemAction(
       'Delete',
       'delete',
@@ -102,7 +102,7 @@ class SavedHymnElement extends React.Component<Props, State> {
 
   render() {
     const {title, lyrics, hymnCoverImage} = this.props.savedHymn;
-    const {highlight, background} = this.props.prefs.theme.colors;
+    const {highlight, background} = this.props.prefs!.theme.colors;
 
     return (
       <SwipeableListItem
@@ -134,4 +134,4 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => 
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SavedHymnElement as any);
+export default connect(mapStateToProps, mapDispatchToProps)(SavedHymnElement);
