@@ -18,7 +18,7 @@ class ThemedView extends PureComponent<Props> {
 
   render() {
     const {children, style, prefs, ...rest} = this.props;
-    return <View style={[{backgroundColor: prefs.theme.colors.background}, style]} {...rest}>{children}</View>
+    return <View style={[{backgroundColor: prefs!.userPrefs.theme.colors.background}, style]} {...rest}>{children}</View>
   }
 }
 

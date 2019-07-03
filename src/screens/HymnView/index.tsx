@@ -13,6 +13,7 @@ import Action from "../../models/Action";
 import { connect } from "react-redux";
 import { screens } from "../../navigation/savedHymnsStack";
 import ThemedView from "../../shared/ThemedView";
+import i18n from "../../i18n";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
@@ -53,11 +54,11 @@ class HymnView extends React.Component<Props, State> {
     this.hideHeaderMenu();
     Alert.alert(
       this.hymnToView.title,
-      'Would you like to remove this song from Saved Hymns?',
+      i18n.t('delete_selected_message', {count: 1}),
       [
-        {text: 'Cancel', style: 'cancel'},
+        {text: i18n.t('btn_cancel'), style: 'cancel'},
         {
-          text: 'OK', onPress: () => {
+          text: i18n.t('btn_ok'), onPress: () => {
             this.props.removeFromSavedHymns([this.hymnToView.hymnId]);
             this.props.navigation.goBack();
           }
@@ -77,8 +78,8 @@ class HymnView extends React.Component<Props, State> {
             <Appbar.Action onPress={this.showHeaderMenu} icon="more-vert" color="#FFF"/>
           }
         >
-          <Menu.Item onPress={this.onEdit} title="Edit Hymn"/>
-          <Menu.Item onPress={this.onDelete} title="Delete from Saved"/>
+          <Menu.Item onPress={this.onEdit} title={i18n.t('edit_hymn')}/>
+          <Menu.Item onPress={this.onDelete} title={i18n.t('delete_from_saved')}/>
         </Menu>
       )
     }
@@ -90,7 +91,7 @@ class HymnView extends React.Component<Props, State> {
         <HeaderWrapper>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
             <Appbar.BackAction onPress={() => this.props.navigation.goBack()}/>
-            <Appbar.Content title={this.hymnToView.title || "Unknown title"}/>
+            <Appbar.Content title={this.hymnToView.title || i18n.t('unknown_title')}/>
             {this.renderHeaderMenu()}
           </Appbar.Header>
         </HeaderWrapper>

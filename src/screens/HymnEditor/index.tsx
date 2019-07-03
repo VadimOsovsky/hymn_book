@@ -15,6 +15,7 @@ import { addToSavedHymns, editSavedHymn } from "../../actions/hymnActions";
 import ImagePickerModal from "./components/ImagePickerModal";
 import HymnCoverAvatar from "../../shared/HymnCoverAvatar";
 import ThemedView from "../../shared/ThemedView";
+import i18n from "../../i18n";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
@@ -41,7 +42,7 @@ class HymnEditor extends React.Component<Props, State> {
   };
 
   // get empty hymn in case of adding new hymn
-  private hymnToEdit: HymnItem = this.props.navigation.getParam('hymnToEdit') || HymnItem.getEmptyHymn(this.props.hymns.savedHymns);
+  private hymnToEdit: HymnItem = this.props.navigation.getParam('hymnToEdit') || HymnItem.getEmptyHymn(this.props.hymns!.savedHymns);
   private isAddNew: boolean = !this.props.navigation.getParam('hymnToEdit');
 
   private inputToFocusOnOpenRef: TextInput | undefined;
@@ -59,12 +60,6 @@ class HymnEditor extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount(): void {
-    this.navFocusListener = this.props.navigation.addListener('didFocus', () => {
-      // this.isAddNew && this.inputToFocusOnOpenRef && this.inputToFocusOnOpenRef.focus()
-    });
-  }
-
   private onDone = () => {
     if (this.isAddNew) {
       this.saveAndExit()
@@ -72,11 +67,11 @@ class HymnEditor extends React.Component<Props, State> {
       this.discardAndExit()
     } else {
       Alert.alert(
-        "Save and exit",
-        "Would you like to save the changes?",
+        i18n.t('save_changes_title'),
+        i18n.t('save_changes_message'),
         [
-          {text: "Cancel"},
-          {text: "Save", onPress: this.saveAndExit},
+          {text: i18n.t('btn_cancel')},
+          {text: i18n.t('btn_save'), onPress: this.saveAndExit},
         ]
       )
     }
@@ -87,12 +82,12 @@ class HymnEditor extends React.Component<Props, State> {
       this.discardAndExit()
     } else {
       Alert.alert(
-        "Attention",
-        "You have made changes to the hymn, would you like to save them?",
+        i18n.t('discard_changes_title'),
+        i18n.t('discard_changes_message'),
         [
-          {text: "Cancel"},
-          {text: "Discard", onPress: this.discardAndExit},
-          {text: "Save", onPress: this.saveAndExit},
+          {text: i18n.t('btn_cancel')},
+          {text: i18n.t('btn_discard'), onPress: this.discardAndExit},
+          {text: i18n.t('btn_save'), onPress: this.saveAndExit},
         ]
       )
     }
@@ -146,7 +141,7 @@ class HymnEditor extends React.Component<Props, State> {
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
             <Appbar.BackAction onPress={this.onGoBack}/>
             <Appbar.Content
-              title={this.isAddNew ? "Add New Hymn" : "Edit Hymn"}
+              title={this.isAddNew ? i18n.t('add_new_hymn') : i18n.t('edit_hymn')}
             />
             <Appbar.Action icon={"check"} onPress={this.onDone}/>
           </Appbar.Header>
@@ -163,12 +158,12 @@ class HymnEditor extends React.Component<Props, State> {
 
             <TextInput
               ref={(ref: TextInput) => this.inputToFocusOnOpenRef = ref}
-              label="Hymn title"
+              label={i18n.t('hymn_title')}
               style={style.input}
               value={hymnTitleInput}
               onChangeText={(val: string) => this.setState({hymnTitleInput: val})}/>
             <TextInput
-              label="Author name"
+              label={i18n.t('author_name')}
               style={style.input}
               value={authorNameInput}
               onChangeText={(val: string) => this.setState({authorNameInput: val})}/>
@@ -176,19 +171,19 @@ class HymnEditor extends React.Component<Props, State> {
             <Divider style={style.divider}/>
 
             <TextInput
-              label="Lyrics"
+              label={i18n.t('lyrics')}
               multiline={true}
               mode="outlined"
-              style={[style.input, {backgroundColor: this.props.prefs.theme.colors.background}]}
+              style={[style.input, {backgroundColor: this.props.prefs!.userPrefs.theme.colors.background}]}
               value={lyricsTextEdit}
               onChangeText={(val: string) => this.setState({lyricsTextEdit: val})}/>
 
             <Button mode="contained" style={style.button} onPress={this.onDone}>
-              Done
+              {i18n.t('btn_done')}
             </Button>
 
             <Button style={style.button} onPress={this.onPreview}>
-              Preview
+              {i18n.t('btn_preview')}
             </Button>
 
           </View>

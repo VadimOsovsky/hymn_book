@@ -28,18 +28,18 @@ export function getSavedHymnsFromStorage() {
   }
 }
 
-export const SET_SAVED_HYMNS_FROM_STORAGE_REQUEST = "SET_SAVED_HYMNS_FROM_STORAGE_REQUEST";
-export const SET_SAVED_HYMNS_FROM_STORAGE_SUCCESS = "SET_SAVED_HYMNS_FROM_STORAGE_SUCCESS";
-export const SET_SAVED_HYMNS_FROM_STORAGE_ERROR = "SET_SAVED_HYMNS_FROM_STORAGE_ERROR";
+export const SET_SAVED_HYMNS_TO_STORAGE_REQUEST = "SET_SAVED_HYMNS_TO_STORAGE_REQUEST";
+export const SET_SAVED_HYMNS_TO_STORAGE_SUCCESS = "SET_SAVED_HYMNS_TO_STORAGE_SUCCESS";
+export const SET_SAVED_HYMNS_TO_STORAGE_ERROR = "SET_SAVED_HYMNS_TO_STORAGE_ERROR";
 
 export function setSavedHymnToStorage(savedHymns: HymnItem[]) {
   return async function (dispatch: ThunkDispatch<{}, {}, any>) {
-    dispatch({type: SET_SAVED_HYMNS_FROM_STORAGE_REQUEST, payload: savedHymns});
+    dispatch({type: SET_SAVED_HYMNS_TO_STORAGE_REQUEST, payload: savedHymns});
     try {
       await StorageUtils.setSavedHymns(savedHymns);
-      dispatch({type: SET_SAVED_HYMNS_FROM_STORAGE_SUCCESS});
+      dispatch({type: SET_SAVED_HYMNS_TO_STORAGE_SUCCESS});
     } catch (err) {
-      dispatch({type: SET_SAVED_HYMNS_FROM_STORAGE_ERROR, payload: err})
+      dispatch({type: SET_SAVED_HYMNS_TO_STORAGE_ERROR, payload: err})
     }
   }
 }
@@ -48,7 +48,7 @@ export const ADD_TO_SAVED_HYMNS = "ADD_TO_SAVED_HYMNS";
 
 export function addToSavedHymns(newHymn: HymnItem) {
   return (dispatch: ThunkDispatch<{}, {}, any>, getState: () => AppState) => {
-    const updatedSavedHymns: HymnItem[] = [newHymn, ...getState().hymns.savedHymns];
+    const updatedSavedHymns: HymnItem[] = [newHymn, ...getState().hymns!.savedHymns];
 
     dispatch(setSavedHymnToStorage(updatedSavedHymns));
     return {type: ADD_TO_SAVED_HYMNS, payload: updatedSavedHymns}
@@ -59,7 +59,7 @@ export const EDIT_SAVED_HYMN = "EDIT_SAVED_HYMN";
 
 export function editSavedHymn(updatedHymn: HymnItem) {
   return (dispatch: ThunkDispatch<{}, {}, any>, getState: () => AppState) => {
-    const savedHymns: HymnItem[] = _.clone(getState().hymns.savedHymns);
+    const savedHymns: HymnItem[] = _.clone(getState().hymns!.savedHymns);
 
     savedHymns.forEach((hymn: HymnItem, index: number) => {
       if (hymn.hymnId === updatedHymn.hymnId) savedHymns[index] = updatedHymn;
@@ -74,7 +74,7 @@ export const REMOVE_FROM_SAVED_HYMNS = "REMOVE_FROM_SAVED_HYMNS";
 
 export function removeFromSavedHymns(hymnIds: number[]) {
   return (dispatch: ThunkDispatch<{}, {}, any>, getState: () => AppState) => {
-    const oldSavedHymns: HymnItem[] = getState().hymns.savedHymns;
+    const oldSavedHymns: HymnItem[] = getState().hymns!.savedHymns;
     const updatedSavedHymns: HymnItem[] = [];
 
     oldSavedHymns.forEach((hymn: HymnItem) => {

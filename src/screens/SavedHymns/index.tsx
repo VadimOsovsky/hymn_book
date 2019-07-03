@@ -1,6 +1,6 @@
 import React from "react";
-import { ActivityIndicator, Alert, FlatList, StatusBar, Text, View } from "react-native"
-import { Appbar, Searchbar, Surface } from "react-native-paper"
+import { ActivityIndicator, Alert, FlatList, StatusBar } from "react-native"
+import { Appbar, Searchbar, Surface, Text } from "react-native-paper"
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
 import { connect } from "react-redux";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
@@ -14,6 +14,8 @@ import Action from "../../models/Action";
 import { removeFromSavedHymns } from "../../actions/hymnActions";
 import Transition from "../../shared/Transition";
 import ThemedView from "../../shared/ThemedView";
+import i18n from "../../i18n";
+import { screens } from "../../navigation/savedHymnsStack";
 
 interface ReduxDispatch {
   removeFromSavedHymns: (hymnIds: number[]) => void
@@ -76,7 +78,7 @@ class SavedHymns extends React.Component<Props, State> {
 
       this.setState({selectedHymns: newSelectedHymnsArray})
     } else {
-      this.props.navigation.navigate('HymnView', {hymnToView: hymn})
+      this.props.navigation.navigate(screens.HYMN_VIEW, {hymnToView: hymn})
     }
   };
 
@@ -87,16 +89,13 @@ class SavedHymns extends React.Component<Props, State> {
   };
 
   private onDeleteSelectedHymns = () => {
-    const {selectedHymns} = this.state;
-    const hymnsNumber = selectedHymns.length === 1 ? `this song` : `these ${selectedHymns.length} songs`;
-
     Alert.alert(
-      "Delete Hymns",
-      `Are you sure you want to delete ${hymnsNumber} from Saved Hymns?`,
+      i18n.t('delete_selected_title'),
+      i18n.t('delete_selected_message', {count: this.state.selectedHymns.length}),
       [
-        {text: "Cancel"},
+        {text: i18n.t('btn_cancel')},
         {
-          text: "Delete", onPress: () => {
+          text: i18n.t('btn_delete'), onPress: () => {
             this.props.removeFromSavedHymns(this.state.selectedHymns);
             this.setState({selectedHymns: []});
           }
@@ -117,13 +116,13 @@ class SavedHymns extends React.Component<Props, State> {
   private renderHeader = () => {
     const hymnsLength = this.state.selectedHymns.length;
     return (
-      <Surface style={{elevation: 4}}>
+      <Surface style={{elevation: 4, backgroundColor: this.props.prefs!.userPrefs.theme.colors.primary}}>
         <Transition visible={this.state.isSearchMode} fade swappingHeader>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}
-                         style={{backgroundColor: this.props.prefs!.theme.colors.surface}}>
+                         style={{backgroundColor: this.props.prefs!.userPrefs.theme.colors.surface}}>
             <Searchbar
               icon="arrow-back"
-              placeholder="Search"
+              placeholder={i18n.t('search')}
               style={{elevation: 0, backgroundColor: "transparent"}}
               ref={(ref: Searchbar) => this.SearchbarRef = ref}
               onIconPress={this.closeSearch}
@@ -135,11 +134,11 @@ class SavedHymns extends React.Component<Props, State> {
 
         <Transition visible={!!hymnsLength} fade swappingHeader>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}
-                         style={{backgroundColor: this.props.prefs!.theme.colors.primaryDark}}>
+                         style={{backgroundColor: this.props.prefs!.userPrefs.theme.colors.primaryDark}}>
             <Appbar.Action icon="close" onPress={() => this.setState({
               selectedHymns: []
             })}/>
-            <Appbar.Content title={"Selected: " + hymnsLength}/>
+            <Appbar.Content title={i18n.t("hymns_selected", {selectedNumber: hymnsLength})}/>
             <Appbar.Action icon="delete" onPress={this.onDeleteSelectedHymns}/>
             <Appbar.Action icon="select-all" onPress={this.onSelectAll}/>
           </Appbar.Header>
@@ -148,7 +147,7 @@ class SavedHymns extends React.Component<Props, State> {
         <Transition visible={!hymnsLength && !this.state.isSearchMode} fade swappingHeader>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
             <Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>
-            <Appbar.Content title="My Saved Hymns"/>
+            <Appbar.Content title={i18n.t('my_saved_hymns')}/>
             <Appbar.Action icon="search" onPress={this.openSearch}/>
           </Appbar.Header>
         </Transition>
@@ -157,10 +156,9 @@ class SavedHymns extends React.Component<Props, State> {
   };
 
   private renderSearchQuery = () => {
+    const query = this.state.searchQuery;
     return (
-      <Text style={[style.searchQuery, {display: this.state.searchQuery ? "flex" : "none"}]}>
-        Results found for: {this.state.searchQuery}
-      </Text>
+      <Text style={[style.searchQuery, {display: query ? "flex" : "none"}]}>{i18n.t('search_results', {query})}</Text>
     )
   };
 
@@ -171,7 +169,7 @@ class SavedHymns extends React.Component<Props, State> {
       )
     } else if (!this.getFilteredSavedHymns().length) {
       return (
-        <Text style={style.noHymns}>Empty here</Text>
+        <Text style={style.noHymns}>{i18n.t('no_hymns')}</Text>
       )
     } else {
       return (

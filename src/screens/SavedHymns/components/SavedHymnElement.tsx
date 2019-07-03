@@ -11,6 +11,8 @@ import Action from "../../../models/Action";
 import { removeFromSavedHymns } from "../../../actions/hymnActions";
 import { connect } from "react-redux";
 import HymnCoverAvatar from "../../../shared/HymnCoverAvatar";
+import { screens } from "../../../navigation/savedHymnsStack";
+import i18n from "../../../i18n";
 
 interface OwnProps {
   savedHymn: HymnItem
@@ -61,16 +63,16 @@ class SavedHymnElement extends React.Component<Props, State> {
   }
 
   private initSwipeActions = () => {
-    const {error, primary} = this.props.prefs!.theme.colors;
+    const {error, primary} = this.props.prefs!.userPrefs.theme.colors;
     this.actions.push(new SwipeableListItemAction(
-      'Delete',
+      i18n.t('btn_delete'),
       'delete',
       '#FFF',
       error,
       this.showDeleteItemAlert
     ));
     this.actions.push(new SwipeableListItemAction(
-      'Edit',
+      i18n.t('btn_edit'),
       'edit',
       '#FFF',
       primary,
@@ -83,17 +85,17 @@ class SavedHymnElement extends React.Component<Props, State> {
 
     Alert.alert(
       this.props.savedHymn.title,
-      'Would you like to remove this song from Saved Hymns?',
+      i18n.t('delete_selected_message', {count: 1}),
       [
-        {text: 'Cancel', style: 'cancel'},
-        {text: 'OK', onPress: this.deleteHymn},
+        {text: i18n.t('btn_cancel'), style: 'cancel'},
+        {text: i18n.t('btn_ok'), onPress: this.deleteHymn},
       ],
     );
   };
 
   private editHymn = () => {
     this.closeSwipeableItemActions();
-    this.props.navigation.navigate("HymnEditor", {hymnToEdit: this.props.savedHymn});
+    this.props.navigation.navigate(screens.HYMN_EDITOR, {hymnToEdit: this.props.savedHymn});
   };
 
   private deleteHymn = () => this.props.removeFromSavedHymns([this.props.savedHymn.hymnId]);
@@ -102,7 +104,7 @@ class SavedHymnElement extends React.Component<Props, State> {
 
   render() {
     const {title, lyrics, hymnCoverImage} = this.props.savedHymn;
-    const {highlight, background} = this.props.prefs!.theme.colors;
+    const {highlight, background} = this.props.prefs!.userPrefs.theme.colors;
 
     return (
       <SwipeableListItem

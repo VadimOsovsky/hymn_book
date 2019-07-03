@@ -3,6 +3,7 @@ import savedHymnsStack from "./savedHymnsStack";
 import NavDrawerContent from "./NavDrawerContent";
 import settingsStack from "./settingsStack";
 import groupsStack from "./groupsStack";
+import i18n from '../i18n';
 
 const drawerNavigator = createDrawerNavigator(
   {
@@ -10,7 +11,7 @@ const drawerNavigator = createDrawerNavigator(
       screen: savedHymnsStack,
       params: {
         icon: "star",
-        label: "Saved hymns",
+        label: i18n.t('route_saved_hymns'),
         showInDrawer: true
       }
     },
@@ -18,7 +19,7 @@ const drawerNavigator = createDrawerNavigator(
       screen: groupsStack,
       params: {
         icon: "people",
-        label: "My Groups",
+        label: i18n.t('route_my_groups'),
         showInDrawer: true
       }
     },
@@ -26,7 +27,7 @@ const drawerNavigator = createDrawerNavigator(
       screen: settingsStack,
       params: {
         icon: "settings",
-        label: "Settings",
+        label: i18n.t('route_settings'),
         showInDrawer: true
       }
     },

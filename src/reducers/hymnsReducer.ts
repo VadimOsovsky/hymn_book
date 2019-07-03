@@ -5,9 +5,9 @@ import {
   GET_SAVED_HYMNS_FROM_STORAGE_ERROR,
   GET_SAVED_HYMNS_FROM_STORAGE_REQUEST,
   GET_SAVED_HYMNS_FROM_STORAGE_SUCCESS,
-  SET_SAVED_HYMNS_FROM_STORAGE_ERROR,
-  SET_SAVED_HYMNS_FROM_STORAGE_REQUEST,
-  SET_SAVED_HYMNS_FROM_STORAGE_SUCCESS
+  SET_SAVED_HYMNS_TO_STORAGE_ERROR,
+  SET_SAVED_HYMNS_TO_STORAGE_REQUEST,
+  SET_SAVED_HYMNS_TO_STORAGE_SUCCESS
 } from "../actions/hymnActions";
 import Action from "../models/Action";
 
@@ -54,20 +54,20 @@ export default (state = INITIAL_STATE, action: Action): HymnsInterface => {
         error: action.payload,
       };
 
-    case SET_SAVED_HYMNS_FROM_STORAGE_REQUEST:
+    case SET_SAVED_HYMNS_TO_STORAGE_REQUEST:
       return {
         ...state,
         isSavingHymnsToStorage: true,
         savedHymns: action.payload,
       };
 
-    case SET_SAVED_HYMNS_FROM_STORAGE_SUCCESS:
+    case SET_SAVED_HYMNS_TO_STORAGE_SUCCESS:
       return {
         ...state,
         isSavingHymnsToStorage: false,
       };
 
-    case SET_SAVED_HYMNS_FROM_STORAGE_ERROR:
+    case SET_SAVED_HYMNS_TO_STORAGE_ERROR:
       return {
         ...state,
         isSavingHymnsToStorage: false,

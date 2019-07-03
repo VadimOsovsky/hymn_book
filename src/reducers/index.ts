@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import hymnsReducer, { HymnsInterface } from "./hymnsReducer";
-import preferencesReducer, { PreferencesInterface } from "./preferencesReducer";
+import preferencesReducer, { Preferences } from "./preferencesReducer";
 
 export interface AppState {
   hymns?: HymnsInterface
-  prefs?: PreferencesInterface
+  prefs?: Preferences
 }
 
 export default combineReducers({

@@ -2,6 +2,8 @@ import React from 'react';
 import { FAB } from 'react-native-paper';
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { StyleSheet, ToastAndroid } from "react-native";
+import { screens } from "../../../navigation/savedHymnsStack";
+import i18n from '../../../i18n';
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
@@ -25,10 +27,10 @@ export default class SavedHymnsFAB extends React.Component<Props, State> {
         actions={[
           {
             icon: 'playlist-add',
-            label: 'Add manually',
-            onPress: () => this.props.navigation.navigate("HymnEditor", {hymnToEdit: null})
+            label: i18n.t('add_hymn_manually'),
+            onPress: () => this.props.navigation.navigate(screens.HYMN_EDITOR, {hymnToEdit: null})
           },
-          {icon: 'cloud-upload', label: 'Import file', onPress: () => ToastAndroid.show('Import WIP', ToastAndroid.SHORT)},
+          {icon: 'cloud-upload', label: i18n.t('import_files'), onPress: () => ToastAndroid.show('Import WIP', ToastAndroid.SHORT)},
         ]}
         onStateChange={({open: isOpen}) => this.setState({isOpen})}
       />
@@ -37,7 +39,7 @@ export default class SavedHymnsFAB extends React.Component<Props, State> {
     //   <FAB
     //     icon={this.state.isOpen ? 'close' : 'add'}
     //     style={style.fab}
-    //     onPress={() => this.props.navigation.navigate("HymnEditor", {hymnToEdit: null})}
+    //     onPress={() => this.props.navigation.navigate(screens.HYMN_EDITOR, {hymnToEdit: null})}
     //   />
     // )
   }

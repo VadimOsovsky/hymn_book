@@ -1,6 +1,5 @@
 import React, {ReactChild, ReactChildren} from 'react';
 import {Surface} from "react-native-paper";
-import StatusBarSafeArea from "./StatusBarSafeArea";
 import { Props as StatusBarSafeAreaProps } from "./StatusBarSafeArea";
 
 interface Props extends StatusBarSafeAreaProps{

@@ -4,6 +4,7 @@ import { Button, Dialog, Portal, Text, TextInput } from "react-native-paper"
 import ImagePicker from 'react-native-image-picker';
 import globalStyles from "../../../styles/globalStyles";
 import HymnCoverAvatar from "../../../shared/HymnCoverAvatar";
+import i18n from "../../../i18n";
 
 interface Props {
   hymnCoverUri?: string
@@ -41,7 +42,7 @@ class ImagePickerModal extends React.Component<Props, State> {
     this.hideDialog();
 
     const options = {
-      title: 'Select hymn cover image',
+      title: i18n.t('select_hymn_image'),
       // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
       storageOptions: {
         skipBackup: true,
@@ -102,9 +103,10 @@ class ImagePickerModal extends React.Component<Props, State> {
       return (
         <Dialog.Content style={style.dialogContent}>
           <HymnCoverAvatar hymnCoverImage={imageSrc} size={120}/>
-          <Text style={style.or}>or</Text>
-          <Text style={[globalStyles.pressableText, globalStyles.textCenter]} onPress={this.cancelSelection}>Select
-            another image</Text>
+          <Text style={style.or}>{i18n.t('or')}</Text>
+          <Text style={[globalStyles.pressableText, globalStyles.textCenter]} onPress={this.cancelSelection}>
+            {i18n.t('select_another_image')}
+          </Text>
         </Dialog.Content>
       )
     } else if (hymnCoverImageUrlInput) {
@@ -113,7 +115,7 @@ class ImagePickerModal extends React.Component<Props, State> {
           <HymnCoverAvatar hymnCoverImage={hymnCoverImageUrlInput} size={120}/>
           <Text style={style.or}/>
           <TextInput
-            label="Hymn cover URL"
+            label={i18n.t('hymn_cover_url')}
             style={style.input}
             value={this.state.hymnCoverImageUrlInput}
             onChangeText={(val: string) => this.setState({hymnCoverImageUrlInput: val})}/>
@@ -122,11 +124,12 @@ class ImagePickerModal extends React.Component<Props, State> {
     } else {
       return (
         <Dialog.Content>
-          <Text style={[globalStyles.pressableText, globalStyles.textCenter]} onPress={this.showImagePicker}>Select
-            image</Text>
-          <Text style={style.or}>or</Text>
+          <Text style={[globalStyles.pressableText, globalStyles.textCenter]} onPress={this.showImagePicker}>
+            {i18n.t('select_image')}
+          </Text>
+          <Text style={style.or}>{i18n.t('or')}</Text>
           <TextInput
-            label="Hymn cover URL"
+            label={i18n.t('hymn_cover_url')}
             style={style.input}
             value={this.state.hymnCoverImageUrlInput}
             onChangeText={(val: string) => this.setState({hymnCoverImageUrlInput: val})}/>
@@ -138,19 +141,20 @@ class ImagePickerModal extends React.Component<Props, State> {
   render() {
     return (
       <View style={style.container}>
-        <Text style={[globalStyles.pressableText, globalStyles.textCenter]} onPress={this.showDialog}>Edit cover
-          image</Text>
+        <Text style={[globalStyles.pressableText, globalStyles.textCenter]}
+              onPress={this.showDialog}>{i18n.t('edit_hymn_image')}
+        </Text>
         <Portal>
           <Dialog
             visible={this.state.isDialogShown}
             onDismiss={this.hideDialog}>
-            <Dialog.Title>Set hymn cover</Dialog.Title>
+            <Dialog.Title>{i18n.t('set_hymn_image')}</Dialog.Title>
 
             {this.renderDialogContent()}
 
             <Dialog.Actions>
-              <Button onPress={this.hideDialog}>Cancel</Button>
-              <Button onPress={this.onImageSelectDone}>Done</Button>
+              <Button onPress={this.hideDialog}>{i18n.t('btn_cancel')}</Button>
+              <Button onPress={this.onImageSelectDone}>{i18n.t('btn_done')}</Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>

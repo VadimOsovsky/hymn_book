@@ -2,6 +2,7 @@ import React from "react"
 import {StyleSheet, View} from "react-native";
 import {Button, Colors, TextInput} from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
+import i18n from "../../../i18n";
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
@@ -28,7 +29,7 @@ class Login extends React.Component<Props, State> {
     return (
       <View style={{width: '100%', height: "auto"}}>
         <TextInput
-          label='Email'
+          label={i18n.t('email')}
           style={style.input}
           theme={inputTheme}
           underlineColor="#FFF"
@@ -36,14 +37,14 @@ class Login extends React.Component<Props, State> {
           onChangeText={email => this.setState({ email })}
         />
         <TextInput
-          label='Password'
+          label={i18n.t('password')}
           style={style.input}
           theme={inputTheme}
           underlineColor="#FFF"
           value={this.state.email}
           onChangeText={email => this.setState({ email })}
         />
-        <Button style={style.button} mode="contained" onPress={() => this.props.navigation.replace("drawerNavigator")}>LOG IN</Button>
+        <Button style={style.button} mode="contained" onPress={() => this.props.navigation.replace("drawerNavigator")}>{i18n.t('btn_login')}</Button>
       </View>
     );
   }
