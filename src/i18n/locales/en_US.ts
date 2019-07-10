@@ -5,6 +5,7 @@ export default {
   btn_done: "Done",
   btn_preview: "Preview",
   btn_delete: "Delete",
+  btn_share: "Share",
   btn_edit: "Edit",
   btn_save: "Saved",
   btn_discard: "Discard",
@@ -30,6 +31,7 @@ export default {
   search: "Search",
   search_results: "Results found for: %{query}",
   hymns_selected: "Selected: %{selectedNumber}",
+  select_all: "Select all",
   delete_selected_title: "Delete Hymns",
   delete_selected_message: {
     one: "Are you sure you want to delete this song from Saved Hymns?",

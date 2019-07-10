@@ -16,6 +16,8 @@ import Transition from "../../shared/Transition";
 import ThemedView from "../../shared/ThemedView";
 import i18n from "../../i18n";
 import { screens } from "../../navigation/savedHymnsStack";
+import AndroidAppBar, { AppBarAction, navIcons, showAsAction } from "../../shared/AndroidAppBar";
+import icons from "../../styles/icons";
 
 interface ReduxDispatch {
   removeFromSavedHymns: (hymnIds: number[]) => void
@@ -113,45 +115,84 @@ class SavedHymns extends React.Component<Props, State> {
     this.setState({selectedHymns: allSelectedHymns})
   };
 
+  private getSelectModeAppBarActions = (): AppBarAction[] => {
+    const action: AppBarAction[] = [];
+
+    action.push({
+      title: i18n.t('delete_from_saved'),
+      icon: icons.delete,
+      show: showAsAction.IF_ROOM,
+      onActionSelected: this.onDeleteSelectedHymns,
+    });
+
+    action.push({
+      title: i18n.t('select_all'),
+      icon: icons.select_all,
+      show: showAsAction.IF_ROOM,
+      onActionSelected: this.onSelectAll,
+    });
+
+    return action;
+  };
+
+  private getMainAppBarActions = (): AppBarAction[] => {
+    const action: AppBarAction[] = [];
+
+    action.push({
+      title: i18n.t('search'),
+      icon: icons.search,
+      show: showAsAction.ALWAYS,
+      onActionSelected: this.openSearch,
+    });
+
+    return action;
+  };
+
   private renderHeader = () => {
+    const { surface, primaryDark } = this.props.prefs!.userPrefs.theme.colors;
     const hymnsLength = this.state.selectedHymns.length;
     return (
-      <Surface style={{elevation: 4, backgroundColor: this.props.prefs!.userPrefs.theme.colors.primary}}>
+      <ThemedView style={{zIndex: 9}}>
+        {/*SEARCH*/}
         <Transition visible={this.state.isSearchMode} fade swappingHeader>
-          <Appbar.Header statusBarHeight={StatusBar.currentHeight}
-                         style={{backgroundColor: this.props.prefs!.userPrefs.theme.colors.surface}}>
-            <Searchbar
-              icon="arrow-back"
-              placeholder={i18n.t('search')}
-              style={{elevation: 0, backgroundColor: "transparent"}}
-              ref={(ref: Searchbar) => this.SearchbarRef = ref}
-              onIconPress={this.closeSearch}
-              onChangeText={query => this.setState({searchQuery: query})}
-              value={this.state.searchQuery}
-            />
-          </Appbar.Header>
+          <Surface style={{elevation: 4}}>
+            <Appbar.Header statusBarHeight={StatusBar.currentHeight}
+                           style={{backgroundColor: surface}}>
+              <Searchbar
+                icon="arrow-back"
+                placeholder={i18n.t('search')}
+                style={{elevation: 0, backgroundColor: "transparent"}}
+                ref={(ref: Searchbar) => this.SearchbarRef = ref}
+                onIconPress={this.closeSearch}
+                onChangeText={query => this.setState({searchQuery: query})}
+                value={this.state.searchQuery}
+              />
+            </Appbar.Header>
+          </Surface>
         </Transition>
 
+        {/*SELECTION*/}
         <Transition visible={!!hymnsLength} fade swappingHeader>
-          <Appbar.Header statusBarHeight={StatusBar.currentHeight}
-                         style={{backgroundColor: this.props.prefs!.userPrefs.theme.colors.primaryDark}}>
-            <Appbar.Action icon="close" onPress={() => this.setState({
-              selectedHymns: []
-            })}/>
-            <Appbar.Content title={i18n.t("hymns_selected", {selectedNumber: hymnsLength})}/>
-            <Appbar.Action icon="delete" onPress={this.onDeleteSelectedHymns}/>
-            <Appbar.Action icon="select-all" onPress={this.onSelectAll}/>
-          </Appbar.Header>
+
+          <AndroidAppBar
+            title={i18n.t("hymns_selected", {selectedNumber: hymnsLength})}
+            navIcon={navIcons.CLOSE}
+            onNavIconClick={() => this.setState({selectedHymns: []})}
+            actions={this.getSelectModeAppBarActions()}
+            backgroundColor={primaryDark}
+          />
         </Transition>
 
+        {/*MAIN*/}
         <Transition visible={!hymnsLength && !this.state.isSearchMode} fade swappingHeader>
-          <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
-            <Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>
-            <Appbar.Content title={i18n.t('my_saved_hymns')}/>
-            <Appbar.Action icon="search" onPress={this.openSearch}/>
-          </Appbar.Header>
+          <AndroidAppBar
+            title={i18n.t('my_saved_hymns')}
+            navIcon={navIcons.MENU}
+            onNavIconClick={this.props.navigation.openDrawer}
+            actions={this.getMainAppBarActions()}
+          />
         </Transition>
-      </Surface>
+      </ThemedView>
     )
   };
 

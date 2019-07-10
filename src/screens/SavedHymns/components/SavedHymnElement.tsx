@@ -4,7 +4,7 @@ import { List } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import SwipeableListItemAction from "../../../models/SwipeableListItemAction";
 import SwipeableListItem from "../../../shared/SwipeableListItem";
-import { Alert } from "react-native";
+import { Alert, ToastAndroid } from "react-native";
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../../../reducers";
 import Action from "../../../models/Action";
@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import HymnCoverAvatar from "../../../shared/HymnCoverAvatar";
 import { screens } from "../../../navigation/savedHymnsStack";
 import i18n from "../../../i18n";
+import icons from "../../../styles/icons";
 
 interface OwnProps {
   savedHymn: HymnItem
@@ -63,21 +64,32 @@ class SavedHymnElement extends React.Component<Props, State> {
   }
 
   private initSwipeActions = () => {
-    const {error, primary} = this.props.prefs!.userPrefs.theme.colors;
+    const {error, primary, info} = this.props.prefs!.userPrefs.theme.colors;
+    this.actions.push(new SwipeableListItemAction(
+      i18n.t('btn_share'),
+      icons.share,
+      '#FFF',
+      info,
+      this.share
+    ));
     this.actions.push(new SwipeableListItemAction(
       i18n.t('btn_delete'),
-      'delete',
+      icons.delete,
       '#FFF',
       error,
       this.showDeleteItemAlert
     ));
     this.actions.push(new SwipeableListItemAction(
       i18n.t('btn_edit'),
-      'edit',
+      icons.edit,
       '#FFF',
       primary,
       this.editHymn
     ));
+  };
+
+  private share = () => {
+    ToastAndroid.show("Shared", ToastAndroid.SHORT)
   };
 
   private showDeleteItemAlert = () => {

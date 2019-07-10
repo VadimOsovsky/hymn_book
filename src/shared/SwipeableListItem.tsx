@@ -1,7 +1,6 @@
 import React from "react";
-import { Animated, PanResponder, PanResponderInstance, StyleSheet, Text, Vibration, View } from "react-native";
+import { Animated, Image, PanResponder, PanResponderInstance, StyleSheet, Text, Vibration, View } from "react-native";
 import SwipeableListItemAction from "../models/SwipeableListItemAction"
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { TouchableRipple } from "react-native-paper";
 import { fullWH } from "../styles/styleVariables";
 
@@ -118,7 +117,7 @@ class SwipeableListItem extends React.Component<Props, State> {
                 style={[style.actionContainer, {backgroundColor: action.backgroundColor, width: this.actionWidth}]}
                 onPress={() => action.callback()}>
                 <View style={style.action}>
-                  <Icon name={action.icon} color={action.iconColor} size={21}/>
+                  <Image source={action.icon} height={21} width={21}/>
                   <Text style={[style.actionText, {color: action.iconColor}]}>{action.actionName}</Text>
                 </View>
               </TouchableRipple>

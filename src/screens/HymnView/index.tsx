@@ -1,11 +1,10 @@
 import React from "react";
-import { Alert, ScrollView, StatusBar, View } from "react-native"
-import { Appbar, Menu, Text } from "react-native-paper";
+import { Alert, ScrollView, ToastAndroid, View } from "react-native"
+import { Text } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import globalStyles from "../../styles/globalStyles";
 import HymnItem from "../../models/HymnItem";
 import style from "./style";
-import HeaderWrapper from "../../shared/HeaderWrapper";
 import { removeFromSavedHymns } from "../../actions/hymnActions";
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../../reducers";
@@ -14,6 +13,8 @@ import { connect } from "react-redux";
 import { screens } from "../../navigation/savedHymnsStack";
 import ThemedView from "../../shared/ThemedView";
 import i18n from "../../i18n";
+import AndroidAppBar, { AppBarAction, navIcons, showAsAction } from "../../shared/AndroidAppBar";
+import icons from "../../styles/icons";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
@@ -42,16 +43,15 @@ class HymnView extends React.Component<Props, State> {
     };
   }
 
-  private showHeaderMenu = () => this.setState({isHeaderMenuVisible: true});
-  private hideHeaderMenu = () => this.setState({isHeaderMenuVisible: false});
+  private onShare = () => {
+    ToastAndroid.show("Shared", ToastAndroid.SHORT)
+  };
 
   private onEdit = () => {
-    this.hideHeaderMenu();
     this.props.navigation.replace(screens.HYMN_EDITOR, {hymnToEdit: this.hymnToView})
   };
 
   private onDelete = () => {
-    this.hideHeaderMenu();
     Alert.alert(
       this.hymnToView.title,
       i18n.t('delete_selected_message', {count: 1}),
@@ -67,34 +67,42 @@ class HymnView extends React.Component<Props, State> {
     );
   };
 
-  private renderHeaderMenu = () => {
-    if (!this.isPreviewMode) {
-      return (
-        <Menu
-          visible={this.state.isHeaderMenuVisible}
-          style={{transform: [{translateY: StatusBar.currentHeight || 20}]}}
-          onDismiss={this.hideHeaderMenu}
-          anchor={
-            <Appbar.Action onPress={this.showHeaderMenu} icon="more-vert" color="#FFF"/>
-          }
-        >
-          <Menu.Item onPress={this.onEdit} title={i18n.t('edit_hymn')}/>
-          <Menu.Item onPress={this.onDelete} title={i18n.t('delete_from_saved')}/>
-        </Menu>
-      )
-    }
+  private getAppBarActions = (): AppBarAction[] => {
+    const actions: AppBarAction[] = [];
+
+    actions.push({
+      title: i18n.t('btn_share'),
+      icon: icons.share,
+      show: showAsAction.NEVER,
+      onActionSelected: this.onShare,
+    });
+
+    actions.push({
+      title: i18n.t('edit_hymn'),
+      icon: icons.edit,
+      show: showAsAction.NEVER,
+      onActionSelected: this.onEdit,
+    });
+
+    actions.push({
+      title: i18n.t('delete_from_saved'),
+      icon: icons.delete,
+      show: showAsAction.NEVER,
+      onActionSelected: this.onDelete,
+    });
+
+    return actions;
   };
 
   render() {
     return (
       <ThemedView style={globalStyles.screen}>
-        <HeaderWrapper>
-          <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
-            <Appbar.BackAction onPress={() => this.props.navigation.goBack()}/>
-            <Appbar.Content title={this.hymnToView.title || i18n.t('unknown_title')}/>
-            {this.renderHeaderMenu()}
-          </Appbar.Header>
-        </HeaderWrapper>
+        <AndroidAppBar
+          title={this.hymnToView.title || i18n.t('unknown_title')}
+          navIcon={navIcons.BACK}
+          onNavIconClick={this.props.navigation.goBack}
+          actions={this.getAppBarActions()}
+        />
 
         <ScrollView>
           <View style={style.lyricsView}>
@@ -103,6 +111,10 @@ class HymnView extends React.Component<Props, State> {
         </ScrollView>
       </ThemedView>
     );
+  }
+
+  onActionSelected = (position: number) => {
+    if (position) ToastAndroid.show(position.toString(), ToastAndroid.SHORT)
   }
 }
 

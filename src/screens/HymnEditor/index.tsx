@@ -1,9 +1,8 @@
 import React from "react"
-import { Alert, ScrollView, StatusBar, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { connect } from "react-redux";
 import globalStyles from "../../styles/globalStyles";
-import HeaderWrapper from "../../shared/HeaderWrapper";
-import { Appbar, Button, Divider, TextInput } from "react-native-paper";
+import { Button, Divider, TextInput } from "react-native-paper";
 import HymnItem from "../../models/HymnItem";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import style from "./style";
@@ -16,6 +15,8 @@ import ImagePickerModal from "./components/ImagePickerModal";
 import HymnCoverAvatar from "../../shared/HymnCoverAvatar";
 import ThemedView from "../../shared/ThemedView";
 import i18n from "../../i18n";
+import AndroidAppBar, { AppBarAction, navIcons, showAsAction } from "../../shared/AndroidAppBar";
+import icons from "../../styles/icons";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>
@@ -132,20 +133,30 @@ class HymnEditor extends React.Component<Props, State> {
     return JSON.stringify(this.hymnToEdit) !== JSON.stringify(this.getNewHymn());
   };
 
+  private getAppBarActions = (): AppBarAction[] => {
+    const actions: AppBarAction[] = [];
+
+    actions.push({
+      title: i18n.t("btn_done"),
+      icon: icons.check,
+      show: showAsAction.ALWAYS,
+      onActionSelected: this.onDone,
+    });
+
+    return actions;
+  };
+
   render() {
     const {hymnTitleInput, authorNameInput, hymnCoverUri, lyricsTextEdit} = this.state;
 
     return (
       <ThemedView style={globalStyles.screen}>
-        <HeaderWrapper>
-          <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
-            <Appbar.BackAction onPress={this.onGoBack}/>
-            <Appbar.Content
-              title={this.isAddNew ? i18n.t('add_new_hymn') : i18n.t('edit_hymn')}
-            />
-            <Appbar.Action icon={"check"} onPress={this.onDone}/>
-          </Appbar.Header>
-        </HeaderWrapper>
+        <AndroidAppBar
+          title={this.isAddNew ? i18n.t('add_new_hymn') : i18n.t('edit_hymn')}
+          navIcon={navIcons.BACK}
+          onNavIconClick={this.onGoBack}
+          actions={this.getAppBarActions()}
+        />
 
         <ScrollView collapsable={true}>
           <View style={style.container}>

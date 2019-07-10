@@ -8,7 +8,9 @@ export interface MyTheme extends Theme {
     surface: string
     accent: string
     error: string
+    info: string
     text: string
+    headerText: string
     disabled: string
     placeholder: string
     backdrop: string
@@ -26,9 +28,11 @@ export const lightTheme: MyTheme = {
     primaryDark: "#34495d",
     background: "#F9F9F9",
     accent: Colors.teal500,
+    headerText: Colors.white,
     highlight: "#DDD",
     surfaceAlt: Colors.black,
-    error: Colors.redA200
+    error: Colors.redA200,
+    info: Colors.blue600,
   }
 };
 
@@ -43,7 +47,9 @@ export const darkTheme: MyTheme = {
     surface: "#34495d",
     accent: Colors.teal500,
     error: Colors.redA200,
+    info: Colors.blue600,
     text: Colors.white,
+    headerText: Colors.white,
     disabled: Colors.grey500,
     placeholder: Colors.grey400,
     highlight: "#435d77",

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import {fullWH} from "../../styles/styleVariables";
+import { fullWH } from "../../styles/styleVariables";
 
 export default StyleSheet.create({
   lyricsView: {
