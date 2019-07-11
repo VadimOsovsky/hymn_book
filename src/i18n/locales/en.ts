@@ -63,6 +63,7 @@ export default {
   save_changes_message: "Would you like to save the changes?",
   discard_changes_title: "Attention",
   discard_changes_message: "You have made changes to the hymn, would you like to save them?",
+  error_save_hymn: "Error, provide lyrics",
 
   // My Groups
   my_groups: "My Groups",

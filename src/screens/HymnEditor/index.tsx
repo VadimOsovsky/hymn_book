@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, ScrollView, View } from "react-native";
+import { Alert, ScrollView, ToastAndroid, View } from "react-native";
 import { Button, Divider, TextInput } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
@@ -43,7 +43,6 @@ class HymnEditor extends React.Component<Props, State> {
     header: null,
   };
 
-  // get empty hymn in case of adding new hymn
   private hymnToEdit: HymnItem = this.props.navigation.getParam("hymnToEdit") || null;
   private isAddNew: boolean = !this.props.navigation.getParam("hymnToEdit");
 
@@ -55,11 +54,11 @@ class HymnEditor extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      hymnTitleInput: this.hymnToEdit.title || "",
-      musicByInput: this.hymnToEdit.musicBy || "",
-      lyricsByInput: this.hymnToEdit.lyricsBy || "",
-      hymnCoverUri: this.hymnToEdit.hymnCoverImage || "",
-      lyrics: this.hymnToEdit.lyrics,
+      hymnTitleInput: this.hymnToEdit ? this.hymnToEdit.title : "",
+      musicByInput: this.hymnToEdit ? this.hymnToEdit.musicBy : "",
+      lyricsByInput: this.hymnToEdit ? this.hymnToEdit.lyricsBy : "",
+      hymnCoverUri: this.hymnToEdit ? this.hymnToEdit.hymnCoverImage : "",
+      lyrics: this.hymnToEdit ? this.hymnToEdit.lyrics : [],
     };
   }
 
@@ -106,9 +105,14 @@ class HymnEditor extends React.Component<Props, State> {
   }
 
   private saveAndExit = () => {
-    const newHymn = this.getNewHymn();
-    this.isAddNew ? this.props.addToSavedHymns(newHymn) : this.props.editSavedHymn(newHymn);
-    this.props.navigation.goBack();
+    // TODO Save to backend
+    if (!this.state.lyrics.length) {
+      ToastAndroid.show(i18n.t("error_save_hymn"), ToastAndroid.LONG);
+    } else {
+      const newHymn = this.getNewHymn();
+      this.isAddNew ? this.props.addToSavedHymns(newHymn) : this.props.editSavedHymn(newHymn);
+      this.props.navigation.goBack();
+    }
   }
 
   private discardAndExit = () => {
@@ -118,14 +122,24 @@ class HymnEditor extends React.Component<Props, State> {
   private getNewHymn(): HymnItem {
     const {hymnTitleInput, musicByInput, lyricsByInput, hymnCoverUri, lyrics} = this.state;
 
+    let hymnCoverImage: string;
+
+    if (hymnCoverUri) {
+      hymnCoverImage = hymnCoverUri;
+    } else if (this.hymnToEdit && this.hymnToEdit.hymnCoverImage) {
+      hymnCoverImage = this.hymnToEdit.hymnCoverImage;
+    } else {
+      hymnCoverImage = "";
+    }
+
     return new HymnItem(
-      this.hymnToEdit.hymnId,
+      this.hymnToEdit ? this.hymnToEdit.hymnId : "-1",
       hymnTitleInput,
       lyrics,
       musicByInput,
       lyricsByInput,
       null,
-      hymnCoverUri || this.hymnToEdit.hymnCoverImage,
+      hymnCoverImage,
     );
   }
 

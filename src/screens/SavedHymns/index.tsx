@@ -134,14 +134,14 @@ class SavedHymns extends React.Component<Props, State> {
     action.push({
       title: i18n.t("delete_from_saved"),
       icon: icons.delete,
-      show: showAsAction.IF_ROOM,
+      show: showAsAction.ALWAYS,
       onActionSelected: this.onDeleteSelectedHymns,
     });
 
     action.push({
       title: i18n.t("select_all"),
       icon: icons.select_all,
-      show: showAsAction.IF_ROOM,
+      show: showAsAction.ALWAYS,
       onActionSelected: this.onSelectAll,
     });
 
