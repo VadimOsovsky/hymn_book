@@ -1,18 +1,18 @@
 import React from "react";
-import { Animated } from 'react-native';
+import { Animated } from "react-native";
 
 interface Props {
-  visible: boolean
-  duration?: number
-  swappingHeader?: boolean
-  style?: StyleMedia
-  fade?: boolean
-  scale?: boolean
+  visible: boolean;
+  duration?: number;
+  swappingHeader?: boolean;
+  style?: StyleMedia;
+  fade?: boolean;
+  scale?: boolean;
 }
 
 interface State {
-  visible: boolean
-  isFadingOut: boolean
+  visible: boolean;
+  isFadingOut: boolean;
 }
 
 class Transition extends React.Component<Props, State> {
@@ -26,17 +26,17 @@ class Transition extends React.Component<Props, State> {
       visible: props.visible,
       isFadingOut: false,
     };
-  };
+  }
 
-  componentWillMount() {
+  public componentWillMount() {
     this.visibility = new Animated.Value(this.props.visible ? 1 : 0);
   }
 
-  componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
+  public componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
     if (nextProps.visible) {
       this.setState({visible: true});
     } else {
-      this.setState({isFadingOut: true})
+      this.setState({isFadingOut: true});
     }
     Animated.timing(this.visibility, {
       toValue: nextProps.visible ? 1 : 0,
@@ -49,7 +49,7 @@ class Transition extends React.Component<Props, State> {
     });
   }
 
-  render() {
+  public render() {
     const {visible, style, swappingHeader, fade, scale, children, ...rest} = this.props;
 
     const fadeTransition = {
@@ -80,10 +80,10 @@ class Transition extends React.Component<Props, State> {
     };
     const combinedStyle = [];
 
-    if (scale) combinedStyle.push(scaleTransition);
-    if (fade) combinedStyle.push(fadeTransition);
-    if (this.state.visible) combinedStyle.push(style);
-    if (swappingHeader && this.state.isFadingOut) combinedStyle.push(fadingOutStyle);
+    if (scale) { combinedStyle.push(scaleTransition); }
+    if (fade) { combinedStyle.push(fadeTransition); }
+    if (this.state.visible) { combinedStyle.push(style); }
+    if (swappingHeader && this.state.isFadingOut) { combinedStyle.push(fadingOutStyle); }
 
     return (
       <Animated.View style={combinedStyle} {...rest}>

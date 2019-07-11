@@ -1,20 +1,20 @@
 import React from "react";
 import { Animated, Image, PanResponder, PanResponderInstance, StyleSheet, Text, Vibration, View } from "react-native";
-import SwipeableListItemAction from "../models/SwipeableListItemAction"
 import { TouchableRipple } from "react-native-paper";
+import SwipeableListItemAction from "../models/SwipeableListItemAction";
 import { fullWH } from "../styles/styleVariables";
 
 interface Props {
-  actions: SwipeableListItemAction[]
-  actionWidth?: number
-  vibrateOnOpen?: boolean
-  vibrationLengthMs?: number
-  swipingDisabled?: boolean
+  actions: SwipeableListItemAction[];
+  actionWidth?: number;
+  vibrateOnOpen?: boolean;
+  vibrationLengthMs?: number;
+  swipingDisabled?: boolean;
 }
 
 interface State {
-  itemXPosition: Animated.ValueXY
-  swipingDisabled: boolean
+  itemXPosition: Animated.ValueXY;
+  swipingDisabled: boolean;
 }
 
 class SwipeableListItem extends React.Component<Props, State> {
@@ -34,16 +34,18 @@ class SwipeableListItem extends React.Component<Props, State> {
     this.state = {
       itemXPosition: new Animated.ValueXY(),
       swipingDisabled: this.props.swipingDisabled || false,
-    }
+    };
   }
 
-  componentWillMount() {
+  public componentWillMount() {
     const rightThreshold = this.actionWidth * this.actions.length * -1;
 
     this.panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e, gesture) => true,
       onPanResponderMove: (evt, gestureState) => {
-        if (this.state.swipingDisabled) return;
+        if (this.state.swipingDisabled) {
+          return;
+        }
 
         const dxDiff = gestureState.dx - this.prevGestureStateDx;
         this.prevGestureStateDx = gestureState.dx;
@@ -63,45 +65,50 @@ class SwipeableListItem extends React.Component<Props, State> {
 
         Animated.event([null, {
           dx: this.state.itemXPosition.x,
-          dy: this.state.itemXPosition.y
+          dy: this.state.itemXPosition.y,
         }])(evt, {dx: this.panXValue, dy: 0});
       },
       onPanResponderRelease: (e, gesture) => {
-        if (this.state.swipingDisabled) return;
+        if (this.state.swipingDisabled) {
+          return;
+        }
 
         this.prevGestureStateDx = 0;
         this.vibrateOnOpen = true;
         // to fix in open position
         // @ts-ignore
-        if (this.panXValue < rightThreshold / 2) this.panXValue = rightThreshold;
-        else this.panXValue = 0;
+        if (this.panXValue < rightThreshold / 2) {
+          this.panXValue = rightThreshold;
+        } else {
+          this.panXValue = 0;
+        }
         // else if (this.state.itemXPosition.x._value > leftThreshold) stopValue = leftThreshold;
         this.moveItemToValue(this.panXValue);
       },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         const {dx, dy} = gestureState;
         return dx > 5 || dx < -5 || dy > 5 || dy < -5;
-      }
+      },
     });
-  };
-
-  componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
-    this.setState({
-      swipingDisabled: nextProps.swipingDisabled || false,
-    })
   }
 
-  moveItemToValue = (toValue: number) => {
+  public componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
+    this.setState({
+      swipingDisabled: nextProps.swipingDisabled || false,
+    });
+  }
+
+  public moveItemToValue = (toValue: number) => {
     Animated.spring(this.state.itemXPosition, {
       toValue: {x: toValue, y: 0},
       // friction: 30,
       speed: 150,
-      bounciness: 0
+      bounciness: 0,
       // set panXValue in case this function was invoked from outside
     }).start(() => this.panXValue = toValue);
-  };
+  }
 
-  render() {
+  public render() {
 
     const itemStyle = {
       transform: this.state.itemXPosition.getTranslateTransform(),
@@ -121,7 +128,7 @@ class SwipeableListItem extends React.Component<Props, State> {
                   <Text style={[style.actionText, {color: action.iconColor}]}>{action.actionName}</Text>
                 </View>
               </TouchableRipple>
-            )
+            );
           })}
         </View>
 
@@ -129,35 +136,35 @@ class SwipeableListItem extends React.Component<Props, State> {
           {this.props.children}
         </Animated.View>
       </View>
-    )
+    );
   }
 }
 
 const style = StyleSheet.create({
   actionsHolder: {
     ...fullWH,
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
     zIndex: -5,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   actionContainer: {
-    height: '80%',
+    height: "80%",
   },
   action: {
     ...fullWH,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   actionText: {
     fontSize: 12,
     marginTop: 3,
-  }
+  },
 });
 
 export default SwipeableListItem;

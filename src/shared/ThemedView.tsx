@@ -1,24 +1,28 @@
-import { View } from "react-native";
 import React, { PureComponent } from "react";
-import { AppState } from "../reducers";
+import { StyleProp, View } from "react-native";
 import { connect } from "react-redux";
+import { AppState } from "../reducers";
 
 interface OwnProps {
-  style?: StyleMedia
+  style?: StyleProp<any>;
 }
 
 interface ReduxState {
-  prefs: AppState["prefs"]
+  prefs: AppState["prefs"];
 }
 
-type Props = OwnProps & ReduxState
+type Props = OwnProps & ReduxState;
 
 class ThemedView extends PureComponent<Props> {
 
-
-  render() {
+  public render() {
     const {children, style, prefs, ...rest} = this.props;
-    return <View style={[{backgroundColor: prefs!.userPrefs.theme.colors.background}, style]} {...rest}>{children}</View>
+    return (
+      <View
+        style={[{backgroundColor: prefs!.userPrefs.theme.colors.background}, style]} {...rest}>
+        {children}
+      </View>
+    );
   }
 }
 
@@ -27,4 +31,4 @@ const mapStateToProps = (state: AppState) => {
   return {prefs};
 };
 
-export default connect(mapStateToProps)(ThemedView)
+export default connect(mapStateToProps)(ThemedView);

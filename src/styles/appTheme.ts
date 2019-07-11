@@ -15,8 +15,8 @@ export interface MyTheme extends Theme {
     placeholder: string
     backdrop: string
     highlight: string
-    surfaceAlt: string
-  }
+    surfaceAlt: string,
+  };
 }
 
 export const lightTheme: MyTheme = {
@@ -33,7 +33,7 @@ export const lightTheme: MyTheme = {
     surfaceAlt: Colors.black,
     error: Colors.redA200,
     info: Colors.blue600,
-  }
+  },
 };
 
 export const darkTheme: MyTheme = {
@@ -54,5 +54,5 @@ export const darkTheme: MyTheme = {
     placeholder: Colors.grey400,
     highlight: "#435d77",
     surfaceAlt: Colors.white,
-  }
+  },
 };

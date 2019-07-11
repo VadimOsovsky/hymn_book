@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 import { fullWH } from "../../styles/styleVariables";
 
 export default StyleSheet.create({
@@ -9,5 +9,5 @@ export default StyleSheet.create({
   lyricsText: {
     fontSize: 17,
     opacity: 0.85,
-  }
-})
+  },
+});

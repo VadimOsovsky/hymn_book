@@ -1,8 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   screen: {
-    height: '100%',
+    height: "100%",
   },
   noHymns: {
     textAlign: "center",
@@ -14,6 +14,6 @@ export default StyleSheet.create({
     textAlign: "center",
     margin: 10,
     opacity: 0.7,
-    fontSize: 16
+    fontSize: 16,
   },
-})
+});

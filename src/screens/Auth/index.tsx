@@ -1,21 +1,21 @@
 import React from "react";
 import { ImageBackground, View } from "react-native";
-import LinearGradient from "react-native-linear-gradient"
-import style from "./style";
+import LinearGradient from "react-native-linear-gradient";
+import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import AppLogo from "../../shared/AppLogo";
 import Login from "./components/Login";
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
+import style from "./style";
 
 interface Props {
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 class AuthScreen extends React.Component<Props> {
   constructor(props: Props) {
-    super(props)
+    super(props);
   }
 
-  render() {
+  public render() {
     return (
       <ImageBackground source={require("../../assets/images/auth_bg.jpg")} style={style.bgPic}>
         <LinearGradient
@@ -28,7 +28,7 @@ class AuthScreen extends React.Component<Props> {
           </View>
         </LinearGradient>
       </ImageBackground>
-    )
+    );
   }
 }
 

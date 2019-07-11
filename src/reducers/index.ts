@@ -3,11 +3,11 @@ import hymnsReducer, { HymnsInterface } from "./hymnsReducer";
 import preferencesReducer, { Preferences } from "./preferencesReducer";
 
 export interface AppState {
-  hymns?: HymnsInterface
-  prefs?: Preferences
+  hymns?: HymnsInterface;
+  prefs?: Preferences;
 }
 
 export default combineReducers({
   hymns: hymnsReducer,
-  prefs: preferencesReducer
+  prefs: preferencesReducer,
 });

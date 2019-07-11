@@ -1,6 +1,6 @@
 import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
-import { List } from "react-native-paper"
+import { ScrollView, StyleSheet, View } from "react-native";
+import { List } from "react-native-paper";
 
 interface Props {
 
@@ -9,10 +9,10 @@ interface Props {
 class BottomSheetContent extends React.Component<Props> {
 
   constructor(props: Props) {
-    super(props)
+    super(props);
   }
 
-  render() {
+  public render() {
     return (
       <View>
         <List.Section>
@@ -20,14 +20,14 @@ class BottomSheetContent extends React.Component<Props> {
           <List.Item
             title="Edit"
             style={style.menuItem}
-            left={props => <List.Icon {...props} icon="edit"/>}
-            onPress={() => {}}
+            left={(props) => <List.Icon {...props} icon="edit"/>}
+            onPress={() => {/**/}}
           />
           <List.Item
             title="Remove from saved"
             style={style.menuItem}
-            left={props => <List.Icon {...props} icon="delete"/>}
-            onPress={() => {}}
+            left={(props) => <List.Icon {...props} icon="delete"/>}
+            onPress={() => {/**/}}
           />
         </List.Section>
         <List.Section>
@@ -38,14 +38,14 @@ class BottomSheetContent extends React.Component<Props> {
           </ScrollView>
         </List.Section>
       </View>
-    )
+    );
   }
 }
 
 const style = StyleSheet.create({
   menuItem: {
     padding: 0,
-  }
+  },
 });
 
-export default BottomSheetContent
+export default BottomSheetContent;

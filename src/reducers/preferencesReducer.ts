@@ -1,5 +1,3 @@
-import Action from "../models/Action";
-import { lightTheme, MyTheme } from "../styles/appTheme";
 import {
   GET_PREFS_FROM_STORAGE_ERROR,
   GET_PREFS_FROM_STORAGE_REQUEST,
@@ -8,18 +6,20 @@ import {
   SET_PREFS_TO_STORAGE_ERROR,
   SET_PREFS_TO_STORAGE_REQUEST,
   SET_PREFS_TO_STORAGE_SUCCESS,
-  SET_THEME
+  SET_THEME,
 } from "../actions/preferencesActions";
+import Action from "../models/Action";
+import { lightTheme, MyTheme } from "../styles/appTheme";
 
-export type UserPrefs = {
-  lang: string
-  theme: MyTheme
+export interface UserPrefs {
+  lang: string;
+  theme: MyTheme;
 }
 
 export interface Preferences {
-  userPrefs: UserPrefs
-  isPrefsReady: boolean
-  error: string
+  userPrefs: UserPrefs;
+  isPrefsReady: boolean;
+  error: string;
 }
 
 const INITIAL_STATE: Preferences = {
@@ -28,7 +28,7 @@ const INITIAL_STATE: Preferences = {
     theme: lightTheme,
   },
   isPrefsReady: false,
-  error: ""
+  error: "",
 };
 
 export default (state = INITIAL_STATE, action: Action): Preferences => {
@@ -39,7 +39,7 @@ export default (state = INITIAL_STATE, action: Action): Preferences => {
         userPrefs: {
           ...state.userPrefs,
           theme: action.payload,
-        }
+        },
       };
 
     case SET_LANG:
@@ -48,14 +48,14 @@ export default (state = INITIAL_STATE, action: Action): Preferences => {
         userPrefs: {
           ...state.userPrefs,
           lang: action.payload,
-        }
+        },
       };
 
     case SET_PREFS_TO_STORAGE_REQUEST:
     case GET_PREFS_FROM_STORAGE_REQUEST:
       return {
         ...state,
-        error: ""
+        error: "",
       };
 
     case GET_PREFS_FROM_STORAGE_SUCCESS:
@@ -72,9 +72,9 @@ export default (state = INITIAL_STATE, action: Action): Preferences => {
     case GET_PREFS_FROM_STORAGE_ERROR:
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
       };
     default:
-      return state
+      return state;
   }
 };

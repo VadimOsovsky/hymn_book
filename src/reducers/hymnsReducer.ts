@@ -1,23 +1,22 @@
-import HymnItem from "../models/HymnItem";
 import {
   ADD_TO_SAVED_HYMNS, EDIT_SAVED_HYMN,
-  REMOVE_FROM_SAVED_HYMNS,
   GET_SAVED_HYMNS_FROM_STORAGE_ERROR,
   GET_SAVED_HYMNS_FROM_STORAGE_REQUEST,
   GET_SAVED_HYMNS_FROM_STORAGE_SUCCESS,
+  REMOVE_FROM_SAVED_HYMNS,
   SET_SAVED_HYMNS_TO_STORAGE_ERROR,
   SET_SAVED_HYMNS_TO_STORAGE_REQUEST,
-  SET_SAVED_HYMNS_TO_STORAGE_SUCCESS
+  SET_SAVED_HYMNS_TO_STORAGE_SUCCESS,
 } from "../actions/hymnActions";
 import Action from "../models/Action";
-
+import HymnItem from "../models/HymnItem";
 
 export interface HymnsInterface {
-  isLaunchingApp: boolean,
-  savedHymns: HymnItem[]
-  isSavedHymnsLoading: boolean
-  isSavingHymnsToStorage: boolean
-  error: string
+  isLaunchingApp: boolean;
+  savedHymns: HymnItem[];
+  isSavedHymnsLoading: boolean;
+  isSavingHymnsToStorage: boolean;
+  error: string;
 }
 
 const INITIAL_STATE: HymnsInterface = {
@@ -79,10 +78,10 @@ export default (state = INITIAL_STATE, action: Action): HymnsInterface => {
     case REMOVE_FROM_SAVED_HYMNS:
       return {
         ...state,
-        savedHymns: action.payload
+        savedHymns: action.payload,
       };
 
     default:
-      return state
+      return state;
   }
 };

@@ -1,15 +1,15 @@
-import React from "react"
-import {StyleSheet, View} from "react-native";
-import {Button, Colors, TextInput} from "react-native-paper";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, Colors, TextInput } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import i18n from "../../../i18n";
 
 interface Props {
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 interface State {
-  email: string
+  email: string;
 }
 
 class Login extends React.Component<Props, State> {
@@ -18,33 +18,36 @@ class Login extends React.Component<Props, State> {
 
     this.state = {
       email: "",
-    }
+    };
   }
 
-  render() {
+  public render() {
     const inputTheme = {
-      colors: { primary: "#FFF", text: "#FFF", placeholder: "#FFF" }
+      colors: {primary: "#FFF", text: "#FFF", placeholder: "#FFF"},
     };
 
     return (
-      <View style={{width: '100%', height: "auto"}}>
+      <View style={{width: "100%", height: "auto"}}>
         <TextInput
-          label={i18n.t('email')}
+          label={i18n.t("email")}
           style={style.input}
           theme={inputTheme}
           underlineColor="#FFF"
           value={this.state.email}
-          onChangeText={email => this.setState({ email })}
+          onChangeText={(email) => this.setState({email})}
         />
         <TextInput
-          label={i18n.t('password')}
+          label={i18n.t("password")}
           style={style.input}
           theme={inputTheme}
           underlineColor="#FFF"
           value={this.state.email}
-          onChangeText={email => this.setState({ email })}
+          onChangeText={(email) => this.setState({email})}
         />
-        <Button style={style.button} mode="contained" onPress={() => this.props.navigation.replace("drawerNavigator")}>{i18n.t('btn_login')}</Button>
+        <Button style={style.button} mode="contained"
+                onPress={() => this.props.navigation.replace("drawerNavigator")}>
+          {i18n.t("btn_login")}
+        </Button>
       </View>
     );
   }
@@ -57,8 +60,8 @@ const style = StyleSheet.create({
   },
   button: {
     marginVertical: 20,
-    backgroundColor: Colors.tealA700
-  }
+    backgroundColor: Colors.tealA700,
+  },
 });
 
 export default Login;

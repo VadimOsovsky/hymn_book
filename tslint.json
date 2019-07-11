@@ -8,6 +8,9 @@
   "rules": {
     "object-literal-sort-keys": false,
     "no-string-literal": false,
+    "interface-name": false,
+    "member-ordering": false,
+    "no-empty-interface": false,
     "no-console": [
       false
     ]

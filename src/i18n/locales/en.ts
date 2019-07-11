@@ -44,6 +44,8 @@ export default {
   edit_hymn: "Edit Hymn",
   delete_from_saved: "Delete from Saved",
   unknown_title: "Unknown title",
+  unknown_author: "Unknown author",
+  no_chords: "w/out Chords",
 
   // Hymn Editor
   add_new_hymn: "Add New Hymn",
@@ -54,7 +56,8 @@ export default {
   set_hymn_image: "Set hymn cover",
   hymn_cover_url: "Hymn cover URL",
   hymn_title: "Hymn title",
-  author_name: "Author name",
+  music_by: "Music by",
+  lyrics_by: "Lyrics by",
   lyrics: "Lyrics",
   save_changes_title: "Save and exit",
   save_changes_message: "Would you like to save the changes?",
@@ -75,5 +78,5 @@ export default {
   night_mode: "Night Mode",
 
   // Other
-  or: "or"
+  or: "or",
 };

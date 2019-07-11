@@ -1,23 +1,22 @@
 import React from "react";
-import { StatusBar } from "react-native";
-import globalStyles from "../../styles/globalStyles";
-import { AppState } from "../../reducers";
-import { ThunkDispatch } from "redux-thunk";
-import Action from "../../models/Action";
-import { connect } from "react-redux";
-import { Appbar } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
-import ThemedView from "../../shared/ThemedView";
+import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
 import i18n from "../../i18n";
+import Action from "../../models/Action";
+import { AppState } from "../../reducers";
+import AndroidAppBar, { navIcons } from "../../shared/AndroidAppBar";
+import ThemedView from "../../shared/ThemedView";
+import globalStyles from "../../styles/globalStyles";
 
 interface ReduxDispatch {
 }
 
 interface OwnProps {
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
-type Props = AppState & ReduxDispatch & OwnProps
+type Props = AppState & ReduxDispatch & OwnProps;
 
 interface State {
 }
@@ -27,19 +26,21 @@ class SavedHymns extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = {}
+    this.state = {};
   }
 
   private renderHeader = () => {
     return (
-      <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
-        <Appbar.Action icon="menu" onPress={() => this.props.navigation.openDrawer()}/>
-        <Appbar.Content title={i18n.t('my_groups')}/>
-      </Appbar.Header>
-    )
-  };
+      <AndroidAppBar
+        title={i18n.t("my_groups")}
+        navIcon={navIcons.MENU}
+        onNavIconClick={this.props.navigation.openDrawer}
+        actions={[]}
+      />
+    );
+  }
 
-  render() {
+  public render() {
     return (
       <ThemedView style={globalStyles.screen}>
         {this.renderHeader()}
@@ -51,13 +52,13 @@ class SavedHymns extends React.Component<Props, State> {
 
 const mapStateToProps = (state: AppState) => {
   const {} = state;
-  return {}
+  return {};
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
     // removeFromSavedHymns: (ids: number[]) => dispatch(removeFromSavedHymns(ids)),
-  }
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SavedHymns);

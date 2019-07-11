@@ -1,6 +1,6 @@
 export default class Action {
-  type: string;
-  payload: any;
+  public type: string;
+  public payload: any;
 
   constructor(type: string, payload: any) {
     this.type = type;

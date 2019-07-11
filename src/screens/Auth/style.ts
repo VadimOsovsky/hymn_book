@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native"
+import { StyleSheet } from "react-native";
 import { fullWH } from "../../styles/styleVariables";
 
 export default StyleSheet.create({
@@ -12,6 +12,6 @@ export default StyleSheet.create({
     ...fullWH,
     paddingHorizontal: 20,
     alignItems: "center",
-    justifyContent: "center"
-  }
-})
+    justifyContent: "center",
+  },
+});

@@ -2,13 +2,19 @@ import { ImageSourcePropType } from "react-native";
 
 export default class SwipeableListItemAction {
 
-  actionName: string;
-  icon: ImageSourcePropType;
-  iconColor: string;
-  backgroundColor: string;
-  callback: Function;
+  public actionName: string;
+  public icon: ImageSourcePropType;
+  public iconColor: string;
+  public backgroundColor: string;
+  public callback: () => void;
 
-  constructor(actionName: string, icon: ImageSourcePropType, iconColor: string, backgroundColor: string, callback: Function) {
+  constructor(
+    actionName: string,
+    icon: ImageSourcePropType,
+    iconColor: string,
+    backgroundColor: string,
+    callback: () => void,
+  ) {
     this.actionName = actionName;
     this.icon = icon;
     this.iconColor = iconColor;
