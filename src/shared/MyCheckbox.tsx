@@ -31,7 +31,7 @@ class MyCheckbox extends PureComponent<Props, State> {
   public render() {
     return (
       <View style={this.props.style}>
-        <TouchableRipple style={style.ripple} onPress={() => this.props.onCheckboxChange()}>
+        <TouchableRipple style={style.ripple} onPress={this.props.onCheckboxChange}>
           <View style={style.row}>
             <View style={{flexDirection: "row", alignItems: "center"}}>
               {(() => {
@@ -41,7 +41,7 @@ class MyCheckbox extends PureComponent<Props, State> {
               })()}
               <Text style={this.props.textStyle}>{this.props.label}</Text>
             </View>
-            <CheckBox onValueChange={() => this.props.onCheckboxChange()} value={this.state.value}/>
+            <CheckBox onValueChange={this.props.onCheckboxChange} value={this.state.value}/>
           </View>
         </TouchableRipple>
       </View>

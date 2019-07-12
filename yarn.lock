@@ -5330,6 +5330,11 @@ react-native-paper@^2.16.0:
     react-lifecycles-compat "^3.0.4"
     react-native-safe-area-view "^0.12.0"
 
+react-native-radio-button-android@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-radio-button-android/-/react-native-radio-button-android-2.0.0.tgz#c4c6bde6dde174c55e8d8972b3124a9c3f328478"
+  integrity sha512-CZ8iitOSGCX+ZeWX/wuNsvBxvVsVrSf5FRgXZgM7/uQRAgn54+/SoIBfQ74zvBtjXqrB+sZhBP8tytcBYIDi8A==
+
 react-native-raw-bottom-sheet@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-2.0.2.tgz#a617d88f40204350f6ad8cd061dfa2b6edfea57c"

@@ -3,11 +3,15 @@ export default {
   btn_cancel: "Cancel",
   btn_ok: "Ok",
   btn_done: "Done",
+  btn_add: "Add",
+  btn_add_lyrics: "Add Lyrics",
+  btn_publish: "Publish",
+  btn_update: "Update",
   btn_preview: "Preview",
   btn_delete: "Delete",
   btn_share: "Share",
   btn_edit: "Edit",
-  btn_save: "Saved",
+  btn_save: "Save",
   btn_discard: "Discard",
   btn_login: "LOG IN",
 
@@ -46,6 +50,7 @@ export default {
   unknown_title: "Unknown title",
   unknown_author: "Unknown author",
   no_chords: "w/out Chords",
+  with_chords: "w/ %{key} Chords",
 
   // Hymn Editor
   add_new_hymn: "Add New Hymn",
@@ -63,7 +68,11 @@ export default {
   save_changes_message: "Would you like to save the changes?",
   discard_changes_title: "Attention",
   discard_changes_message: "You have made changes to the hymn, would you like to save them?",
-  error_save_hymn: "Error, provide lyrics",
+  delete_chords_title: "Delete Chords",
+  delete_chords_message: "Are you sure you want to delete this version of lyrics?",
+  select_chords_key: "Select Chords Key",
+  error_save_hymn_no_lyrics: "Please add lyrics by pressing + button",
+  // error_delete_lyrics_last: "At least 1 lyrics version has to be present",
 
   // My Groups
   my_groups: "My Groups",

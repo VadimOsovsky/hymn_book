@@ -1,6 +1,7 @@
+import _ from "lodash";
 import React from "react";
 import { Alert, ScrollView, ToastAndroid, View } from "react-native";
-import { Button, Divider, TextInput } from "react-native-paper";
+import { Button, Chip, Divider, IconButton, TextInput } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -8,6 +9,7 @@ import { addToSavedHymns, editSavedHymn } from "../../actions/hymnActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
 import HymnItem, { LyricsItem } from "../../models/HymnItem";
+import { MusicKeys } from "../../models/MusicKeys";
 import { screens } from "../../navigation/savedHymnsStack";
 import { AppState } from "../../reducers";
 import AndroidAppBar, { AppBarAction, navIcons, showAsAction } from "../../shared/AndroidAppBar";
@@ -15,6 +17,7 @@ import HymnCoverAvatar from "../../shared/HymnCoverAvatar";
 import ThemedView from "../../shared/ThemedView";
 import globalStyles from "../../styles/globalStyles";
 import icons from "../../styles/icons";
+import AddLyricsBtn from "./components/AddLyricsBtn";
 import ImagePickerModal from "./components/ImagePickerModal";
 import style from "./style";
 
@@ -33,8 +36,10 @@ interface State {
   hymnTitleInput: string;
   musicByInput: string;
   lyricsByInput: string;
+  lyricsTextInput: string;
   hymnCoverUri: string;
   lyrics: LyricsItem[];
+  selectedLyricsItem: LyricsItem | null;
 }
 
 class HymnEditor extends React.Component<Props, State> {
@@ -46,8 +51,6 @@ class HymnEditor extends React.Component<Props, State> {
   private hymnToEdit: HymnItem = this.props.navigation.getParam("hymnToEdit") || null;
   private isAddNew: boolean = !this.props.navigation.getParam("hymnToEdit");
 
-  private inputToFocusOnOpenRef: TextInput | undefined;
-
   private navFocusListener: { remove: () => void } | undefined;
 
   constructor(props: Props) {
@@ -57,12 +60,16 @@ class HymnEditor extends React.Component<Props, State> {
       hymnTitleInput: this.hymnToEdit ? this.hymnToEdit.title : "",
       musicByInput: this.hymnToEdit ? this.hymnToEdit.musicBy : "",
       lyricsByInput: this.hymnToEdit ? this.hymnToEdit.lyricsBy : "",
+      lyricsTextInput: this.hymnToEdit ? this.hymnToEdit.lyrics[0].text : "",
       hymnCoverUri: this.hymnToEdit ? this.hymnToEdit.hymnCoverImage : "",
-      lyrics: this.hymnToEdit ? this.hymnToEdit.lyrics : [],
+      lyrics: this.hymnToEdit ? _.cloneDeep(this.hymnToEdit.lyrics) : [],
+      selectedLyricsItem: this.hymnToEdit ? this.hymnToEdit.lyrics[0] : null,
     };
   }
 
-  private onDone = () => {
+  private onDone = async () => {
+    await this.updateLyrics();
+
     if (this.isAddNew) {
       this.saveAndExit();
     } else if (!this.checkIfHymnChanged()) {
@@ -79,7 +86,9 @@ class HymnEditor extends React.Component<Props, State> {
     }
   }
 
-  private onGoBack = () => {
+  private onGoBack = async () => {
+    await this.updateLyrics();
+
     if (!this.checkIfHymnChanged()) {
       this.discardAndExit();
     } else {
@@ -95,19 +104,42 @@ class HymnEditor extends React.Component<Props, State> {
     }
   }
 
-  private onPreview = () => {
-    const hymnToPreview = this.getNewHymn();
+  private onAddLyricsItem = (newLyrics: LyricsItem) => {
+    this.setState({
+      lyrics: [...this.state.lyrics, newLyrics],
+      selectedLyricsItem: newLyrics,
+      lyricsTextInput: newLyrics.text,
+    });
+  }
 
-    if (this.navFocusListener) {
-      this.navFocusListener.remove();
+  private onDeleteLyricsItem = (keyToDelete: MusicKeys) => {
+    Alert.alert(
+      i18n.t("delete_chords_title"),
+      i18n.t("delete_chords_message"),
+      [
+        {text: i18n.t("btn_cancel")},
+        {text: i18n.t("btn_delete"), onPress: () => this.deleteLyricsItem(keyToDelete)},
+      ],
+    );
+  }
+
+  private onPreview = () => {
+    if (!this.state.lyrics.length) {
+      ToastAndroid.show(i18n.t("error_save_hymn_no_lyrics"), ToastAndroid.LONG);
+    } else {
+      const hymnToPreview = this.getNewHymn();
+
+      if (this.navFocusListener) {
+        this.navFocusListener.remove();
+      }
+      this.props.navigation.navigate(screens.HYMN_VIEW, {hymnToView: hymnToPreview, isPreviewMode: true});
     }
-    this.props.navigation.navigate(screens.HYMN_VIEW, {hymnToView: hymnToPreview, isPreviewMode: true});
   }
 
   private saveAndExit = () => {
     // TODO Save to backend
     if (!this.state.lyrics.length) {
-      ToastAndroid.show(i18n.t("error_save_hymn"), ToastAndroid.LONG);
+      ToastAndroid.show(i18n.t("error_save_hymn_no_lyrics"), ToastAndroid.LONG);
     } else {
       const newHymn = this.getNewHymn();
       this.isAddNew ? this.props.addToSavedHymns(newHymn) : this.props.editSavedHymn(newHymn);
@@ -117,6 +149,40 @@ class HymnEditor extends React.Component<Props, State> {
 
   private discardAndExit = () => {
     this.props.navigation.goBack();
+  }
+
+  private updateLyrics = () => new Promise((resolve) => {
+    const lyrics: LyricsItem[] = _.cloneDeep(this.state.lyrics);
+    if (this.state.selectedLyricsItem) {
+      const lyricsToUpdate = lyrics[lyrics.indexOf(this.state.selectedLyricsItem)];
+      if (lyricsToUpdate) {
+        lyricsToUpdate.text = this.state.lyricsTextInput;
+        this.setState({lyrics}, resolve);
+      } else {
+        resolve();
+      }
+    } else {
+      resolve();
+    }
+  })
+
+  private deleteLyricsItem = (keyToDelete: MusicKeys) => {
+    const lyrics: LyricsItem[] = _.clone(this.state.lyrics);
+
+    lyrics.forEach((item, index) => {
+      if (item.key === keyToDelete) {
+        lyrics.splice(index, 1);
+      }
+    });
+    this.setState({lyrics}, () => {
+      // if the deleted item was selected, select first
+      if (this.state.selectedLyricsItem!.key === keyToDelete) {
+        this.setState({
+          selectedLyricsItem: this.state.lyrics[0],
+          lyricsTextInput: this.state.lyrics[0].text,
+        });
+      }
+    });
   }
 
   private getNewHymn(): HymnItem {
@@ -145,7 +211,7 @@ class HymnEditor extends React.Component<Props, State> {
 
   // private setHymnCoverImage(hymnCoverUri: string) {
   //   this.setState({hymnCoverUri})
-  // };
+  // }
 
   private checkIfHymnChanged = () => {
     // returns true if changed
@@ -166,7 +232,8 @@ class HymnEditor extends React.Component<Props, State> {
   }
 
   public render() {
-    const {hymnTitleInput, musicByInput, lyricsByInput, hymnCoverUri, lyrics} = this.state;
+    // tslint:disable-next-line:max-line-length
+    const {hymnTitleInput, musicByInput, lyricsByInput, lyricsTextInput, hymnCoverUri, lyrics, selectedLyricsItem} = this.state;
 
     return (
       <ThemedView style={globalStyles.screen}>
@@ -187,7 +254,6 @@ class HymnEditor extends React.Component<Props, State> {
             </View>
 
             <TextInput
-              ref={(ref: TextInput) => this.inputToFocusOnOpenRef = ref}
               label={i18n.t("hymn_title")}
               style={style.input}
               value={hymnTitleInput}
@@ -205,19 +271,49 @@ class HymnEditor extends React.Component<Props, State> {
 
             <Divider style={style.divider}/>
 
-            <TextInput
-              label={i18n.t("lyrics")}
-              multiline={true}
-              mode="outlined"
-              style={[style.input, {backgroundColor: this.props.prefs!.userPrefs.theme.colors.background}]}
-              value={""}
-              onChangeText={(val: string) => this.setState({})}/>
+            <View style={{flexDirection: "row", flexWrap: "wrap", alignItems: "center", marginBottom: 15}}>
+              {lyrics.map((item, index) => {
+                return (
+                  <Chip
+                    key={item.key}
+                    style={{marginRight: 5, marginBottom: 5}}
+                    icon="music-note"
+                    selected={item.key === selectedLyricsItem!.key}
+                    onPress={() => this.setState({selectedLyricsItem: item, lyricsTextInput: item.text})}
+                    onClose={this.state.lyrics.length > 1 ? () => this.onDeleteLyricsItem(item.key) : undefined}
+                  >
+                    {item.key ? i18n.t("with_chords", {key: item.key}) : i18n.t("no_chords")}
+                  </Chip>
+                );
+              })}
+              <AddLyricsBtn
+                lyrics={lyrics}
+                onAddLyrics={this.onAddLyricsItem}/>
+            </View>
 
-            <Button mode="contained" style={style.button} onPress={this.onDone}>
-              {i18n.t("btn_done")}
+            {lyrics.map((item: LyricsItem, index) => {
+              if (item.key === selectedLyricsItem!.key) {
+                return (
+                  <TextInput
+                    key={item.key}
+                    label={i18n.t("lyrics")}
+                    multiline={true}
+                    mode="outlined"
+                    style={[style.input, {backgroundColor: this.props.prefs!.userPrefs.theme.colors.background}]}
+                    value={lyricsTextInput}
+                    onChangeText={(val: string) => this.setState({lyricsTextInput: val})}
+                    onBlur={this.updateLyrics}/>
+                );
+              } else {
+                return null;
+              }
+            })}
+
+            <Button mode="contained" icon="publish" style={style.button} onPress={this.onDone}>
+              {i18n.t(this.isAddNew ? "btn_publish" : "btn_update")}
             </Button>
 
-            <Button style={style.button} onPress={this.onPreview}>
+            <Button style={style.button} icon="visibility" onPress={this.onPreview}>
               {i18n.t("btn_preview")}
             </Button>
 

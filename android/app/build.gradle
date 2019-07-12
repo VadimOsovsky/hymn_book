@@ -149,6 +149,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-radio-button-android')
     implementation project(':react-native-reanimated')
     implementation project(':react-native-i18n')
     implementation project(':react-native-image-picker')

@@ -3,6 +3,7 @@ package com.hymnbook_mobile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.sichacvah.react.radio_button.RadioButtonPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.imagepicker.ImagePickerPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RadioButtonPackage(),
             new ReanimatedPackage(),
             new RNI18nPackage(),
             new ImagePickerPackage(),
