@@ -21,7 +21,7 @@ interface OwnProps {
   isSwipingDisabled: boolean;
   isHymnSelected: boolean;
   onPress: (hymn: HymnItem) => void;
-  onLongPress: (hymnId: string) => void;
+  onLongPress: (hymn: HymnItem) => void;
 }
 
 interface ReduxDispatch {
@@ -131,7 +131,7 @@ class SavedHymnElement extends React.Component<Props, State> {
                    style={{backgroundColor: this.state.isHymnSelected ? highlight : background}}
                    description={HymnItem.formatLyricsForPreview(lyrics)}
                    onPress={() => this.props.onPress(this.props.savedHymn)}
-                   onLongPress={() => this.props.onLongPress(this.props.savedHymn.hymnId)}
+                   onLongPress={() => this.props.onLongPress(this.props.savedHymn)}
                    left={() => <HymnCoverAvatar hymnCoverImage={hymnCoverImage}/>}
         />
       </SwipeableListItem>

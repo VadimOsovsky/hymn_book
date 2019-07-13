@@ -1,6 +1,7 @@
+import _ from "lodash";
 import React, { PureComponent } from "react";
 import { Animated, Dimensions, ScrollView, StyleSheet, View } from "react-native";
-import { Button, Dialog, IconButton, Portal, Text, TouchableRipple } from "react-native-paper";
+import { Button, Dialog, Portal, Text, TouchableRipple } from "react-native-paper";
 // @ts-ignore
 import RadioBtn from "react-native-radio-button-android";
 import i18n from "../../../i18n";
@@ -9,7 +10,7 @@ import { MusicKeys, musicKeysArr } from "../../../models/MusicKeys";
 
 interface OwnProps {
   lyrics: LyricsItem[];
-  onAddLyrics: (newLyrics: LyricsItem) => void;
+  onKeySelected: (lyrics: LyricsItem[], newLyricsItem: LyricsItem) => void;
 }
 
 type Props = OwnProps;
@@ -22,7 +23,7 @@ type State = Readonly<{
   modalMaxHeight: Animated.Value
 }>;
 
-class AddLyricsBtn extends PureComponent<Props, State> {
+class ChordKeySelectionModal extends PureComponent<Props, State> {
 
   public readonly state: State = {
     lyrics: this.props.lyrics,
@@ -31,6 +32,9 @@ class AddLyricsBtn extends PureComponent<Props, State> {
     selectedKey: null,
     modalMaxHeight: new Animated.Value(0),
   };
+
+  private editedLyricsText: string = "";
+  private editedLyricsIndex: number | null = null;
 
   public componentWillMount(): void {
     this.setModalMaxHeight();
@@ -42,7 +46,17 @@ class AddLyricsBtn extends PureComponent<Props, State> {
     }
   }
 
-  private openDialog = () => {
+  public openDialog = (text?: string, index?: number) => {
+    this.setAvailableChordKeys();
+    this.editedLyricsText = _.isString(text) ? text : "";
+    this.editedLyricsIndex = _.isNumber(index) ? index : null;
+    this.setState({
+      selectedKey: null,
+      visible: true,
+    });
+  }
+
+  private setAvailableChordKeys = () => {
     const availableKeys: string[] = [];
     const usedKeys: string[] = [];
     this.state.lyrics.forEach((item) => {
@@ -53,24 +67,11 @@ class AddLyricsBtn extends PureComponent<Props, State> {
         availableKeys.push(key);
       }
     });
-    this.setState({
-      availableKeys,
-      selectedKey: null,
-      visible: true,
-    });
+    this.setState({availableKeys});
   }
 
-  private hideDialog = () => {
+  public hideDialog = () => {
     this.setState({visible: false});
-  }
-
-  private onAddLyrics = () => {
-    const newLyricsItem: LyricsItem = {
-      key: this.state.selectedKey as MusicKeys,
-      text: "",
-    };
-    this.props.onAddLyrics(newLyricsItem);
-    this.hideDialog();
   }
 
   private setModalMaxHeight = () => {
@@ -83,23 +84,26 @@ class AddLyricsBtn extends PureComponent<Props, State> {
     }).start();
   }
 
-  private renderAddButton = () => {
-    if (!this.state.lyrics.length) {
-      return (
-        <Button
-          icon="add"
-          onPress={this.openDialog}
-        >{i18n.t("btn_add_lyrics")}</Button>
-      );
+  private onDoneSelecting = () => {
+    const {lyrics, selectedKey} = this.state;
+    const newLyricsItem: LyricsItem = {
+      key: selectedKey as MusicKeys,
+      text: this.editedLyricsText,
+    };
+    const updatedLyrics = _.clone(lyrics);
+
+    // if changing an existing lyrics item's key
+    if (_.isNumber(this.editedLyricsIndex)) {
+      updatedLyrics[this.editedLyricsIndex] = newLyricsItem;
     } else {
-      return (
-        <IconButton
-          icon="add"
-          size={20}
-          onPress={this.openDialog}
-        />
-      );
+      updatedLyrics.push(newLyricsItem);
     }
+    this.setState({
+      lyrics: updatedLyrics,
+    });
+
+    this.props.onKeySelected(updatedLyrics, newLyricsItem);
+    this.hideDialog();
   }
 
   private renderRadioBtn = (key: string) => {
@@ -117,42 +121,40 @@ class AddLyricsBtn extends PureComponent<Props, State> {
 
   public render() {
     return (
-      <View>
-        {this.renderAddButton()}
-        <Portal>
-          <Dialog
-            visible={this.state.visible}
-            onDismiss={this.hideDialog}>
-            <Dialog.Title>{i18n.t("select_chords_key")}</Dialog.Title>
+      <Portal>
+        <Dialog
+          visible={this.state.visible}
+          onDismiss={this.hideDialog}>
+          <Dialog.Title>{i18n.t("select_chords_key")}</Dialog.Title>
 
-            <Dialog.Content>
-              <Animated.View style={{maxHeight: this.state.modalMaxHeight}}
-                             onLayout={this.setModalMaxHeight}>
-                <ScrollView>
-                  {this.state.availableKeys.map((key) => {
-                    return this.renderRadioBtn(key);
-                  })}
-                </ScrollView>
-              </Animated.View>
-            </Dialog.Content>
+          <Dialog.Content>
+            <Animated.View style={{maxHeight: this.state.modalMaxHeight}}
+                           onLayout={this.setModalMaxHeight}>
+              <ScrollView>
+                {this.state.availableKeys.map((key) => {
+                  return this.renderRadioBtn(key);
+                })}
+              </ScrollView>
+            </Animated.View>
+          </Dialog.Content>
 
-            <Dialog.Actions>
-              <Button onPress={this.hideDialog}>
-                {i18n.t("btn_cancel")}
-              </Button>
-              <Button onPress={this.onAddLyrics} disabled={typeof this.state.selectedKey !== "string"}>
-                {i18n.t("btn_add")}
-              </Button>
-            </Dialog.Actions>
+          <Dialog.Actions>
+            <Button onPress={this.hideDialog}>
+              {i18n.t("btn_cancel")}
+            </Button>
+            <Button onPress={this.onDoneSelecting}
+                    disabled={typeof this.state.selectedKey !== "string"}>
+              {i18n.t("btn_done")}
+            </Button>
+          </Dialog.Actions>
 
-          </Dialog>
-        </Portal>
-      </View>
+        </Dialog>
+      </Portal>
     );
   }
 }
 
-export default AddLyricsBtn;
+export default ChordKeySelectionModal;
 
 const style = StyleSheet.create({
   radioContainer: {

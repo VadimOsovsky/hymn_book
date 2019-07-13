@@ -12,6 +12,7 @@ export default {
   btn_share: "Share",
   btn_edit: "Edit",
   btn_save: "Save",
+  btn_apply: "Apply",
   btn_discard: "Discard",
   btn_login: "LOG IN",
 
@@ -64,14 +65,15 @@ export default {
   music_by: "Music by",
   lyrics_by: "Lyrics by",
   lyrics: "Lyrics",
-  save_changes_title: "Save and exit",
-  save_changes_message: "Would you like to save the changes?",
+  save_changes_title: "Update and exit",
+  save_changes_message: "Would you like to update the hymn?",
   discard_changes_title: "Attention",
-  discard_changes_message: "You have made changes to the hymn, would you like to save them?",
+  discard_changes_message: "You have made changes to the hymn, would you like to apply them?",
   delete_chords_title: "Delete Chords",
   delete_chords_message: "Are you sure you want to delete this version of lyrics?",
   select_chords_key: "Select Chords Key",
-  error_save_hymn_no_lyrics: "Please add lyrics by pressing + button",
+  error_save_hymn_no_title: "Please add title to the hymn",
+  error_save_hymn_no_lyrics: "Please add lyrics",
   // error_delete_lyrics_last: "At least 1 lyrics version has to be present",
 
   // My Groups

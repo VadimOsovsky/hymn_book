@@ -1,5 +1,5 @@
 import React from "react";
-import { ActivityIndicator, Alert, FlatList, StatusBar } from "react-native";
+import { ActivityIndicator, Alert, FlatList, StatusBar, Vibration } from "react-native";
 import { Appbar, Searchbar, Surface, Text } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
@@ -97,9 +97,14 @@ class SavedHymns extends React.Component<Props, State> {
     }
   }
 
-  private onHymnLongPress = (hymnId: string) => {
+  private onHymnLongPress = (hymn: HymnItem) => {
     if (!this.state.isSearchMode) {
-      this.setState({selectedHymns: [...this.state.selectedHymns, hymnId]});
+      if (!this.state.selectedHymns.length) {
+        Vibration.vibrate(50);
+        this.setState({selectedHymns: [...this.state.selectedHymns, hymn.hymnId]});
+      } else {
+        this.onHymnPress(hymn);
+      }
     }
   }
 
