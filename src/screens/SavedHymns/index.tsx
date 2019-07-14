@@ -11,6 +11,7 @@ import HymnItem from "../../models/HymnItem";
 import { screens } from "../../navigation/savedHymnsStack";
 import { AppState } from "../../reducers";
 import AndroidAppBar, { AppBarAction, navIcons, showAsAction } from "../../shared/AndroidAppBar";
+import GuideBanner from "../../shared/GuideBanner";
 import ThemedView from "../../shared/ThemedView";
 import Transition from "../../shared/Transition";
 import globalStyles from "../../styles/globalStyles";
@@ -18,6 +19,7 @@ import icons from "../../styles/icons";
 import SavedHymnElement from "./components/SavedHymnElement";
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
 import style from "./style";
+import { GuideTips } from "../../models/GuideTips";
 
 interface ReduxDispatch {
   removeFromSavedHymns: (hymnIds: string[]) => void;
@@ -47,17 +49,6 @@ class SavedHymns extends React.Component<Props, State> {
       searchQuery: "",
       selectedHymns: [],
     };
-  }
-
-  public render() {
-    return (
-      <ThemedView style={globalStyles.screen}>
-        {this.renderHeader()}
-        {this.renderSearchQuery()}
-        {this.renderSavedHymns()}
-        {this.renderFAB()}
-      </ThemedView>
-    );
   }
 
   private openSearch = () => {
@@ -253,8 +244,24 @@ class SavedHymns extends React.Component<Props, State> {
 
   private renderFAB = () => {
     if (!this.props.hymns!.isSavedHymnsLoading && !this.state.selectedHymns.length && !this.state.isSearchMode) {
-      return <SavedHymnsFAB navigation={this.props.navigation}/>;
+      return (
+        <SavedHymnsFAB
+          navigation={this.props.navigation}
+          openSearch={this.openSearch}/>
+      );
     }
+  }
+
+  public render() {
+    return (
+      <ThemedView style={globalStyles.screen}>
+        {this.renderHeader()}
+        {this.renderSearchQuery()}
+        <GuideBanner tipType={GuideTips.PRELOADED_HYMNS}/>
+        {this.renderSavedHymns()}
+        {this.renderFAB()}
+      </ThemedView>
+    );
   }
 
 }

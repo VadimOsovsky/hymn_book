@@ -1,9 +1,11 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import HymnItem from "../models/HymnItem";
 import { UserPrefs } from "../reducers/preferencesReducer";
+import { GuideInterface, TipsToShow } from "../reducers/guideReducer";
 
 const SAVED_HYMNS = "SAVED_HYMNS";
 const PREFS = "PREFS";
+const GUIDE = "GUIDE";
 
 export default class StorageUtils {
 
@@ -19,6 +21,13 @@ export default class StorageUtils {
   }
   public static setUserPrefs = async (prefs: UserPrefs) => {
     return AsyncStorage.setItem(PREFS, JSON.stringify(prefs));
+  }
+
+  public static getGuideTips = async () => {
+    return AsyncStorage.getItem(GUIDE);
+  }
+  public static setGuideTips = async (tips: TipsToShow) => {
+    return AsyncStorage.setItem(GUIDE, JSON.stringify(tips));
   }
 
 }

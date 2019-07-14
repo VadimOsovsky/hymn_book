@@ -7,6 +7,7 @@ import { screens } from "../../../navigation/savedHymnsStack";
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+  openSearch: () => void;
 }
 
 interface State {
@@ -19,33 +20,33 @@ export default class SavedHymnsFAB extends React.Component<Props, State> {
   };
 
   public render() {
-    // return (
-    //   <FAB.Group
-    //     open={this.state.isOpen}
-    //     style={style}
-    //     icon={this.state.isOpen ? "close" : "add"}
-    //     actions={[
-    //       {
-    //         icon: "playlist-add",
-    //         label: i18n.t("add_hymn_manually"),
-    //         onPress: () => this.props.navigation.navigate(screens.HYMN_EDITOR, {hymnToEdit: null}),
-    //       },
-    //       {
-    //         icon: "cloud-upload",
-    //         label: i18n.t("import_files"),
-    //         onPress: () => ToastAndroid.show("Import WIP", ToastAndroid.SHORT),
-    //       },
-    //     ]}
-    //     onStateChange={({open: isOpen}) => this.setState({isOpen})}
-    //   />
-    // );
     return (
-      <FAB
-        icon="add"
-        style={style.fab}
-        onPress={() => this.props.navigation.navigate(screens.HYMN_EDITOR, {hymnToEdit: null})}
+      <FAB.Group
+        open={this.state.isOpen}
+        style={style}
+        icon={this.state.isOpen ? "close" : "add"}
+        actions={[
+          {
+            icon: "playlist-add",
+            label: i18n.t("fab_add_new_hymn"),
+            onPress: () => this.props.navigation.navigate(screens.HYMN_EDITOR, {hymnToEdit: null}),
+          },
+          {
+            icon: "search",
+            label: i18n.t("fab_find_existing"),
+            onPress: this.props.openSearch,
+          },
+        ]}
+        onStateChange={({open: isOpen}) => this.setState({isOpen})}
       />
     );
+    // return (
+    //   <FAB
+    //     icon="add"
+    //     style={style.fab}
+    //     onPress={() => this.props.navigation.navigate(screens.HYMN_EDITOR, {hymnToEdit: null})}
+    //   />
+    // );
   }
 }
 

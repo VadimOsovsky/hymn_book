@@ -10,7 +10,7 @@ interface State {
   hymnCoverSrc: ImageSourcePropType | { uri: string };
 }
 
-const DEFAULT_HYMN_COVER_PATH = "../assets/images/default_hymn_cover.png";
+const DEFAULT_HYMN_COVER_PATH = "../assets/images/hymn_default_cover.jpg";
 
 class HymnCoverAvatar extends React.Component<Props, State> {
 

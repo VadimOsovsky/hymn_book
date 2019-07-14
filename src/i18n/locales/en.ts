@@ -2,6 +2,7 @@ export default {
   // Buttons
   btn_cancel: "Cancel",
   btn_ok: "Ok",
+  btn_got_it: "Got it",
   btn_done: "Done",
   btn_add: "Add",
   btn_add_lyrics: "Add Lyrics",
@@ -15,6 +16,9 @@ export default {
   btn_apply: "Apply",
   btn_discard: "Discard",
   btn_login: "LOG IN",
+  wizard_PRELOADED_HYMNS: "We've preloaded some hymns for you to try out. " +
+    "You can delete each one by swiping left and pressing Delete. " +
+    "To add more press the + button at the bottom.",
 
   // Navigation
   guest: "Guest",
@@ -42,8 +46,8 @@ export default {
     one: "Are you sure you want to delete this song from Saved Hymns?",
     other: "Are you sure you want to delete these %{count} songs from Saved Hymns?",
   },
-  add_hymn_manually: "Add manually",
-  import_files: "Import files",
+  fab_add_new_hymn: "Add new hymn",
+  fab_find_existing: "Find existing",
 
   // Hymn View
   edit_hymn: "Edit Hymn",

@@ -5,6 +5,7 @@ import SplashScreen from "react-native-splash-screen";
 import { createAppContainer } from "react-navigation";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
+import { getGuideTipsFromStorage } from "../actions/guideActions";
 import { getSavedHymnsFromStorage } from "../actions/hymnActions";
 import { getUserPrefsFromStorage } from "../actions/preferencesActions";
 import Action from "../models/Action";
@@ -16,6 +17,7 @@ const Navigation = createAppContainer(rootStack);
 interface ReduxDispatch {
   getHymns: () => void;
   getUserPrefsFromStorage: () => void;
+  getGuideFromStorage: () => void;
 }
 
 interface OwnProps {
@@ -36,6 +38,7 @@ class RootScreen extends React.Component<Props, State> {
   public async componentDidMount() {
     this.props.getHymns();
     this.props.getUserPrefsFromStorage();
+    this.props.getGuideFromStorage();
     this.hideSplashScreen(this.props);
   }
 
@@ -46,9 +49,13 @@ class RootScreen extends React.Component<Props, State> {
   private hideSplashScreen = (props: Props) => {
     const {isLaunchingApp, isSavedHymnsLoading, error} = props.hymns!;
     const {isPrefsReady} = props.prefs!;
-    if (!isLaunchingApp && !isSavedHymnsLoading && isPrefsReady) {
+    const {isGuideReady} = props.guide!;
+
+    if (!isLaunchingApp && !isSavedHymnsLoading && isPrefsReady && isGuideReady) {
       SplashScreen.hide();
-      if (error) { ToastAndroid.show(error, ToastAndroid.LONG); }
+      if (error) {
+        ToastAndroid.show(error, ToastAndroid.LONG);
+      }
       this.setState({isAppReady: true});
     }
   }
@@ -64,14 +71,15 @@ class RootScreen extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState) => {
-  const {hymns, prefs} = state;
-  return {hymns, prefs};
+  const {hymns, prefs, guide} = state;
+  return {hymns, prefs, guide};
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
     getHymns: () => dispatch(getSavedHymnsFromStorage()),
     getUserPrefsFromStorage: () => dispatch(getUserPrefsFromStorage()),
+    getGuideFromStorage: () => dispatch(getGuideTipsFromStorage()),
   };
 };
 
