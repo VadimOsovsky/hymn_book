@@ -4,9 +4,10 @@ import { Appbar, Searchbar, Surface, Text } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { removeFromSavedHymns } from "../../actions/hymnActions";
+import { getSavedHymnsFromStorage, removeFromSavedHymns } from "../../actions/hymnActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
+import { GuideTips } from "../../models/GuideTips";
 import HymnItem from "../../models/HymnItem";
 import { screens } from "../../navigation/savedHymnsStack";
 import { AppState } from "../../reducers";
@@ -19,9 +20,9 @@ import icons from "../../styles/icons";
 import SavedHymnElement from "./components/SavedHymnElement";
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
 import style from "./style";
-import { GuideTips } from "../../models/GuideTips";
 
 interface ReduxDispatch {
+  getSavedHymnsFromStorage: () => void;
   removeFromSavedHymns: (hymnIds: string[]) => void;
 }
 
@@ -224,6 +225,8 @@ class SavedHymns extends React.Component<Props, State> {
       return (
         <FlatList
           data={this.getFilteredSavedHymns()}
+          onRefresh={this.props.getSavedHymnsFromStorage}
+          refreshing={this.props.hymns!.isSavedHymnsLoading}
           keyExtractor={((item: HymnItem) => String(item.hymnId))}
           extraData={this.state.selectedHymns}
           renderItem={({item}) => {
@@ -273,6 +276,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
+    getSavedHymnsFromStorage: () => dispatch(getSavedHymnsFromStorage()),
     removeFromSavedHymns: (ids: string[]) => dispatch(removeFromSavedHymns(ids)),
   };
 };
