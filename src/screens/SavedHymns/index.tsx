@@ -228,6 +228,8 @@ class SavedHymns extends React.Component<Props, State> {
           onRefresh={this.props.getSavedHymnsFromStorage}
           refreshing={this.props.hymns!.isSavedHymnsLoading}
           keyExtractor={((item: HymnItem) => String(item.hymnId))}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
           extraData={this.state.selectedHymns}
           renderItem={({item}) => {
             return (

@@ -15,7 +15,10 @@ export default {
   btn_save: "Save",
   btn_apply: "Apply",
   btn_discard: "Discard",
-  btn_login: "LOG IN",
+  btn_login: "Log in",
+  btn_signup: "Sign up",
+  btn_signup_later: "Sign up later",
+  btn_signup_now: "Sign up now!",
   wizard_PRELOADED_HYMNS: "We've preloaded some hymns for you to try out. " +
     "You can delete each one by swiping left and pressing Delete. " +
     "To add more press the + button at the bottom.",
@@ -25,14 +28,27 @@ export default {
   user: "User",
   enter_wycliffe_account: "Enter your Wycliffe account",
   route_saved_hymns: "Saved Hymns",
+  route_my_profile: "My Profile",
   route_my_groups: "My Groups",
   route_settings: "Settings",
   route_login: "Log in",
   route_about_wycliffe: "About Wycliffe",
 
   // Login
+  title_login: "Login",
+  login_info: "Use your Wycliffe account to log in",
+  title_signup: "Sign up",
+  // space at the end for Learn more
+  signup_info: "Create a Wycliffe account that will be compatible with ",
+  link_other_products: "other products from Wycliffe Russia",
+  name: "Your name",
   email: "Email",
   password: "Password",
+  repeat_password: "Repeat Password",
+  continue_as_guest: "Continue as a Guest",
+  continue_as_guest_warning: "Please note that you will not be able to use social features of the app, such as " +
+    "creating and joining groups, publishing your own hymns, etc.",
+  forgot_pwd: "Forgot password?",
 
   // Saved Hymns Screen
   my_saved_hymns: "My Saved Hymns",
@@ -95,4 +111,5 @@ export default {
 
   // Other
   or: "or",
+  learn_more: "Learn more",
 };
