@@ -39,17 +39,16 @@ class RootScreen extends React.Component<Props> {
   }
 
   private isAppReady = (props: Props) => {
-    const {isLaunchingApp, isSavedHymnsLoading} = props.hymns!;
     const {isPrefsReady} = props.prefs!;
     const {isGuideReady} = props.guide!;
-    return !isLaunchingApp && !isSavedHymnsLoading && isPrefsReady && isGuideReady;
+    return isPrefsReady && isGuideReady;
   }
 
   private hideSplashScreen = (props: Props) => {
     const {error} = props.hymns!;
 
     if (this.isAppReady(props)) {
-      SplashScreen.hide();
+      setTimeout(SplashScreen.hide);
       if (error) {
         ToastAndroid.show(error, ToastAndroid.LONG);
       }

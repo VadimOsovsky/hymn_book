@@ -25,7 +25,7 @@ const rootStack = createSwitchNavigator({
     navigationOptions: {title: screens.MAIN_APP, header: null},
   },
 }, {
-  initialRouteName: screens.AUTH,
+  initialRouteName: screens.AUTH_LOADING,
 });
 
 export default rootStack;

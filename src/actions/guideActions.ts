@@ -21,7 +21,7 @@ export const GET_GUIDE_FROM_STORAGE_SUCCESS = "GET_GUIDE_FROM_STORAGE_SUCCESS";
 export const GET_GUIDE_FROM_STORAGE_ERROR = "GET_GUIDE_FROM_STORAGE_ERROR";
 
 export function getGuideTipsFromStorage() {
-  return async (dispatch: ThunkDispatch<{}, {}, any>) => {
+  return async (dispatch: ThunkDispatch<{}, {}, any>, getState: () => AppState) => {
     dispatch({type: GET_GUIDE_FROM_STORAGE_REQUEST});
 
     try {
@@ -30,6 +30,7 @@ export function getGuideTipsFromStorage() {
         dispatch({type: GET_GUIDE_FROM_STORAGE_SUCCESS, payload: JSON.parse(tipsToShow)});
       } else {
         // else it's the first launch, set initial state to store
+        dispatch({type: GET_GUIDE_FROM_STORAGE_SUCCESS, payload: getState().guide!.tipsToShow});
         dispatch(setGuideTipsToStorage());
       }
     } catch (err) {
