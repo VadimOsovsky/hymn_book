@@ -65,7 +65,14 @@ class SavedHymnElement extends React.Component<Props, State> {
   }
 
   private initSwipeActions = () => {
-    const {error, primaryDark, primary, info} = this.props.prefs!.userPrefs.theme.colors;
+    const {error, primary, info} = this.props.prefs!.userPrefs.theme.colors;
+    this.actions.push(new SwipeableListItemAction(
+      i18n.t("btn_share"),
+      icons.share,
+      "#FFF",
+      info,
+      this.share,
+    ));
     this.actions.push(new SwipeableListItemAction(
       i18n.t("btn_delete"),
       icons.delete,
@@ -74,17 +81,10 @@ class SavedHymnElement extends React.Component<Props, State> {
       this.showDeleteItemAlert,
     ));
     this.actions.push(new SwipeableListItemAction(
-      i18n.t("btn_share"),
-      icons.share,
-      "#FFF",
-      primary,
-      this.share,
-    ));
-    this.actions.push(new SwipeableListItemAction(
       i18n.t("btn_edit"),
       icons.edit,
       "#FFF",
-      info,
+      primary,
       this.editHymn,
     ));
   }

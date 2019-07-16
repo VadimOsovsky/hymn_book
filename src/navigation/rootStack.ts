@@ -14,6 +14,7 @@ const rootStack = createStackNavigator({
     navigationOptions: {title: screens.AUTH, header: null},
   },
 }, {
+  // initialRouteName: screens.AUTH,
   headerMode: "none",
 });
 

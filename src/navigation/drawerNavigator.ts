@@ -24,6 +24,14 @@ const drawerNavigator = createDrawerNavigator(
         showInDrawer: true,
       },
     },
+    MyProfile: {
+      screen: groupsStack,
+      params: {
+        icon: "person",
+        label: i18n.t("route_my_profile"),
+        showInDrawer: true,
+      },
+    },
     SettingsStack: {
       screen: settingsStack,
       params: {

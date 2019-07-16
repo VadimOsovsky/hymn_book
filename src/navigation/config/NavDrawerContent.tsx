@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import { Linking, ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, Drawer, Text, Title } from "react-native-paper";
 import { DrawerItemsProps } from "react-navigation";
@@ -20,72 +20,80 @@ interface ReduxDispatch {
 
 type Props = DrawerItemsProps & ReduxDispatch & AppState;
 
-function NavDrawerContent(props: Props) {
+class NavDrawerContent extends PureComponent<Props> {
 
-  // TODO get user from store
-  const firstName = i18n.t("guest");
-  const lastName = i18n.t("user");
-  const email = i18n.t("enter_wycliffe_account");
-  const profilePicture = "";
+  private firstName = i18n.t("guest");
+  private lastName = i18n.t("user");
+  private email = i18n.t("enter_wycliffe_account");
+  private profilePicture = "";
 
-  return (
-    <ThemedView style={style.drawer}>
-      <ScrollView>
-        <View style={{paddingVertical: 10}}>
-          <StatusBarSafeArea transparent/>
-          <Drawer.Section style={style.userSection}>
-            {(() => {
-              if (profilePicture) {
-                return <Avatar.Image style={style.profilePicture} source={{uri: profilePicture}}/>;
-              } else {
-                return <Avatar.Text style={style.profilePicture} label={firstName[0] + lastName[0]}/>;
-              }
-            })()}
-            <Title style={style.title}>{`${firstName} ${lastName}`}</Title>
-            <Text style={style.caption}>{email}</Text>
-          </Drawer.Section>
+  private onNavItemPress = (navItemKey: string) => {
+    this.props.navigation.closeDrawer();
+    this.props.navigation.navigate(navItemKey);
+  }
 
-          <Drawer.Section>
-            {props.items.map((navItem: any) => {
-              if (navItem.params.showInDrawer) {
-                return (
-                  <Drawer.Item
-                    key={navItem.key}
-                    label={navItem.params.label}
-                    icon={navItem.params.icon}
-                    active={props.activeItemKey === navItem.key}
-                    onPress={() => {
-                      props.navigation.closeDrawer();
-                      props.navigation.navigate(navItem.key);
-                    }}
-                  />
-                );
-              }
-            })}
-          </Drawer.Section>
-          <Drawer.Item
-            label={i18n.t("route_login")}
-            icon="launch"
-            onPress={() => props.navigation.replace(screens.AUTH)}
-          />
-          <Drawer.Item
-            label={i18n.t("route_about_wycliffe")}
-            icon="info"
-            onPress={() => Linking.openURL("https://wycliffe.ru/")}
-          />
-          <MyCheckbox
-            value={props.prefs!.userPrefs.theme.dark}
-            label={i18n.t("night_mode")}
-            icon="brightness-4"
-            style={style.checkboxContainer}
-            textStyle={[style.checkboxLabel, {color: props.prefs!.userPrefs.theme.colors.text}]}
-            iconStyle={[style.checkboxIcon, {color: props.prefs!.userPrefs.theme.colors.text}]}
-            onCheckboxChange={() => props.setTheme(!props.prefs!.userPrefs.theme.dark ? darkTheme : lightTheme)}
-          />
-        </View>
-      </ScrollView>
-    </ThemedView>
-  );
+  public render() {
+    return (
+      <ThemedView style={style.drawer}>
+        <ScrollView contentContainerStyle={{justifyContent: "space-between", flexGrow: 1}}>
+          <View style={{paddingVertical: 10}}>
+            <StatusBarSafeArea transparent/>
+            <Drawer.Section style={style.userSection}>
+              {(() => {
+                if (this.profilePicture) {
+                  return <Avatar.Image style={style.profilePicture} source={{uri: this.profilePicture}}/>;
+                } else {
+                  return <Avatar.Text style={style.profilePicture} label={this.firstName[0] + this.lastName[0]}/>;
+                }
+              })()}
+              <Title style={style.title}>{`${this.firstName} ${this.lastName}`}</Title>
+              <Text style={style.caption}>{this.email}</Text>
+            </Drawer.Section>
+
+            <Drawer.Section>
+              {this.props.items.map((navItem: any) => {
+                if (navItem.params.showInDrawer) {
+                  return (
+                    <Drawer.Item
+                      key={navItem.key}
+                      label={navItem.params.label}
+                      icon={navItem.params.icon}
+                      active={this.props.activeItemKey === navItem.key}
+                      onPress={() => this.onNavItemPress(navItem.key)}
+                    />
+                  );
+                }
+              })}
+            </Drawer.Section>
+            <Drawer.Item
+              label={i18n.t("route_login")}
+              icon="launch"
+              onPress={() => this.props.navigation.replace(screens.AUTH)}
+            />
+          </View>
+
+          <View>
+            <Drawer.Item
+              label={i18n.t("route_about_wycliffe")}
+              icon="info"
+              onPress={() => Linking.openURL("https://wycliffe.ru/")}
+            />
+            <MyCheckbox
+              value={this.props.prefs!.userPrefs.theme.dark}
+              label={i18n.t("night_mode")}
+              icon="brightness-4"
+              style={style.checkboxContainer}
+              textStyle={[style.checkboxLabel, {color: this.props.prefs!.userPrefs.theme.colors.text}]}
+              iconStyle={[style.checkboxIcon, {color: this.props.prefs!.userPrefs.theme.colors.text}]}
+              onCheckboxChange={() => {
+                this.props.setTheme(!this.props.prefs!.userPrefs.theme.dark ? darkTheme : lightTheme);
+              }}
+            />
+          </View>
+        </ScrollView>
+      </ThemedView>
+    );
+  }
 }
 
 const mapStateToProps = (state: AppState) => {
