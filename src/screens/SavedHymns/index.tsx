@@ -62,7 +62,7 @@ class SavedHymns extends React.Component<Props, State> {
 
   private closeSearch = () => this.setState({isSearchMode: false});
 
-  private getFilteredSavedHymns = () => {
+  private getFilteredSavedHymns = (): HymnItem[] => {
     if (this.state.searchQuery) {
       return this.props.hymns!.savedHymns.filter((hymn: HymnItem) => {
         return hymn.title.toLowerCase().includes(this.state.searchQuery.toLowerCase());
@@ -217,16 +217,13 @@ class SavedHymns extends React.Component<Props, State> {
       return (
         <ActivityIndicator size="large" style={style.noHymns}/>
       );
-    } else if (!this.getFilteredSavedHymns().length) {
-      return (
-        <Text style={style.noHymns}>{i18n.t("no_hymns")}</Text>
-      );
     } else {
       return (
         <FlatList
           data={this.getFilteredSavedHymns()}
           onRefresh={this.props.getSavedHymnsFromStorage}
           refreshing={this.props.hymns!.isSavedHymnsLoading}
+          ListEmptyComponent={<Text style={style.noHymns}>{i18n.t("no_hymns")}</Text>}
           keyExtractor={((item: HymnItem) => String(item.hymnId))}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"

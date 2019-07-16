@@ -34,7 +34,7 @@ export const lightTheme: MyTheme = {
     highlight: "#DDD",
     surfaceAlt: Colors.black,
     error: Colors.redA200,
-    info: Colors.indigo500,
+    info: Colors.blue500,
   },
 };
 
