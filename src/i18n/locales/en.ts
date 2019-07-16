@@ -20,7 +20,7 @@ export default {
   btn_signup_later: "Sign up later",
   btn_signup_now: "Sign up now!",
   wizard_PRELOADED_HYMNS: "We've preloaded some hymns for you to try out. " +
-    "You can delete each one by swiping left and pressing Delete. " +
+    "You can delete them by swiping left and pressing Delete. " +
     "To add more press the + button at the bottom.",
 
   // Navigation
