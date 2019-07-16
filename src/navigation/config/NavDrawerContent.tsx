@@ -68,7 +68,7 @@ class NavDrawerContent extends PureComponent<Props> {
             <Drawer.Item
               label={i18n.t("route_login")}
               icon="launch"
-              onPress={() => this.props.navigation.replace(screens.AUTH)}
+              onPress={() => this.props.navigation.navigate(screens.AUTH)}
             />
           </View>
 

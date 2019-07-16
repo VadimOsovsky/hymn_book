@@ -14,6 +14,7 @@ const INITIAL_STATE: GuideInterface = {
   isGuideReady: false,
   tipsToShow: {
     PRELOADED_HYMNS: true,
+    GUEST_MODE_WARNING: true,
   },
   error: "",
 };

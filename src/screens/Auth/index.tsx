@@ -5,17 +5,18 @@ import { Colors, Text, Title } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { setTipToNeverBeShownAgain } from "../../actions/guideActions";
 import i18n from "../../i18n";
+import Action from "../../models/Action";
+import { GuideTips } from "../../models/GuideTips";
 import { AppState } from "../../reducers";
 import AppLogo from "../../shared/AppLogo";
 import StatusBarSafeArea from "../../shared/StatusBarSafeArea";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import style from "./style";
-import { ThunkDispatch } from "redux-thunk";
-import Action from "../../models/Action";
-import { setTipToNeverBeShownAgain } from "../../actions/guideActions";
-import { GuideTips } from "../../models/GuideTips";
+import { screens } from "../../navigation/rootStack";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -46,13 +47,14 @@ class AuthScreen extends React.Component<Props, State> {
   }
 
   private onContinue = () => {
+    console.log("VO: this.props.guide!.tipsToShow", this.props.guide!.tipsToShow);
     if (this.props.guide!.tipsToShow.GUEST_MODE_WARNING) {
       Alert.alert(
         i18n.t("continue_as_guest"),
         i18n.t("continue_as_guest_warning"),
         [
           {text: i18n.t("btn_signup_later"), onPress: this.continueWithoutAccount},
-          {text: i18n.t("btn_signup_now")},
+          {text: i18n.t("btn_signup_now"), onPress: () => this.setState({authMode: authModes.SIGNUP})},
         ],
       );
     } else {
@@ -66,7 +68,7 @@ class AuthScreen extends React.Component<Props, State> {
     if (guide!.tipsToShow.GUEST_MODE_WARNING) {
       setTip(GuideTips.GUEST_MODE_WARNING);
     }
-    navigation.replace("drawerNavigator");
+    navigation.navigate(screens.MAIN_APP);
   }
 
   public render() {
@@ -132,4 +134,4 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => 
   };
 };
 
-export default connect(mapStateToProps)(AuthScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(AuthScreen);

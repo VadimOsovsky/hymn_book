@@ -23,17 +23,9 @@ interface ReduxDispatch {
 interface OwnProps {
 }
 
-interface State {
-  isAppReady: boolean;
-}
-
 type Props = AppState & ReduxDispatch & OwnProps;
 
-class RootScreen extends React.Component<Props, State> {
-
-  public readonly state = {
-    isAppReady: false,
-  };
+class RootScreen extends React.Component<Props> {
 
   public async componentDidMount() {
     this.props.getHymns();
@@ -42,31 +34,39 @@ class RootScreen extends React.Component<Props, State> {
     this.hideSplashScreen(this.props);
   }
 
-  public componentWillReceiveProps(nextProps: Readonly<AppState & ReduxDispatch & OwnProps & State>, nextContext: any) {
+  public componentWillReceiveProps(nextProps: Readonly<AppState & ReduxDispatch & OwnProps>, nextContext: any) {
     this.hideSplashScreen(nextProps);
   }
 
-  private hideSplashScreen = (props: Props) => {
-    const {isLaunchingApp, isSavedHymnsLoading, error} = props.hymns!;
+  private isAppReady = (props: Props) => {
+    const {isLaunchingApp, isSavedHymnsLoading} = props.hymns!;
     const {isPrefsReady} = props.prefs!;
     const {isGuideReady} = props.guide!;
+    return !isLaunchingApp && !isSavedHymnsLoading && isPrefsReady && isGuideReady;
+  }
 
-    if (!isLaunchingApp && !isSavedHymnsLoading && isPrefsReady && isGuideReady) {
+  private hideSplashScreen = (props: Props) => {
+    const {error} = props.hymns!;
+
+    if (this.isAppReady(props)) {
       SplashScreen.hide();
       if (error) {
         ToastAndroid.show(error, ToastAndroid.LONG);
       }
-      this.setState({isAppReady: true});
     }
   }
 
   public render() {
-    return (
-      <PaperProvider theme={this.props.prefs!.userPrefs.theme}>
-        <StatusBar translucent={true} backgroundColor="rgba(0,0,0,0.15)"/>
-        <Navigation/>
-      </PaperProvider>
-    );
+    if (this.isAppReady(this.props)) {
+      return (
+        <PaperProvider theme={this.props.prefs!.userPrefs.theme}>
+          <StatusBar translucent={true} backgroundColor="rgba(0,0,0,0.15)"/>
+          <Navigation/>
+        </PaperProvider>
+      );
+    } else {
+      return null;
+    }
   }
 }
 

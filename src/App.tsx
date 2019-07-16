@@ -7,6 +7,7 @@ import RootScreen from "./screens/RootScreen";
 
 const store = createStore(appReducer, applyMiddleware(thunk));
 
+
 export default class App extends React.Component {
 
   public render() {
