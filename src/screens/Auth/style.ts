@@ -9,9 +9,6 @@ export default StyleSheet.create({
   bgPic: {
     ...fullWH,
   },
-  gradient: {
-    ...fullWH,
-  },
   container: {
     alignItems: "center",
     justifyContent: "space-between",

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item>
-        <bitmap
-                android:src="@drawable/auth_bg"
-                android:gravity="center|top|clip_vertical"/>
-    </item>
-<!--    <item android:drawable="@color/colorPrimary"/>-->
-<!--        <item-->
-<!--                android:drawable="@mipmap/ic_launcher_foreground"-->
-<!--                android:gravity="center"/>-->
+    <item android:drawable="@color/colorPrimary" />
+
+    <!--<item>-->
+    <!--<bitmap-->
+    <!--android:src="@drawable/auth_bg"-->
+    <!--android:tileMode="disabled"-->
+    <!--android:gravity="fill_vertical|bottom"/>-->
+    <!--</item>-->
+    <item
+            android:drawable="@drawable/app_logo"
+            android:gravity="center"/>
 
 </layer-list>

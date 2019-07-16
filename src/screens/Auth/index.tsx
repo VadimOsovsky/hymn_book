@@ -1,6 +1,5 @@
 import React from "react";
 import { Alert, ImageBackground, ScrollView, TouchableNativeFeedback, View } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
 import { Colors, Text, Title } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
@@ -76,48 +75,43 @@ class AuthScreen extends React.Component<Props, State> {
 
     return (
       <ImageBackground source={require("../../assets/images/auth_bg.jpg")} style={style.bgPic}>
-        <LinearGradient
-          style={style.gradient}
-          colors={["rgba(0,0,0,0.3)", "rgba(0,0,0,0.5)"]}
-          locations={[0, 0.9]}>
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={style.container}>
-            <StatusBarSafeArea transparent/>
-            <AppLogo/>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={style.container}>
+          <StatusBarSafeArea transparent/>
+          <AppLogo/>
 
-            <View style={style.authSheetWrapper}>
-              <View style={style.authSheet}>
-                <View style={style.titlesContainer}>
-                  <Title
-                    style={[style.title, {opacity: authMode === authModes.LOGIN ? 1 : 0.2}]}
-                    onPress={() => this.setState({authMode: authModes.LOGIN})}
-                  >{i18n.t("title_login")}</Title>
-                  <Title
-                    style={[style.title, {opacity: authMode === authModes.SIGNUP ? 1 : 0.2}]}
-                    onPress={() => this.setState({authMode: authModes.SIGNUP})}
-                  >{i18n.t("title_signup")}</Title>
-                </View>
-                {
-                  this.state.authMode === authModes.LOGIN ?
-                    <Login navigation={this.props.navigation}/> :
-                    <Signup navigation={this.props.navigation}/>
-                }
+          <View style={style.authSheetWrapper}>
+            <View style={style.authSheet}>
+              <View style={style.titlesContainer}>
+                <Title
+                  style={[style.title, {opacity: authMode === authModes.LOGIN ? 1 : 0.2}]}
+                  onPress={() => this.setState({authMode: authModes.LOGIN})}
+                >{i18n.t("title_login")}</Title>
+                <Title
+                  style={[style.title, {opacity: authMode === authModes.SIGNUP ? 1 : 0.2}]}
+                  onPress={() => this.setState({authMode: authModes.SIGNUP})}
+                >{i18n.t("title_signup")}</Title>
               </View>
+              {
+                this.state.authMode === authModes.LOGIN ?
+                  <Login navigation={this.props.navigation}/> :
+                  <Signup navigation={this.props.navigation}/>
+              }
             </View>
+          </View>
 
-            <TouchableNativeFeedback
-              style={{width: "100%", backgroundColor: this.props.prefs!.userPrefs.theme.colors.primary}}
-              onPress={this.onContinue}>
-              <View style={[style.offlineBtn, {}]}>
-                <Icon color={Colors.white} size={20} name="cloud-off"/>
-                <Text style={style.offlineBtnText}>{i18n.t("continue_as_guest")}</Text>
-              </View>
-            </TouchableNativeFeedback>
+          <TouchableNativeFeedback
+            style={{width: "100%", backgroundColor: this.props.prefs!.userPrefs.theme.colors.primary}}
+            onPress={this.onContinue}>
+            <View style={[style.offlineBtn, {}]}>
+              <Icon color={Colors.white} size={20} name="cloud-off"/>
+              <Text style={style.offlineBtnText}>{i18n.t("continue_as_guest")}</Text>
+            </View>
+          </TouchableNativeFeedback>
 
-          </ScrollView>
-        </LinearGradient>
+        </ScrollView>
       </ImageBackground>
     );
   }
