@@ -28,7 +28,7 @@ interface ReduxDispatch {
 type Props = OwnProps & ReduxDispatch & AppState;
 
 interface State {
-  currentLyrics: LyricsItem;
+  currentLyricsItem: LyricsItem;
   isHeaderMenuVisible: boolean;
 }
 
@@ -41,7 +41,7 @@ class HymnView extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      currentLyrics: this.hymnToView.lyrics[0],
+      currentLyricsItem: this.hymnToView.lyrics[0],
       isHeaderMenuVisible: false,
     };
   }
@@ -70,6 +70,10 @@ class HymnView extends React.Component<Props, State> {
     );
   }
 
+  private onReport = () => {
+    ToastAndroid.show("Report WIP", 5);
+  }
+
   private getAppBarActions = (): AppBarAction[] => {
     if (this.isPreviewMode) {
       return [];
@@ -96,6 +100,13 @@ class HymnView extends React.Component<Props, State> {
       show: showAsAction.NEVER,
       onActionSelected: this.onDelete,
     });
+
+    actions.push({
+      title: i18n.t("report"),
+      icon: icons.delete,
+      show: showAsAction.NEVER,
+      onActionSelected: this.onReport,
+    });
     return actions;
   }
 
@@ -112,10 +123,12 @@ class HymnView extends React.Component<Props, State> {
 
         <ScrollView>
           <View style={style.lyricsView}>
-            <Text style={style.lyricsText}>{this.state.currentLyrics.text}</Text>
+            <Text style={style.lyricsText}>{this.state.currentLyricsItem.text}</Text>
           </View>
         </ScrollView>
-        <HymnViewFAB lyrics={[]}/>
+        <HymnViewFAB lyrics={[]}
+                     // lyrics={this.hymnToView.lyrics}
+                     onLyricsSelect={(item: LyricsItem) => this.setState({currentLyricsItem: item})}/>
       </ThemedView>
     );
   }

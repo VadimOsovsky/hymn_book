@@ -1,12 +1,12 @@
 import _ from "lodash";
 import { ThunkDispatch } from "redux-thunk";
-import { GuideTips } from "../models/GuideTips";
+import { guideTips } from "../models/GuideTips";
 import { AppState } from "../reducers";
 import StorageUtils from "../utils/StorageUtils";
 
 export const SET_TIP_SHOWN = "SET_TIP_SHOWN";
 
-export function setTipToNeverBeShownAgain(tip: GuideTips) {
+export function setTipToNeverBeShownAgain(tip: guideTips) {
   return (dispatch: ThunkDispatch<{}, {}, any>, getState: () => AppState) => {
     const tips = _.cloneDeep(getState().guide!.tipsToShow);
     // @ts-ignore

@@ -1,8 +1,8 @@
 import { GET_GUIDE_FROM_STORAGE_ERROR, GET_GUIDE_FROM_STORAGE_SUCCESS, SET_TIP_SHOWN } from "../actions/guideActions";
 import Action from "../models/Action";
-import { GuideTips } from "../models/GuideTips";
+import { guideTips } from "../models/GuideTips";
 
-export type TipsToShow = { [key in keyof typeof GuideTips]: boolean };
+export type TipsToShow = { [key in keyof typeof guideTips]: boolean };
 
 export interface GuideInterface {
   isGuideReady: boolean;
@@ -15,6 +15,7 @@ const INITIAL_STATE: GuideInterface = {
   tipsToShow: {
     PRELOADED_HYMNS: true,
     GUEST_MODE_WARNING: true,
+    HYMN_EDITOR_STEP_1: true,
   },
   error: "",
 };

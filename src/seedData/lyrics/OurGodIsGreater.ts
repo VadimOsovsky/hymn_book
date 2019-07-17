@@ -55,6 +55,13 @@ const OurGodIsGreater = [
       "Our God is Healer, awesome in power\n" +
       "Our God! Our God!",
   },
+  {key: MusicKeys.A, text: ""},
+  {key: MusicKeys.Am, text: ""},
+  {key: MusicKeys.B, text: ""},
+  {key: MusicKeys.Bm, text: ""},
+  {key: MusicKeys.C, text: ""},
+  {key: MusicKeys.Cm, text: ""},
+  {key: MusicKeys.D, text: ""},
 ];
 
 export default OurGodIsGreater;

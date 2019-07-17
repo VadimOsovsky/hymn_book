@@ -1,7 +1,7 @@
 import _ from "lodash";
 import React from "react";
-import { Alert, ScrollView, ToastAndroid, View } from "react-native";
-import { Button, Divider, TextInput } from "react-native-paper";
+import { Alert, ScrollView, StatusBar, ToastAndroid, View } from "react-native";
+import { Appbar, Button, Surface } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -9,16 +9,17 @@ import { addToSavedHymns, editSavedHymn } from "../../actions/hymnActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
 import HymnItem, { LyricsItem } from "../../models/HymnItem";
-import { screens } from "../../navigation/savedHymnsStack";
 import { AppState } from "../../reducers";
-import HymnCoverAvatar from "../../shared/HymnCoverAvatar";
-import AndroidAppBar, { AppBarAction, navIcons, showAsAction } from "../../shared/ui/AndroidAppBar";
 import ThemedView from "../../shared/ui/ThemedView";
 import globalStyles from "../../styles/globalStyles";
-import icons from "../../styles/icons";
-import ImagePickerModal from "./components/ImagePickerModal";
+import InfoEditor from "./components/InfoEditor";
 import LyricsEditor from "./components/LyricsEditor";
 import style from "./style";
+
+enum steps {
+  LYRICS = "LYRICS",
+  INFO = "INFO",
+}
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -32,10 +33,7 @@ interface ReduxDispatch {
 type Props = AppState & ReduxDispatch & OwnProps;
 
 interface State {
-  hymnTitleInput: string;
-  musicByInput: string;
-  lyricsByInput: string;
-  hymnCoverUri: string;
+  currentStep: steps;
   lyrics: LyricsItem[];
 }
 
@@ -49,31 +47,28 @@ class HymnEditor extends React.Component<Props, State> {
   private isAddNew: boolean = !this.props.navigation.getParam("hymnToEdit");
 
   private lyricsEditorRef: LyricsEditor | undefined;
-  private navFocusListener: { remove: () => void } | undefined;
+  private infoEditorRef: InfoEditor | undefined;
 
   constructor(props: Props) {
     super(props);
 
     this.state = {
-      hymnTitleInput: this.hymnToEdit ? this.hymnToEdit.title : "",
-      musicByInput: this.hymnToEdit ? this.hymnToEdit.musicBy : "",
-      lyricsByInput: this.hymnToEdit ? this.hymnToEdit.lyricsBy : "",
-      hymnCoverUri: this.hymnToEdit ? this.hymnToEdit.hymnCoverImage : "",
+      currentStep: steps.LYRICS,
       lyrics: this.hymnToEdit ? _.cloneDeep(this.hymnToEdit.lyrics) : [],
     };
   }
 
   private onDone = () => {
-    const lyrics = this.lyricsEditorRef!.getNewLyrics();
+    const lyrics = this.lyricsEditorRef!.getLyrics();
     this.setState({lyrics}, () => {
 
       if (!this.state.lyrics.length) {
         ToastAndroid.show(i18n.t("error_save_hymn_no_lyrics"), ToastAndroid.LONG);
-      } else if (!this.state.hymnTitleInput) {
+      } else if (!this.infoEditorRef!.getHymnInfo().title) {
         ToastAndroid.show(i18n.t("error_save_hymn_no_title"), ToastAndroid.LONG);
       } else if (this.isAddNew) {
         this.saveAndExit();
-      } else if (!this.checkIfHymnChanged()) {
+      } else if (!this.checkIfHymnChanged() && 1 > 5) {
         this.discardAndExit();
       } else {
         Alert.alert(
@@ -90,7 +85,7 @@ class HymnEditor extends React.Component<Props, State> {
   }
 
   private onGoBack = () => {
-    const lyrics = this.lyricsEditorRef!.getNewLyrics();
+    const lyrics = this.lyricsEditorRef!.getLyrics();
     this.setState({lyrics}, () => {
 
       if (!this.checkIfHymnChanged()) {
@@ -110,22 +105,6 @@ class HymnEditor extends React.Component<Props, State> {
     });
   }
 
-  private onPreview = async () => {
-    const lyrics = await this.lyricsEditorRef!.getNewLyrics();
-    this.setState({lyrics}, () => {
-      if (!this.state.lyrics.length) {
-        ToastAndroid.show(i18n.t("error_save_hymn_no_lyrics"), ToastAndroid.LONG);
-      } else {
-        const hymnToPreview = this.getNewHymn();
-
-        if (this.navFocusListener) {
-          this.navFocusListener.remove();
-        }
-        this.props.navigation.navigate(screens.HYMN_VIEW, {hymnToView: hymnToPreview, isPreviewMode: true});
-      }
-    });
-  }
-
   private saveAndExit = () => {
     // TODO Save to backend
     if (!this.state.lyrics.length) {
@@ -142,12 +121,13 @@ class HymnEditor extends React.Component<Props, State> {
   }
 
   private getNewHymn(): HymnItem {
-    const {hymnTitleInput, musicByInput, lyricsByInput, hymnCoverUri, lyrics} = this.state;
+    const lyrics = this.lyricsEditorRef!.getLyrics();
+    const info = this.infoEditorRef!.getHymnInfo();
 
     let hymnCoverImage: string;
 
-    if (hymnCoverUri) {
-      hymnCoverImage = hymnCoverUri;
+    if (info.hymnCoverImage) {
+      hymnCoverImage = info.hymnCoverImage;
     } else if (this.hymnToEdit && this.hymnToEdit.hymnCoverImage) {
       hymnCoverImage = this.hymnToEdit.hymnCoverImage;
     } else {
@@ -156,10 +136,10 @@ class HymnEditor extends React.Component<Props, State> {
 
     return new HymnItem(
       this.hymnToEdit ? this.hymnToEdit.hymnId : "-1",
-      hymnTitleInput,
+      info.title,
       lyrics,
-      musicByInput,
-      lyricsByInput,
+      info.lyricsBy,
+      info.musicBy,
       null,
       hymnCoverImage,
     );
@@ -169,80 +149,74 @@ class HymnEditor extends React.Component<Props, State> {
   //   this.setState({hymnCoverUri})
   // }
 
-  private checkIfHymnChanged = () => {
+  private checkIfHymnChanged = (): boolean => {
     // returns true if changed
-    return JSON.stringify(this.hymnToEdit) !== JSON.stringify(this.getNewHymn());
+    // return JSON.stringify(this.hymnToEdit) !== JSON.stringify(this.getNewHymn());
+    return false;
   }
 
-  private getAppBarActions = (): AppBarAction[] => {
-    const actions: AppBarAction[] = [];
-
-    actions.push({
-      title: i18n.t("btn_done"),
-      icon: icons.check,
-      show: showAsAction.ALWAYS,
-      onActionSelected: this.onDone,
-    });
-
-    return actions;
+  private getAppbarTitle = (): string => {
+    const {currentStep} = this.state;
+    if (this.isAddNew) {
+      return currentStep === steps.LYRICS ? "add_hymn_lyrics" : "add_hymn_info";
+    } else {
+      return currentStep === steps.LYRICS ? "edit_hymn_lyrics" : "edit_hymn_info";
+    }
   }
 
   public render() {
-    // tslint:disable-next-line:max-line-length
-    const {hymnTitleInput, musicByInput, lyricsByInput, hymnCoverUri, lyrics} = this.state;
+    const {currentStep, lyrics} = this.state;
 
     return (
       <ThemedView style={globalStyles.screen}>
-        <AndroidAppBar
-          title={this.isAddNew ? i18n.t("add_new_hymn") : i18n.t("edit_hymn")}
-          navIcon={navIcons.BACK}
-          onNavIconClick={this.onGoBack}
-          actions={this.getAppBarActions()}
-        />
+        <Surface style={{elevation: 4}}>
+          <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
+            <Appbar.BackAction onPress={this.onGoBack}/>
+            <Appbar.Content title={i18n.t(this.getAppbarTitle())}/>
+            <Appbar.Action
+              icon={currentStep === steps.LYRICS ? "lens" : "panorama-fish-eye"}
+              size={15}
+              style={{marginHorizontal: 5}}
+              onPress={() => this.setState({currentStep: steps.LYRICS})}/>
+            <Appbar.Action
+              icon={currentStep === steps.INFO ? "lens" : "panorama-fish-eye"}
+              size={15}
+              style={{marginStart: 0, marginEnd: 5}}
+              onPress={() => this.setState({currentStep: steps.INFO})}/>
+          </Appbar.Header>
+        </Surface>
 
-        <ScrollView collapsable={true}>
-          <View style={style.container}>
-            <View style={{alignItems: "center"}}>
-              <HymnCoverAvatar hymnCoverImage={hymnCoverUri} size={120}/>
-              <ImagePickerModal
-                hymnCoverUri={hymnCoverUri}
-                getNewHymnCoverUri={(newHymnCoverUri) => this.setState({hymnCoverUri: newHymnCoverUri})}/>
+        <ScrollView contentContainerStyle={style.container} keyboardShouldPersistTaps="handled">
+
+          <LyricsEditor
+            visible={currentStep === steps.LYRICS}
+            lyrics={lyrics}
+            inputTextColor={this.props.prefs!.userPrefs.theme.colors.text}
+            ref={(ref: LyricsEditor) => this.lyricsEditorRef = ref}
+          />
+          <InfoEditor
+            visible={currentStep === steps.INFO}
+            title={this.hymnToEdit ? this.hymnToEdit.title : undefined}
+            lyricsBy={this.hymnToEdit ? this.hymnToEdit.lyricsBy : undefined}
+            musicBy={this.hymnToEdit ? this.hymnToEdit.musicBy : undefined}
+            hymnCoverImage={this.hymnToEdit ? this.hymnToEdit.hymnCoverImage : undefined}
+            ref={(ref: InfoEditor) => this.infoEditorRef = ref}
+          />
+
+          {currentStep === steps.LYRICS ?
+            <Button style={style.button} onPress={() => this.setState({currentStep: steps.INFO})}>
+              {i18n.t("btn_edit_hymn_info")}
+            </Button>
+            :
+            <View>
+              <Button mode="contained" icon="publish" style={style.button} onPress={this.onDone}>
+                {i18n.t(this.isAddNew ? "btn_publish" : "btn_update")}
+              </Button>
+              <Button style={style.button} onPress={() => this.setState({currentStep: steps.LYRICS})}>
+                {i18n.t("btn_edit_lyrics")}
+              </Button>
             </View>
-
-            <TextInput
-              label={i18n.t("hymn_title")}
-              style={style.input}
-              value={hymnTitleInput}
-              onChangeText={(val: string) => this.setState({hymnTitleInput: val})}/>
-            <TextInput
-              label={i18n.t("lyrics_by")}
-              style={style.input}
-              value={lyricsByInput}
-              onChangeText={(val: string) => this.setState({lyricsByInput: val})}/>
-            <TextInput
-              label={i18n.t("music_by")}
-              style={style.input}
-              value={musicByInput}
-              onChangeText={(val: string) => this.setState({musicByInput: val})}/>
-
-            <Divider style={style.divider}/>
-
-            <LyricsEditor
-              ref={(ref: LyricsEditor) => this.lyricsEditorRef = ref}
-              lyrics={lyrics}
-              lyricsInputBackgroundColor={this.props.prefs!.userPrefs.theme.colors.background}
-            />
-
-            <Button mode="contained" icon="publish" style={style.button} onPress={this.onDone}>
-              {i18n.t(this.isAddNew ? "btn_publish" : "btn_update")}
-            </Button>
-
-            <Button style={style.button} icon="visibility" onPress={this.onPreview}>
-              {i18n.t("btn_preview")}
-            </Button>
-
-          </View>
-
+          }
         </ScrollView>
       </ThemedView>
     );

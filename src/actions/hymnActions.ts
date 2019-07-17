@@ -14,7 +14,7 @@ export function getSavedHymnsFromStorage() {
 
     try {
       const savedHymns: string | null = await StorageUtils.getSavedHymns();
-      if (savedHymns && 1 > 4) {
+      if (savedHymns) {
         dispatch({type: GET_SAVED_HYMNS_FROM_STORAGE_SUCCESS, payload: JSON.parse(savedHymns)});
       } else {
         // else it's the first launch, prepopulate with dummy hymns

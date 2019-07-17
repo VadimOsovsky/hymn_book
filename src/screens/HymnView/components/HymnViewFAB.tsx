@@ -1,14 +1,12 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { FAB } from "react-native-paper";
-
-interface TemporaryLyricsItem {
-  key: string;
-  lyrics: string;
-}
+import { LyricsItem } from "../../../models/HymnItem";
+import i18n from "../../../i18n";
 
 interface Props {
-  lyrics: TemporaryLyricsItem[];
+  lyrics: LyricsItem[];
+  onLyricsSelect: (item: LyricsItem) => void;
 }
 
 interface State {
@@ -23,22 +21,12 @@ export default class HymnViewFAB extends React.Component<Props, State> {
   private getFabActions = () => {
     const actions: any[] = [];
 
-    this.props.lyrics.forEach((chord: TemporaryLyricsItem) => {
-      if (!chord.key) {
-        actions.push({
-          icon: "music-off",
-          label: chord.key,
-          onClick: () => {/*TODO*/
-          },
-        });
-      } else {
-        actions.unshift({
-          icon: "music-note",
-          label: chord.key,
-          onClick: () => {/*TODO*/
-          },
-        });
-      }
+    this.props.lyrics.forEach((item: LyricsItem) => {
+      actions.push({
+        icon: item.key ? "music-note" : "not-interested",
+        label: item.key || i18n.t("no_chords"),
+        onClick: () => this.props.onLyricsSelect(item),
+      });
     });
 
     return actions;

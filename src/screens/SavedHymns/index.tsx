@@ -7,7 +7,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { getSavedHymnsFromStorage, removeFromSavedHymns } from "../../actions/hymnActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
-import { GuideTips } from "../../models/GuideTips";
+import { guideTips } from "../../models/GuideTips";
 import HymnItem from "../../models/HymnItem";
 import { screens } from "../../navigation/savedHymnsStack";
 import { AppState } from "../../reducers";
@@ -259,7 +259,7 @@ class SavedHymns extends React.Component<Props, State> {
       <ThemedView style={globalStyles.screen}>
         {this.renderHeader()}
         {this.renderSearchQuery()}
-        <GuideBanner tipType={GuideTips.PRELOADED_HYMNS}/>
+        <GuideBanner tipType={guideTips.PRELOADED_HYMNS}/>
         {this.renderSavedHymns()}
         {this.renderFAB()}
       </ThemedView>

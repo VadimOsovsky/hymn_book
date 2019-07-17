@@ -43,6 +43,9 @@ export default StyleSheet.create({
   form: {
     paddingHorizontal: authSheetPadding,
   },
+  input: {
+    color: Colors.black,
+  },
   button: {
     marginTop: 30,
     marginBottom: 20,

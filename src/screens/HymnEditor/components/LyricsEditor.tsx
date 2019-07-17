@@ -1,15 +1,19 @@
 import _ from "lodash";
 import React, { PureComponent } from "react";
-import { Alert, StyleSheet, View } from "react-native";
-import { Button, Chip, IconButton, TextInput } from "react-native-paper";
+import { Alert, StyleSheet, TextInput, View } from "react-native";
+import { Button, Chip, IconButton } from "react-native-paper";
+import { NavigationEvents } from "react-navigation";
 import i18n from "../../../i18n";
+import { guideTips } from "../../../models/GuideTips";
 import { LyricsItem } from "../../../models/HymnItem";
 import { MusicKeys } from "../../../models/MusicKeys";
+import GuideBanner from "../../../shared/ui/GuideBanner";
 import ChordKeySelectionModal from "./ChordKeySelectionModal";
 
 interface OwnProps {
+  visible: boolean;
   lyrics: LyricsItem[];
-  lyricsInputBackgroundColor: string;
+  inputTextColor: string;
 }
 
 type Props = OwnProps;
@@ -28,7 +32,13 @@ class LyricsEditor extends PureComponent<Props, State> {
     selectedLyricsItem: this.props.lyrics[0] || null,
   };
 
-  public getNewLyrics = (): LyricsItem[] => this.state.lyrics;
+  public getLyrics = (): LyricsItem[] => this.state.lyrics;
+
+  private onNavFocus = () => {
+    if (!this.state.lyrics.length) {
+      this.chordModalRef!.openDialog();
+    }
+  }
 
   private onKeySelected = (updatedLyrics: LyricsItem[], newLyricsItem: LyricsItem) => {
     this.setState({
@@ -99,18 +109,22 @@ class LyricsEditor extends PureComponent<Props, State> {
 
   public render() {
     const {lyrics, selectedLyricsItem} = this.state;
+    const textColor = this.props.inputTextColor;
 
     return (
-      <View>
-        <View style={{flexDirection: "row", flexWrap: "wrap", alignItems: "center", marginBottom: 15}}>
+      <View style={{display: this.props.visible ? "flex" : "none"}}>
+        <NavigationEvents onDidFocus={this.onNavFocus}/>
+        <GuideBanner tipType={guideTips.HYMN_EDITOR_STEP_1}/>
+        <View style={style.container}>
           {lyrics.map((item, index) => {
             return (
               <Chip
                 key={item.key}
-                style={{marginRight: 5, marginBottom: 5}}
-                icon="music-note"
+                style={style.chip}
+                icon={item.key ? "music-note" : "not-interested"}
                 selected={item.key === selectedLyricsItem!.key}
                 onPress={() => this.setState({selectedLyricsItem: item})}
+                // onLongPress={() => this.changeChordKeyForLyrics(item.text, index)}
                 onClose={this.state.lyrics.length > 1 ? () => this.onDeleteLyricsItem(item.key) : undefined}
               >
                 {item.key ? i18n.t("with_chords", {key: item.key}) : i18n.t("no_chords")}
@@ -129,10 +143,10 @@ class LyricsEditor extends PureComponent<Props, State> {
             return (
               <TextInput
                 key={item.key}
-                label={i18n.t("lyrics")}
+                placeholder={i18n.t("type_lyrics_here")}
                 multiline={true}
-                mode="outlined"
-                style={[style.input, {backgroundColor: this.props.lyricsInputBackgroundColor}]}
+                style={[style.input, {color: textColor}]}
+                placeholderTextColor={"#999"}
                 value={item.text}
                 onChangeText={(val) => this.onLyricsInputChange(val, index)}/>
             );
@@ -148,7 +162,19 @@ class LyricsEditor extends PureComponent<Props, State> {
 export default LyricsEditor;
 
 const style = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    alignContent: "center",
+    marginBottom: 15,
+  },
+  chip: {
+    marginRight: 5,
+    marginVertical: 6,
+  },
   input: {
     marginBottom: 15,
+    fontSize: 17,
   },
 });

@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, ToastAndroid, View } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Colors } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import i18n from "../../../i18n";
 import MyInput, { inputPresets } from "../../../shared/ui/MyInput";
@@ -48,21 +48,27 @@ class Signup extends React.Component<Props, State> {
 
           <MyInput
             preset={inputPresets.NAME}
+            inputStyle={style.input}
+            iconColor={Colors.black}
             value={this.state.name}
             onChangeText={(name) => this.setState({name})}
           />
           <MyInput
             preset={inputPresets.EMAIL}
             value={this.state.email}
+            iconColor={Colors.black}
             onChangeText={(email) => this.setState({email})}
           />
           <MyInput
             preset={inputPresets.PASSWORD}
+            inputStyle={style.input}
+            iconColor={Colors.black}
             value={this.state.password}
             onChangeText={(password) => this.setState({password})}
           />
           <MyInput
             preset={inputPresets.REPEAT_PASSWORD}
+            iconColor={Colors.black}
             value={this.state.repeatPassword}
             onChangeText={(repeatPassword) => this.setState({repeatPassword})}
           />

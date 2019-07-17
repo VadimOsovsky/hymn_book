@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, ToastAndroid, View } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Colors } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import i18n from "../../../i18n";
 import MyInput, { inputPresets } from "../../../shared/ui/MyInput";
@@ -34,11 +34,15 @@ class Login extends React.Component<Props, State> {
         <View style={style.form}>
           <MyInput
             preset={inputPresets.EMAIL}
+            inputStyle={style.input}
+            iconColor={Colors.black}
             value={this.state.email}
             onChangeText={(email) => this.setState({email})}
           />
           <MyInput
             preset={inputPresets.PASSWORD}
+            inputStyle={style.input}
+            iconColor={Colors.black}
             value={this.state.password}
             onChangeText={(password) => this.setState({password})}
           />

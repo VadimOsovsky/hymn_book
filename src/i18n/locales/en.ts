@@ -8,7 +8,9 @@ export default {
   btn_add_lyrics: "Add Lyrics",
   btn_publish: "Publish",
   btn_update: "Update",
-  btn_preview: "Preview",
+  btn_edit_lyrics: "Edit lyrics",
+  btn_edit_hymn_info: "Edit hymn info",
+  // btn_preview: "Preview",
   btn_delete: "Delete",
   btn_share: "Share",
   btn_edit: "Edit",
@@ -62,9 +64,6 @@ export default {
   },
   fab_add_new_hymn: "Add new hymn",
   fab_find_existing: "Find existing",
-  wizard_PRELOADED_HYMNS: "We've preloaded some hymns for you to try out. " +
-    "You can delete them by swiping left and pressing Delete. " +
-    "To add more press the + button at the bottom.",
 
   // Hymn View
   edit_hymn: "Edit Hymn",
@@ -72,10 +71,13 @@ export default {
   unknown_title: "Unknown title",
   unknown_author: "Unknown author",
   no_chords: "w/out Chords",
-  with_chords: "w/ %{key} Chords",
+  with_chords: "%{key} ",
 
   // Hymn Editor
-  add_new_hymn: "Add New Hymn",
+  edit_hymn_lyrics: "Edit Hymn Lyrics",
+  edit_hymn_info: "Edit Hymn Info",
+  add_hymn_lyrics: "New Hymn Lyrics",
+  add_hymn_info: "New Hymn Info",
   select_hymn_image: "Select hymn cover image",
   select_image: "Select image",
   select_another_image: "Select another image",
@@ -83,9 +85,12 @@ export default {
   set_hymn_image: "Set hymn cover",
   hymn_cover_url: "Hymn cover URL",
   hymn_title: "Hymn title",
-  music_by: "Music by",
-  lyrics_by: "Lyrics by",
+  music_by_label: "Music by",
+  music_by_placeholder: "Music author",
+  lyrics_by_label: "Lyrics by",
+  lyrics_by_placeholder: "Lyrics author",
   lyrics: "Lyrics",
+  type_lyrics_here: "Type or paste lyrics here...",
   save_changes_title: "Update and exit",
   save_changes_message: "Would you like to update the hymn?",
   discard_changes_title: "Attention",
@@ -110,7 +115,15 @@ export default {
   settings_discarded: "Settings discarded",
   night_mode: "Night Mode",
 
+  // Guide
+  guide_PRELOADED_HYMNS: "We've preloaded some hymns for you to try out. " +
+    "You can delete them by swiping left and pressing Delete. " +
+    "To add more press the + button at the bottom.",
+  guide_HYMN_EDITOR_STEP_1: "Here you can add multiple versions of lyrics with and without chords. " +
+    "To switch to the next step press the empty circle above or the button bellow.",
+
   // Other
   or: "or",
-  learn_more: "Learn more",
+  // learn_more: "Learn more",
+  report: "Report",
 };

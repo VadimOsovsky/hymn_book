@@ -110,7 +110,7 @@ class ChordKeySelectionModal extends PureComponent<Props, State> {
     return (
       <View key={key}>
         <TouchableRipple onPress={() => this.setState({selectedKey: key})}>
-          <View style={style.radioContainer}>
+          <View pointerEvents="none" style={style.radioContainer}>
             <RadioBtn value={this.state.selectedKey === key}/>
             <Text style={style.radioLabel}>{key || i18n.t("no_chords")}</Text>
           </View>

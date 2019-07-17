@@ -8,7 +8,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { setTipToNeverBeShownAgain } from "../../actions/guideActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
-import { GuideTips } from "../../models/GuideTips";
+import { guideTips } from "../../models/GuideTips";
 import { screens } from "../../navigation/rootStack";
 import { AppState } from "../../reducers";
 import AppLogo from "../../shared/AppLogo";
@@ -22,7 +22,7 @@ interface OwnProps {
 }
 
 interface ReduxDispatch {
-  setTip: (tip: GuideTips) => void;
+  setTip: (tip: guideTips) => void;
 }
 
 type Props = OwnProps & AppState & ReduxDispatch;
@@ -65,7 +65,7 @@ class AuthScreen extends React.Component<Props, State> {
     const {guide, setTip, navigation} = this.props;
 
     if (guide!.tipsToShow.GUEST_MODE_WARNING) {
-      setTip(GuideTips.GUEST_MODE_WARNING);
+      setTip(guideTips.GUEST_MODE_WARNING);
     }
     navigation.navigate(screens.MAIN_APP);
   }
@@ -124,7 +124,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
-    setTip: (tip: GuideTips) => dispatch(setTipToNeverBeShownAgain(tip)),
+    setTip: (tip: guideTips) => dispatch(setTipToNeverBeShownAgain(tip)),
   };
 };
 

@@ -6,15 +6,15 @@ import { ThunkDispatch } from "redux-thunk";
 import { setTipToNeverBeShownAgain } from "../../actions/guideActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
-import { GuideTips } from "../../models/GuideTips";
+import { guideTips } from "../../models/GuideTips";
 import { AppState } from "../../reducers";
 
 interface OwnProps {
-  tipType: GuideTips;
+  tipType: guideTips;
 }
 
 interface ReduxDispatch {
-  setTip: (tip: GuideTips) => void;
+  setTip: (tip: guideTips) => void;
 }
 
 type Props = OwnProps & AppState & ReduxDispatch;
@@ -39,7 +39,7 @@ class GuideBanner extends PureComponent<Props, State> {
           />
         }
       >
-        {i18n.t("wizard_" + tipType)}
+        {i18n.t("guide_" + tipType)}
       </Banner>
     );
   }
@@ -52,7 +52,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
-    setTip: (tip: GuideTips) => dispatch(setTipToNeverBeShownAgain(tip)),
+    setTip: (tip: guideTips) => dispatch(setTipToNeverBeShownAgain(tip)),
   };
 };
 
