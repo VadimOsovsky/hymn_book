@@ -9,13 +9,13 @@ import { setTipToNeverBeShownAgain } from "../../actions/guideActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
 import { GuideTips } from "../../models/GuideTips";
+import { screens } from "../../navigation/rootStack";
 import { AppState } from "../../reducers";
 import AppLogo from "../../shared/AppLogo";
 import StatusBarSafeArea from "../../shared/StatusBarSafeArea";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import style from "./style";
-import { screens } from "../../navigation/rootStack";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;

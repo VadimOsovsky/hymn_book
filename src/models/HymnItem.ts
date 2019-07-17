@@ -79,7 +79,9 @@ export default class HymnItem {
   }
 
   private static detectLangCodeFromLyrics(lyrics: LyricsItem[]): LanguageCodes {
-    if (!lyrics.length) { return LanguageCodes.ENGLISH; }
+    if (!lyrics.length) {
+      return LanguageCodes.ENGLISH;
+    }
 
     const lngDetector = new LanguageDetect();
     const langs: Array<[string, number]> = lngDetector.detect(lyrics[0].text);

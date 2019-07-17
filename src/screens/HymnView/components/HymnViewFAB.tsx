@@ -1,9 +1,6 @@
 import React from "react";
-import { StyleSheet, ToastAndroid } from "react-native";
+import { StyleSheet } from "react-native";
 import { FAB } from "react-native-paper";
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
-import i18n from "../../../i18n";
-import { screens } from "../../../navigation/savedHymnsStack";
 
 interface TemporaryLyricsItem {
   key: string;
@@ -31,13 +28,15 @@ export default class HymnViewFAB extends React.Component<Props, State> {
         actions.push({
           icon: "music-off",
           label: chord.key,
-          onClick: () => {/*TODO*/},
+          onClick: () => {/*TODO*/
+          },
         });
       } else {
         actions.unshift({
           icon: "music-note",
           label: chord.key,
-          onClick: () => {/*TODO*/},
+          onClick: () => {/*TODO*/
+          },
         });
       }
     });

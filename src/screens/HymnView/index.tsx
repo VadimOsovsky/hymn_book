@@ -10,8 +10,8 @@ import Action from "../../models/Action";
 import HymnItem, { LyricsItem } from "../../models/HymnItem";
 import { screens } from "../../navigation/savedHymnsStack";
 import { AppState } from "../../reducers";
-import AndroidAppBar, { AppBarAction, navIcons, showAsAction } from "../../shared/AndroidAppBar";
-import ThemedView from "../../shared/ThemedView";
+import AndroidAppBar, { AppBarAction, navIcons, showAsAction } from "../../shared/ui/AndroidAppBar";
+import ThemedView from "../../shared/ui/ThemedView";
 import globalStyles from "../../styles/globalStyles";
 import icons from "../../styles/icons";
 import HymnViewFAB from "./components/HymnViewFAB";
@@ -71,7 +71,9 @@ class HymnView extends React.Component<Props, State> {
   }
 
   private getAppBarActions = (): AppBarAction[] => {
-    if (this.isPreviewMode) { return []; }
+    if (this.isPreviewMode) {
+      return [];
+    }
 
     const actions: AppBarAction[] = [];
     actions.push({
@@ -113,7 +115,7 @@ class HymnView extends React.Component<Props, State> {
             <Text style={style.lyricsText}>{this.state.currentLyrics.text}</Text>
           </View>
         </ScrollView>
-        <HymnViewFAB lyrics={[]} />
+        <HymnViewFAB lyrics={[]}/>
       </ThemedView>
     );
   }

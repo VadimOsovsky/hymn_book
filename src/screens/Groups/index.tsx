@@ -5,8 +5,8 @@ import { ThunkDispatch } from "redux-thunk";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
 import { AppState } from "../../reducers";
-import AndroidAppBar, { navIcons } from "../../shared/AndroidAppBar";
-import ThemedView from "../../shared/ThemedView";
+import AndroidAppBar, { navIcons } from "../../shared/ui/AndroidAppBar";
+import ThemedView from "../../shared/ui/ThemedView";
 import globalStyles from "../../styles/globalStyles";
 
 interface ReduxDispatch {

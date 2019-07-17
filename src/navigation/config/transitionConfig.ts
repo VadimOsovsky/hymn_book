@@ -1,7 +1,7 @@
 import { Animated, Easing } from "react-native";
 import { NavigationSceneRendererProps } from "react-navigation";
 
-export default function() {
+export default function () {
   return {
     transitionSpec: {
       duration: 500,

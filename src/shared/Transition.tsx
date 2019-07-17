@@ -80,10 +80,18 @@ class Transition extends React.Component<Props, State> {
     };
     const combinedStyle = [];
 
-    if (scale) { combinedStyle.push(scaleTransition); }
-    if (fade) { combinedStyle.push(fadeTransition); }
-    if (this.state.visible) { combinedStyle.push(style); }
-    if (swappingHeader && this.state.isFadingOut) { combinedStyle.push(fadingOutStyle); }
+    if (scale) {
+      combinedStyle.push(scaleTransition);
+    }
+    if (fade) {
+      combinedStyle.push(fadeTransition);
+    }
+    if (this.state.visible) {
+      combinedStyle.push(style);
+    }
+    if (swappingHeader && this.state.isFadingOut) {
+      combinedStyle.push(fadingOutStyle);
+    }
 
     return (
       <Animated.View style={combinedStyle} {...rest}>

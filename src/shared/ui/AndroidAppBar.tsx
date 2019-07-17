@@ -2,10 +2,10 @@ import React, { PureComponent } from "react";
 import { ImageURISource, StyleSheet, ToolbarAndroid } from "react-native";
 import { Surface } from "react-native-paper";
 import { connect } from "react-redux";
-import { AppState } from "../reducers";
-import icons from "../styles/icons";
-import { androidAppBarHeight } from "../styles/styleVariables";
-import StatusBarSafeArea from "./StatusBarSafeArea";
+import { AppState } from "../../reducers";
+import icons from "../../styles/icons";
+import { androidAppBarHeight } from "../../styles/styleVariables";
+import StatusBarSafeArea from "../StatusBarSafeArea";
 
 export enum navIcons {
   BACK = "BACK",
@@ -73,7 +73,9 @@ class AndroidAppBar extends PureComponent<Props, State> {
   }
 
   private onActionSelected = (position: number) => {
-    if (this.props.actions) { this.props.actions[position].onActionSelected(); }
+    if (this.props.actions) {
+      this.props.actions[position].onActionSelected();
+    }
   }
 
   public render() {

@@ -19,13 +19,15 @@ export default {
   btn_signup: "Sign up",
   btn_signup_later: "Sign up later",
   btn_signup_now: "Sign up now!",
-  wizard_PRELOADED_HYMNS: "We've preloaded some hymns for you to try out. " +
-    "You can delete them by swiping left and pressing Delete. " +
-    "To add more press the + button at the bottom.",
+
+  // Inputs
+  input_name: "Your name",
+  input_email: "Email",
+  input_password: "Password",
+  input_repeat_password: "Repeat Password",
 
   // Navigation
   guest: "Guest",
-  user: "User",
   enter_wycliffe_account: "Enter your Wycliffe account",
   route_saved_hymns: "Saved Hymns",
   route_my_profile: "My Profile",
@@ -41,10 +43,6 @@ export default {
   // space at the end for Learn more
   signup_info: "Create a Wycliffe account that will be compatible with ",
   link_other_products: "other products from Wycliffe Russia",
-  name: "Your name",
-  email: "Email",
-  password: "Password",
-  repeat_password: "Repeat Password",
   continue_as_guest: "Continue as a Guest",
   continue_as_guest_warning: "Please note that you will not be able to use social features of the app, such as " +
     "creating and joining groups, publishing your own hymns, etc.",
@@ -64,6 +62,9 @@ export default {
   },
   fab_add_new_hymn: "Add new hymn",
   fab_find_existing: "Find existing",
+  wizard_PRELOADED_HYMNS: "We've preloaded some hymns for you to try out. " +
+    "You can delete them by swiping left and pressing Delete. " +
+    "To add more press the + button at the bottom.",
 
   // Hymn View
   edit_hymn: "Edit Hymn",

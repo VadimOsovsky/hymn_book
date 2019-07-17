@@ -1,6 +1,6 @@
 import React from "react";
-import {StatusBar, View} from "react-native";
-import {lightTheme} from "../styles/appTheme";
+import { StatusBar, View } from "react-native";
+import { lightTheme } from "../styles/appTheme";
 
 export interface Props {
   backgroundColor?: string;

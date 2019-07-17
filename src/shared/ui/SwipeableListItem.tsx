@@ -1,8 +1,8 @@
 import React from "react";
 import { Animated, Image, PanResponder, PanResponderInstance, StyleSheet, Text, Vibration, View } from "react-native";
 import { TouchableRipple } from "react-native-paper";
-import SwipeableListItemAction from "../models/SwipeableListItemAction";
-import { fullWH } from "../styles/styleVariables";
+import SwipeableListItemAction from "../../models/SwipeableListItemAction";
+import { fullWH } from "../../styles/styleVariables";
 
 interface Props {
   actions: SwipeableListItemAction[];

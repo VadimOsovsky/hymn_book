@@ -1,9 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, TextInput, ToastAndroid, View } from "react-native";
-import { Button, Colors } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { StyleSheet, Text, ToastAndroid, View } from "react-native";
+import { Button } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import i18n from "../../../i18n";
+import MyInput, { inputPresets } from "../../../shared/ui/MyInput";
 import style from "../style";
 
 interface OwnProps {
@@ -32,31 +32,16 @@ class Login extends React.Component<Props, State> {
       <View>
         <Text style={style.authInfoText}>{i18n.t("login_info")}</Text>
         <View style={style.form}>
-          <View style={{flexDirection: "row", width: "100%", alignItems: "center"}}>
-            <Icon style={style.icon} name="email" size={30}/>
-            <TextInput
-              placeholder={i18n.t("email")}
-              underlineColorAndroid={Colors.teal500}
-              textContentType="emailAddress"
-              keyboardType="email-address"
-              style={style.input}
-              value={this.state.email}
-              onChangeText={(email) => this.setState({email})}
-            />
-          </View>
-
-          <View style={style.inputContainer}>
-            <Icon style={style.icon} name="lock" size={30}/>
-            <TextInput
-              placeholder={i18n.t("password")}
-              underlineColorAndroid={Colors.teal500}
-              style={style.input}
-              textContentType="password"
-              secureTextEntry={true}
-              value={this.state.password}
-              onChangeText={(password) => this.setState({password})}
-            />
-          </View>
+          <MyInput
+            preset={inputPresets.EMAIL}
+            value={this.state.email}
+            onChangeText={(email) => this.setState({email})}
+          />
+          <MyInput
+            preset={inputPresets.PASSWORD}
+            value={this.state.password}
+            onChangeText={(password) => this.setState({password})}
+          />
         </View>
 
         <Button style={style.button} mode="contained"

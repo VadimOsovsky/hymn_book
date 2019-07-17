@@ -21,13 +21,15 @@ class BottomSheetContent extends React.Component<Props> {
             title="Edit"
             style={style.menuItem}
             left={(props) => <List.Icon {...props} icon="edit"/>}
-            onPress={() => {/**/}}
+            onPress={() => {/**/
+            }}
           />
           <List.Item
             title="Remove from saved"
             style={style.menuItem}
             left={(props) => <List.Icon {...props} icon="delete"/>}
-            onPress={() => {/**/}}
+            onPress={() => {/**/
+            }}
           />
         </List.Section>
         <List.Section>

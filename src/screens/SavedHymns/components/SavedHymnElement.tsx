@@ -12,7 +12,7 @@ import SwipeableListItemAction from "../../../models/SwipeableListItemAction";
 import { screens } from "../../../navigation/savedHymnsStack";
 import { AppState } from "../../../reducers";
 import HymnCoverAvatar from "../../../shared/HymnCoverAvatar";
-import SwipeableListItem from "../../../shared/SwipeableListItem";
+import SwipeableListItem from "../../../shared/ui/SwipeableListItem";
 import icons from "../../../styles/icons";
 
 interface OwnProps {

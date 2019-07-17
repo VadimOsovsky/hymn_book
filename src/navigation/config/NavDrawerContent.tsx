@@ -8,9 +8,9 @@ import { setTheme } from "../../actions/preferencesActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
 import { AppState } from "../../reducers";
-import MyCheckbox from "../../shared/MyCheckbox";
 import StatusBarSafeArea from "../../shared/StatusBarSafeArea";
-import ThemedView from "../../shared/ThemedView";
+import MyCheckbox from "../../shared/ui/MyCheckbox";
+import ThemedView from "../../shared/ui/ThemedView";
 import { darkTheme, lightTheme, MyTheme } from "../../styles/appTheme";
 import { screens } from "../rootStack";
 
@@ -22,8 +22,7 @@ type Props = DrawerItemsProps & ReduxDispatch & AppState;
 
 class NavDrawerContent extends PureComponent<Props> {
 
-  private firstName = i18n.t("guest");
-  private lastName = i18n.t("user");
+  private name = i18n.t("guest");
   private email = i18n.t("enter_wycliffe_account");
   private profilePicture = "";
 
@@ -43,10 +42,10 @@ class NavDrawerContent extends PureComponent<Props> {
                 if (this.profilePicture) {
                   return <Avatar.Image style={style.profilePicture} source={{uri: this.profilePicture}}/>;
                 } else {
-                  return <Avatar.Text style={style.profilePicture} label={this.firstName[0] + this.lastName[0]}/>;
+                  return <Avatar.Text style={style.profilePicture} label={this.name[0]}/>;
                 }
               })()}
-              <Title style={style.title}>{`${this.firstName} ${this.lastName}`}</Title>
+              <Title style={style.title}>{this.name}}</Title>
               <Text style={style.caption}>{this.email}</Text>
             </Drawer.Section>
 

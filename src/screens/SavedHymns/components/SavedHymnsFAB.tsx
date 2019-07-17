@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, ToastAndroid } from "react-native";
+import { StyleSheet } from "react-native";
 import { FAB } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import i18n from "../../../i18n";

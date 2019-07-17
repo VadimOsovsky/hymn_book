@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { StyleProp, View } from "react-native";
 import { connect } from "react-redux";
-import { AppState } from "../reducers";
+import { AppState } from "../../reducers";
 
 interface OwnProps {
   style?: StyleProp<any>;

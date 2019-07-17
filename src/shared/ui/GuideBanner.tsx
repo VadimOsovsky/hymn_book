@@ -3,11 +3,11 @@ import { Image } from "react-native";
 import { Banner } from "react-native-paper";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { setTipToNeverBeShownAgain } from "../actions/guideActions";
-import i18n from "../i18n";
-import Action from "../models/Action";
-import { GuideTips } from "../models/GuideTips";
-import { AppState } from "../reducers";
+import { setTipToNeverBeShownAgain } from "../../actions/guideActions";
+import i18n from "../../i18n";
+import Action from "../../models/Action";
+import { GuideTips } from "../../models/GuideTips";
+import { AppState } from "../../reducers";
 
 interface OwnProps {
   tipType: GuideTips;
@@ -34,7 +34,7 @@ class GuideBanner extends PureComponent<Props, State> {
         ]}
         image={({size}) =>
           <Image
-            source={require("../assets/images/app_logo.png")}
+            source={require("../../assets/images/app_logo.png")}
             style={{width: size - 5, height: size}}
           />
         }

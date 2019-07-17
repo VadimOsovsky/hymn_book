@@ -3,7 +3,7 @@ import { NavigationParams, NavigationScreenProp, NavigationState } from "react-n
 import { connect } from "react-redux";
 import { screens } from "../navigation/rootStack";
 import { AppState } from "../reducers";
-import ThemedView from "../shared/ThemedView";
+import ThemedView from "../shared/ui/ThemedView";
 import { fullWH } from "../styles/styleVariables";
 
 interface OwnProps {

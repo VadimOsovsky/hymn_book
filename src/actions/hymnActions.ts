@@ -62,7 +62,9 @@ export function editSavedHymn(updatedHymn: HymnItem) {
     const savedHymns: HymnItem[] = _.clone(getState().hymns!.savedHymns);
 
     savedHymns.forEach((hymn: HymnItem, index: number) => {
-      if (hymn.hymnId === updatedHymn.hymnId) { savedHymns[index] = updatedHymn; }
+      if (hymn.hymnId === updatedHymn.hymnId) {
+        savedHymns[index] = updatedHymn;
+      }
     });
 
     dispatch(setSavedHymnToStorage(savedHymns));
@@ -87,7 +89,9 @@ export function removeFromSavedHymns(hymnIds: string[]) {
         }
       }
 
-      if (!removeHymn) { updatedSavedHymns.push(hymn); }
+      if (!removeHymn) {
+        updatedSavedHymns.push(hymn);
+      }
     });
     dispatch(setSavedHymnToStorage(updatedSavedHymns));
     return {type: REMOVE_FROM_SAVED_HYMNS, payload: updatedSavedHymns};

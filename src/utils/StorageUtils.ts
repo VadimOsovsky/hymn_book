@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import HymnItem from "../models/HymnItem";
 import { UserPrefs } from "../reducers/preferencesReducer";
-import { GuideInterface, TipsToShow } from "../reducers/guideReducer";
+import { TipsToShow } from "../reducers/guideReducer";
 
 const SAVED_HYMNS = "SAVED_HYMNS";
 const PREFS = "PREFS";

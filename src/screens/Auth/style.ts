@@ -43,20 +43,6 @@ export default StyleSheet.create({
   form: {
     paddingHorizontal: authSheetPadding,
   },
-  inputContainer: {
-    flexDirection: "row",
-    width: "100%",
-    alignItems: "center",
-  },
-  icon: {
-    flex: 0.1,
-    marginRight: 10,
-  },
-  input: {
-    backgroundColor: "transparent",
-    fontSize: 16,
-    flex: 0.9,
-  },
   button: {
     marginTop: 30,
     marginBottom: 20,

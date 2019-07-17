@@ -1,12 +1,12 @@
 import React from "react";
-import {Text} from "react-native";
+import { Text } from "react-native";
 
 interface Props {
   color?: string;
   size?: number;
 }
 
-export default function(props: Props) {
+export default function (props: Props) {
   const style = {
     fontFamily: "Caveat",
     color: props.color || "#FFF",
