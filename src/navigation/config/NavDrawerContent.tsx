@@ -45,7 +45,7 @@ class NavDrawerContent extends PureComponent<Props> {
                   return <Avatar.Text style={style.profilePicture} label={this.name[0]}/>;
                 }
               })()}
-              <Title style={style.title}>{this.name}}</Title>
+              <Title style={style.title}>{this.name}</Title>
               <Text style={style.caption}>{this.email}</Text>
             </Drawer.Section>
 
