@@ -10,14 +10,10 @@
         </shape>
     </item>
 
-    <!--<item>-->
-    <!--<bitmap-->
-    <!--android:src="@drawable/auth_bg"-->
-    <!--android:tileMode="disabled"-->
-    <!--android:gravity="fill_vertical|bottom"/>-->
-    <!--</item>-->
-    <item
-            android:drawable="@drawable/app_logo"
-            android:gravity="center"/>
+    <item>
+        <bitmap
+                android:src="@mipmap/app_logo"
+                android:gravity="center"/>
+    </item>
 
 </layer-list>
