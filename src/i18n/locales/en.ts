@@ -120,7 +120,7 @@ export default {
     "You can delete them by swiping left and pressing Delete. " +
     "To add more press the + button at the bottom.",
   guide_HYMN_EDITOR_STEP_1: "Here you can add multiple versions of lyrics with and without chords. " +
-    "To switch to the next step press the empty circle above or the button bellow.",
+    "To switch between the steps press the empty circle above or the button at the bottom of the screen.",
 
   // Other
   or: "or",
