@@ -11,6 +11,7 @@ import { getUserPrefsFromStorage } from "../actions/preferencesActions";
 import Action from "../models/Action";
 import rootStack from "../navigation/rootStack";
 import { AppState } from "../reducers";
+import { STATUS_BAR_INITIAL_COLOR } from "../styles/styleVariables";
 
 const Navigation = createAppContainer(rootStack);
 
@@ -59,7 +60,7 @@ class RootScreen extends React.Component<Props> {
     if (this.isAppReady(this.props)) {
       return (
         <PaperProvider theme={this.props.prefs!.userPrefs.theme}>
-          <StatusBar translucent={true} backgroundColor="rgba(0,0,0,0.15)"/>
+          <StatusBar translucent={true} backgroundColor={STATUS_BAR_INITIAL_COLOR}/>
           <Navigation/>
         </PaperProvider>
       );

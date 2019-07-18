@@ -1,6 +1,6 @@
 import _ from "lodash";
 import React from "react";
-import { Alert, StyleSheet, ToastAndroid, Vibration } from "react-native";
+import { Alert, StatusBar, StyleSheet, ToastAndroid, Vibration } from "react-native";
 import { List, Portal } from "react-native-paper";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
@@ -8,6 +8,7 @@ import i18n from "../../../i18n";
 import HymnItem from "../../../models/HymnItem";
 import { screens } from "../../../navigation/savedHymnsStack";
 import ThemedView from "../../../shared/ui/ThemedView";
+import { STATUS_BAR_DARKENED_COLOR, STATUS_BAR_INITIAL_COLOR } from "../../../styles/styleVariables";
 
 interface OwnProps {
   isSearchMode: boolean;
@@ -56,6 +57,7 @@ class BottomSheet extends React.Component<Props, State> {
     Vibration.vibrate(50);
     this.setState({hymn});
     this.RBSheet!.open();
+    StatusBar.setBackgroundColor(STATUS_BAR_DARKENED_COLOR);
   }
 
   private onSelectHymn = () => {
@@ -141,10 +143,11 @@ class BottomSheet extends React.Component<Props, State> {
           ref={(ref) => this.RBSheet = ref}
           closeOnDragDown
           closeOnPressMask
+          onClose={() => StatusBar.setBackgroundColor(STATUS_BAR_INITIAL_COLOR)}
           duration={this.sheetClosingTime}
           height={46 * (actions.length + 1) + 20 + sheetBottomMargin}
           customStyles={{
-            wrapper: {position: "absolute", bottom: -sheetBottomMargin, top: 0, left: 0, right: 0},
+            wrapper: {position: "absolute", bottom: -sheetBottomMargin, top: 0, left: 0, right: 0, zIndex: 999},
             container: {borderTopStartRadius: 20, borderTopEndRadius: 20},
           }}
         >

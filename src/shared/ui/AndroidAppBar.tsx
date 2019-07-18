@@ -4,7 +4,7 @@ import { Surface } from "react-native-paper";
 import { connect } from "react-redux";
 import { AppState } from "../../reducers";
 import icons from "../../styles/icons";
-import { androidAppBarHeight } from "../../styles/styleVariables";
+import { ANDROID_APPBAR_HEIGHT } from "../../styles/styleVariables";
 import StatusBarSafeArea from "../StatusBarSafeArea";
 
 export enum navIcons {
@@ -103,7 +103,7 @@ class AndroidAppBar extends PureComponent<Props, State> {
 
 const style = StyleSheet.create({
   toolbar: {
-    height: androidAppBarHeight,
+    height: ANDROID_APPBAR_HEIGHT,
     alignSelf: "stretch",
     textAlign: "center",
   },
