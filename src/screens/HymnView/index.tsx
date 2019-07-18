@@ -14,8 +14,8 @@ import AndroidAppBar, { AppBarAction, navIcons, showAsAction } from "../../share
 import ThemedView from "../../shared/ui/ThemedView";
 import globalStyles from "../../styles/globalStyles";
 import icons from "../../styles/icons";
-import HymnViewFAB from "./components/HymnViewFAB";
 import style from "./style";
+import ChordKeySelectionModal from "../HymnEditor/components/ChordKeySelectionModal";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -46,6 +46,8 @@ class HymnView extends React.Component<Props, State> {
     };
   }
 
+  private chordModalRef: ChordKeySelectionModal | null = null;
+
   private onShare = () => {
     ToastAndroid.show("Shared", ToastAndroid.SHORT);
   }
@@ -70,6 +72,10 @@ class HymnView extends React.Component<Props, State> {
     );
   }
 
+  private onOpenDialog = () => {
+    this.chordModalRef!.openDialog();
+  }
+
   private onReport = () => {
     ToastAndroid.show("Report WIP", 5);
   }
@@ -80,6 +86,16 @@ class HymnView extends React.Component<Props, State> {
     }
 
     const actions: AppBarAction[] = [];
+
+    if (this.hymnToView.lyrics.length > 1) {
+      actions.push({
+        title: i18n.t("select_chords_version"),
+        icon: icons.music_note,
+        show: showAsAction.ALWAYS,
+        onActionSelected: this.onOpenDialog,
+      });
+    }
+
     actions.push({
       title: i18n.t("btn_share"),
       icon: icons.share,
@@ -123,12 +139,15 @@ class HymnView extends React.Component<Props, State> {
 
         <ScrollView>
           <View style={style.lyricsView}>
-            <Text style={style.lyricsText}>{this.state.currentLyricsItem.text}</Text>
+            <Text style={style.lyricsText}>{this.state.currentLyricsItem.text || i18n.t("no_lyrics")}</Text>
           </View>
         </ScrollView>
-        <HymnViewFAB lyrics={[]}
-                     // lyrics={this.hymnToView.lyrics}
-                     onLyricsSelect={(item: LyricsItem) => this.setState({currentLyricsItem: item})}/>
+        <ChordKeySelectionModal
+          ref={(ref) => this.chordModalRef = ref!}
+          isViewMode={true}
+          lyrics={this.hymnToView.lyrics}
+          selectedLyricsItem={this.state.currentLyricsItem}
+          onKeySelected={(item: LyricsItem) => this.setState({currentLyricsItem: item})}/>
       </ThemedView>
     );
   }

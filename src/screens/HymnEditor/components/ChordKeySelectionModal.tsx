@@ -10,7 +10,9 @@ import { MusicKeys, musicKeysArr } from "../../../models/MusicKeys";
 
 interface OwnProps {
   lyrics: LyricsItem[];
-  onKeySelected: (lyrics: LyricsItem[], newLyricsItem: LyricsItem) => void;
+  isViewMode: boolean;
+  selectedLyricsItem?: LyricsItem;
+  onKeySelected: (...args: any) => void;
 }
 
 type Props = OwnProps;
@@ -29,7 +31,7 @@ class ChordKeySelectionModal extends PureComponent<Props, State> {
     lyrics: this.props.lyrics,
     visible: false,
     availableKeys: [],
-    selectedKey: null,
+    selectedKey: this.props.selectedLyricsItem ? this.props.selectedLyricsItem.key : null,
     modalMaxHeight: new Animated.Value(0),
   };
 
@@ -44,29 +46,39 @@ class ChordKeySelectionModal extends PureComponent<Props, State> {
     if (nextProps.lyrics) {
       this.setState({lyrics: nextProps.lyrics});
     }
+    if (nextProps.selectedLyricsItem) {
+      this.setState({selectedKey: nextProps.selectedLyricsItem.key});
+    }
   }
 
   public openDialog = (text?: string, index?: number) => {
     this.setAvailableChordKeys();
     this.editedLyricsText = _.isString(text) ? text : "";
     this.editedLyricsIndex = _.isNumber(index) ? index : null;
-    this.setState({
-      selectedKey: null,
-      visible: true,
-    });
+    this.setState({visible: true});
+
+    if (!this.props.isViewMode) {
+      this.setState({selectedKey: null});
+    }
   }
 
   private setAvailableChordKeys = () => {
     const availableKeys: string[] = [];
-    const usedKeys: string[] = [];
-    this.state.lyrics.forEach((item) => {
-      usedKeys.push(item.key);
-    });
-    musicKeysArr.forEach((key) => {
-      if (!usedKeys.includes(key)) {
-        availableKeys.push(key);
-      }
-    });
+    if (!this.props.isViewMode) {
+      const usedKeys: string[] = [];
+      this.state.lyrics.forEach((item) => {
+        usedKeys.push(item.key);
+      });
+      musicKeysArr.forEach((key) => {
+        if (!usedKeys.includes(key)) {
+          availableKeys.push(key);
+        }
+      });
+    } else {
+      this.props.lyrics.forEach((item) => {
+        availableKeys.push(item.key);
+      });
+    }
     this.setState({availableKeys});
   }
 
@@ -86,23 +98,33 @@ class ChordKeySelectionModal extends PureComponent<Props, State> {
 
   private onDoneSelecting = () => {
     const {lyrics, selectedKey} = this.state;
-    const newLyricsItem: LyricsItem = {
-      key: selectedKey as MusicKeys,
-      text: this.editedLyricsText,
-    };
-    const updatedLyrics = _.clone(lyrics);
 
-    // if changing an existing lyrics item's key
-    if (_.isNumber(this.editedLyricsIndex)) {
-      updatedLyrics[this.editedLyricsIndex] = newLyricsItem;
+    if (this.props.isViewMode) {
+      this.props.lyrics.forEach((item) => {
+        if (item.key === selectedKey) {
+          this.props.onKeySelected(item);
+        }
+      });
+
     } else {
-      updatedLyrics.push(newLyricsItem);
-    }
-    this.setState({
-      lyrics: updatedLyrics,
-    });
+      const newLyricsItem: LyricsItem = {
+        key: selectedKey as MusicKeys,
+        text: this.editedLyricsText,
+      };
+      const updatedLyrics = _.clone(lyrics);
 
-    this.props.onKeySelected(updatedLyrics, newLyricsItem);
+      // if changing an existing lyrics item's key
+      if (_.isNumber(this.editedLyricsIndex)) {
+        updatedLyrics[this.editedLyricsIndex] = newLyricsItem;
+      } else {
+        updatedLyrics.push(newLyricsItem);
+      }
+      this.setState({
+        lyrics: updatedLyrics,
+      });
+
+      this.props.onKeySelected(updatedLyrics, newLyricsItem);
+    }
     this.hideDialog();
   }
 

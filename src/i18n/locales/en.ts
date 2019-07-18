@@ -70,8 +70,10 @@ export default {
   // Hymn View
   edit_hymn: "Edit Hymn",
   delete_from_saved: "Delete from Saved",
+  select_chords_version: "Select chords version",
   unknown_title: "Unknown title",
   unknown_author: "Unknown author",
+  no_lyrics: "No lyrics here...",
   no_chords: "w/out Chords",
   with_chords: "%{key} ",
 

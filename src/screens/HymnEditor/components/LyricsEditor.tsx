@@ -135,6 +135,7 @@ class LyricsEditor extends PureComponent<Props, State> {
           <ChordKeySelectionModal
             ref={(ref) => this.chordModalRef = ref!}
             lyrics={lyrics}
+            isViewMode={false}
             onKeySelected={this.onKeySelected}/>
         </View>
 
