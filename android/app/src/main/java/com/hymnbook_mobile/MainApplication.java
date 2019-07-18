@@ -3,7 +3,6 @@ package com.hymnbook_mobile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import ui.bottomactionsheet.RNBottomActionSheetPackage;
 import io.sichacvah.react.radio_button.RadioButtonPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
@@ -33,7 +32,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNBottomActionSheetPackage(),
             new RadioButtonPackage(),
             new ReanimatedPackage(),
             new RNI18nPackage(),

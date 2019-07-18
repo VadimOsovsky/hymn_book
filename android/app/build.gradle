@@ -149,7 +149,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-bottom-action-sheet')
     implementation project(':react-native-radio-button-android')
     implementation project(':react-native-reanimated')
     implementation project(':react-native-i18n')
