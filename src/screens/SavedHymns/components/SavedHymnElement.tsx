@@ -121,12 +121,6 @@ class SavedHymnElement extends React.Component<Props, State> {
     const {highlight, background} = this.props.prefs!.userPrefs.theme.colors;
 
     return (
-      <SwipeableListItem
-        ref={(ref: SwipeableListItem) => this.swipeableListItemRef = ref}
-        actions={this.actions}
-        vibrateOnOpen
-        swipingDisabled={this.state.isSwipingDisabled}
-      >
         <List.Item title={title}
                    style={{backgroundColor: this.state.isHymnSelected ? highlight : background}}
                    description={HymnItem.formatLyricsForPreview(lyrics)}
@@ -134,8 +128,23 @@ class SavedHymnElement extends React.Component<Props, State> {
                    onLongPress={() => this.props.onLongPress(this.props.savedHymn)}
                    left={() => <HymnCoverAvatar hymnCoverImage={hymnCoverImage}/>}
         />
-      </SwipeableListItem>
     );
+    // return (
+    //   <SwipeableListItem
+    //     ref={(ref: SwipeableListItem) => this.swipeableListItemRef = ref}
+    //     actions={this.actions}
+    //     vibrateOnOpen
+    //     swipingDisabled={this.state.isSwipingDisabled}
+    //   >
+    //     <List.Item title={title}
+    //                style={{backgroundColor: this.state.isHymnSelected ? highlight : background}}
+    //                description={HymnItem.formatLyricsForPreview(lyrics)}
+    //                onPress={() => this.props.onPress(this.props.savedHymn)}
+    //                onLongPress={() => this.props.onLongPress(this.props.savedHymn)}
+    //                left={() => <HymnCoverAvatar hymnCoverImage={hymnCoverImage}/>}
+    //     />
+    //   </SwipeableListItem>
+    // );
   }
 }
 

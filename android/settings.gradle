@@ -1,4 +1,6 @@
 rootProject.name = 'hymnbook_mobile'
+include ':react-native-bottom-action-sheet'
+project(':react-native-bottom-action-sheet').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-bottom-action-sheet/android')
 include ':react-native-radio-button-android'
 project(':react-native-radio-button-android').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-radio-button-android/android')
 include ':react-native-reanimated'

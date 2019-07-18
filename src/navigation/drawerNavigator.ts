@@ -43,6 +43,7 @@ const drawerNavigator = createDrawerNavigator(
   },
   {
     drawerType: "back",
+    edgeWidth: 1000,
     contentComponent: NavDrawerContent,
   },
 );

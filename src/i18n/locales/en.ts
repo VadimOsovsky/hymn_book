@@ -56,7 +56,9 @@ export default {
   search: "Search",
   search_results: "Results found for: %{query}",
   hymns_selected: "Selected: %{selectedNumber}",
+  select_hymn: "Select Hymn",
   select_all: "Select all",
+  share_hymn: "Share",
   delete_selected_title: "Delete Hymns",
   delete_selected_message: {
     one: "Are you sure you want to delete this song from Saved Hymns?",

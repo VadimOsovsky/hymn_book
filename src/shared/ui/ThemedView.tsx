@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { StyleProp, View } from "react-native";
+import { StyleProp, View, ViewProps } from "react-native";
 import { connect } from "react-redux";
 import { AppState } from "../../reducers";
 
@@ -11,7 +11,7 @@ interface ReduxState {
   prefs: AppState["prefs"];
 }
 
-type Props = OwnProps & ReduxState;
+type Props = OwnProps & ReduxState & ViewProps;
 
 class ThemedView extends PureComponent<Props> {
 

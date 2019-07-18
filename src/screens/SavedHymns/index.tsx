@@ -1,5 +1,5 @@
 import React from "react";
-import { ActivityIndicator, Alert, FlatList, StatusBar, Vibration } from "react-native";
+import { ActivityIndicator, Alert, FlatList, StatusBar } from "react-native";
 import { Appbar, Searchbar, Surface, Text } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
@@ -11,12 +11,13 @@ import { guideTips } from "../../models/GuideTips";
 import HymnItem from "../../models/HymnItem";
 import { screens } from "../../navigation/savedHymnsStack";
 import { AppState } from "../../reducers";
+import Transition from "../../shared/Transition";
 import AndroidAppBar, { AppBarAction, navIcons, showAsAction } from "../../shared/ui/AndroidAppBar";
 import GuideBanner from "../../shared/ui/GuideBanner";
 import ThemedView from "../../shared/ui/ThemedView";
-import Transition from "../../shared/Transition";
 import globalStyles from "../../styles/globalStyles";
 import icons from "../../styles/icons";
+import BottomSheet from "./components/BottomSheet";
 import SavedHymnElement from "./components/SavedHymnElement";
 import SavedHymnsFAB from "./components/SavedHymnsFAB";
 import style from "./style";
@@ -40,7 +41,8 @@ interface State {
 
 class SavedHymns extends React.Component<Props, State> {
 
-  private SearchbarRef: Searchbar | null = null;
+  private searchbarRef: Searchbar | null = null;
+  private bottomSheetRef: BottomSheet | null = null;
 
   constructor(props: Props) {
     super(props);
@@ -54,8 +56,8 @@ class SavedHymns extends React.Component<Props, State> {
 
   private openSearch = () => {
     this.setState({isSearchMode: true}, () => {
-      if (this.SearchbarRef) {
-        this.SearchbarRef.focus();
+      if (this.searchbarRef) {
+        this.searchbarRef.focus();
       }
     });
   }
@@ -90,14 +92,13 @@ class SavedHymns extends React.Component<Props, State> {
   }
 
   private onHymnLongPress = (hymn: HymnItem) => {
-    if (!this.state.isSearchMode) {
+    // if (!this.state.isSearchMode) {
       if (!this.state.selectedHymns.length) {
-        Vibration.vibrate(50);
-        this.setState({selectedHymns: [...this.state.selectedHymns, hymn.hymnId]});
+        this.bottomSheetRef!.openSheet(hymn);
       } else {
         this.onHymnPress(hymn);
       }
-    }
+    // }
   }
 
   private onDeleteSelectedHymns = () => {
@@ -114,6 +115,10 @@ class SavedHymns extends React.Component<Props, State> {
         },
       ],
     );
+  }
+
+  private onSelectHymn = (hymnId: string) => {
+    this.setState({selectedHymns: [...this.state.selectedHymns, hymnId]});
   }
 
   private onSelectAll = () => {
@@ -172,7 +177,7 @@ class SavedHymns extends React.Component<Props, State> {
                 icon="arrow-back"
                 placeholder={i18n.t("search")}
                 style={{elevation: 0, backgroundColor: "transparent"}}
-                ref={(ref: Searchbar) => this.SearchbarRef = ref}
+                ref={(ref: Searchbar) => this.searchbarRef = ref}
                 onIconPress={this.closeSearch}
                 onChangeText={(query) => this.setState({searchQuery: query})}
                 value={this.state.searchQuery}
@@ -262,6 +267,11 @@ class SavedHymns extends React.Component<Props, State> {
         <GuideBanner tipType={guideTips.PRELOADED_HYMNS}/>
         {this.renderSavedHymns()}
         {this.renderFAB()}
+        <BottomSheet ref={(ref) => this.bottomSheetRef = ref}
+                     isSearchMode={this.state.isSearchMode}
+                     onSelectHymn={this.onSelectHymn}
+                     onRemoveFromSaved={(hymnId: string) => this.props.removeFromSavedHymns([hymnId])}
+                     navigation={this.props.navigation}/>
       </ThemedView>
     );
   }
