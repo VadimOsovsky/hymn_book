@@ -4,6 +4,7 @@ import { Avatar, Drawer, Text, Title } from "react-native-paper";
 import { DrawerItemsProps } from "react-navigation";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
+import { logout } from "../../actions/authActions";
 import { setTheme } from "../../actions/preferencesActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
@@ -15,6 +16,7 @@ import { darkTheme, lightTheme, MyTheme } from "../../styles/appTheme";
 import { screens } from "../rootStack";
 
 interface ReduxDispatch {
+  logout: () => void;
   setTheme: (theme: MyTheme) => void;
 }
 
@@ -22,31 +24,41 @@ type Props = DrawerItemsProps & ReduxDispatch & AppState;
 
 class NavDrawerContent extends PureComponent<Props> {
 
-  private name = i18n.t("guest");
-  private email = i18n.t("enter_wycliffe_account");
-  private profilePicture = "";
-
   private onNavItemPress = (navItemKey: string) => {
     this.props.navigation.closeDrawer();
     this.props.navigation.navigate(navItemKey);
   }
 
+  private getNameAlias = (): string => {
+    const {user} = this.props.auth!;
+
+    if (user && user.name) {
+      const words = user.name.split(" ");
+      if (words.length <= 1) {
+        return words[0][0];
+      } else {
+        return words[0][0] + words[1][0];
+      }
+    } else {
+      return i18n.t("guest")[0];
+    }
+  }
+
   public render() {
+    const {user} = this.props.auth!;
     return (
       <ThemedView style={style.drawer}>
         <ScrollView contentContainerStyle={{justifyContent: "space-between", flexGrow: 1}}>
           <View style={{paddingVertical: 10}}>
             <StatusBarSafeArea transparent/>
             <Drawer.Section style={style.userSection}>
-              {(() => {
-                if (this.profilePicture) {
-                  return <Avatar.Image style={style.profilePicture} source={{uri: this.profilePicture}}/>;
-                } else {
-                  return <Avatar.Text style={style.profilePicture} label={this.name[0]}/>;
-                }
-              })()}
-              <Title style={style.title}>{this.name}</Title>
-              <Text style={style.caption}>{this.email}</Text>
+              {user && user.profilePicture ?
+                <Avatar.Image style={style.profilePicture} source={{uri: user.profilePicture}}/>
+                :
+                <Avatar.Text style={style.profilePicture} label={this.getNameAlias()}/>
+              }
+              <Title style={style.title}>{user ? user.name : i18n.t("guest")}</Title>
+              <Text style={style.caption}>{user ? user.email : i18n.t("enter_wycliffe_account")}</Text>
             </Drawer.Section>
 
             <Drawer.Section>
@@ -64,11 +76,19 @@ class NavDrawerContent extends PureComponent<Props> {
                 }
               })}
             </Drawer.Section>
-            <Drawer.Item
-              label={i18n.t("route_login")}
-              icon="launch"
-              onPress={() => this.props.navigation.navigate(screens.AUTH)}
-            />
+            {this.props.auth!.token ?
+              <Drawer.Item
+                label={i18n.t("route_logout")}
+                icon="launch"
+                onPress={this.props.logout}
+              />
+              :
+              <Drawer.Item
+                label={i18n.t("route_login")}
+                icon="launch"
+                onPress={() => this.props.navigation.navigate(screens.AUTH)}
+              />
+            }
           </View>
 
           <View>
@@ -96,12 +116,13 @@ class NavDrawerContent extends PureComponent<Props> {
 }
 
 const mapStateToProps = (state: AppState) => {
-  const {prefs} = state;
-  return {prefs};
+  const {prefs, auth} = state;
+  return {prefs, auth};
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
+    logout: () => dispatch(logout()),
     setTheme: (theme: MyTheme) => dispatch(setTheme(theme)),
   };
 };

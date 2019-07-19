@@ -53,10 +53,6 @@ class SavedHymns extends React.Component<Props, State> {
       selectedHymns: [],
     };
   }
-  
-  componentDidMount(): void {
-    console.log("VO: this.props.hymns!.savedHymns", this.props.hymns!.savedHymns)
-  }
 
   private openSearch = () => {
     this.setState({isSearchMode: true}, () => {

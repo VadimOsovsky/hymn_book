@@ -2,15 +2,26 @@ import React from "react";
 import { StyleSheet, Text, ToastAndroid, View } from "react-native";
 import { Button, Colors } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
+import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { signup } from "../../../actions/authActions";
 import i18n from "../../../i18n";
+import Action from "../../../models/Action";
+import User from "../../../models/User";
+import { AppState } from "../../../reducers";
 import MyInput, { inputPresets } from "../../../shared/ui/MyInput";
 import style from "../style";
+import ErrorText from "../../../shared/ui/ErrorText";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
-type Props = OwnProps;
+interface ReduxDispatch {
+  signup: (newUser: User) => void;
+}
+
+type Props = OwnProps & ReduxDispatch & AppState;
 
 interface State {
   name: string;
@@ -36,6 +47,13 @@ class Signup extends React.Component<Props, State> {
     ToastAndroid.show("Other products WIP", 5);
   }
 
+  private onSignup = async () => {
+    const {name, email, password} = this.state;
+
+    const newUser = new User(email, password, name);
+    this.props.signup(newUser);
+  }
+
   public render() {
     return (
       <View>
@@ -45,6 +63,7 @@ class Signup extends React.Component<Props, State> {
                 onPress={this.visitOtherProducts}>{i18n.t("link_other_products")}</Text>
         </Text>
         <View style={style.form}>
+          <ErrorText>{this.props.auth!.signupError}</ErrorText>
 
           <MyInput
             preset={inputPresets.NAME}
@@ -75,7 +94,9 @@ class Signup extends React.Component<Props, State> {
         </View>
 
         <Button style={style.button} mode="contained"
-                onPress={() => ToastAndroid.show("Sign up WIP", 5)}>
+                loading={this.props.auth!.signupLoading}
+                disabled={this.props.auth!.signupLoading}
+                onPress={this.onSignup}>
           {i18n.t("btn_signup")}
         </Button>
       </View>
@@ -83,6 +104,17 @@ class Signup extends React.Component<Props, State> {
   }
 }
 
-const localStyle = StyleSheet.create({});
+const mapStateToProps = (state: AppState) => {
+  const {auth} = state;
+  return {auth};
+};
 
-export default Signup;
+const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
+  return {
+    signup: (newUser: User) => dispatch(signup(newUser)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+
+const localStyle = StyleSheet.create({});

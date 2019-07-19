@@ -2,15 +2,25 @@ import React from "react";
 import { StyleSheet, Text, ToastAndroid, View } from "react-native";
 import { Button, Colors } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
+import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { login } from "../../../actions/authActions";
 import i18n from "../../../i18n";
+import Action from "../../../models/Action";
+import { AppState } from "../../../reducers";
 import MyInput, { inputPresets } from "../../../shared/ui/MyInput";
 import style from "../style";
+import ErrorText from "../../../shared/ui/ErrorText";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
-type Props = OwnProps;
+interface ReduxDispatch {
+  login: (email: string, password: string) => void;
+}
+
+type Props = OwnProps & ReduxDispatch & AppState;
 
 interface State {
   email: string;
@@ -27,11 +37,17 @@ class Login extends React.Component<Props, State> {
     };
   }
 
+  private onLogin = () => {
+    const {email, password} = this.state;
+    this.props.login(email, password);
+  }
+
   public render() {
     return (
       <View>
         <Text style={style.authInfoText}>{i18n.t("login_info")}</Text>
         <View style={style.form}>
+          <ErrorText>{this.props.auth!.loginError}</ErrorText>
           <MyInput
             preset={inputPresets.EMAIL}
             inputStyle={style.input}
@@ -49,7 +65,9 @@ class Login extends React.Component<Props, State> {
         </View>
 
         <Button style={style.button} mode="contained"
-                onPress={() => ToastAndroid.show("Log in WIP", 5)}>
+                loading={this.props.auth!.loginLoading}
+                disabled={this.props.auth!.loginLoading}
+                onPress={this.onLogin}>
           {i18n.t("btn_login")}
         </Button>
 
@@ -69,4 +87,15 @@ const localStyle = StyleSheet.create({
   },
 });
 
-export default Login;
+const mapStateToProps = (state: AppState) => {
+  const {auth} = state;
+  return {auth};
+};
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
+  return {
+    login: (email: string, password: string) => dispatch(login(email, password)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

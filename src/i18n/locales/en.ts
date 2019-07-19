@@ -43,9 +43,10 @@ export default {
   route_my_groups: "My Groups",
   route_settings: "Settings",
   route_login: "Log in",
+  route_logout: "Log out",
   route_about_wycliffe: "About Wycliffe",
 
-  // Login
+  // Auth
   title_login: "Login",
   login_info: "Use your Wycliffe account to log in",
   title_signup: "Sign up",
@@ -137,4 +138,5 @@ export default {
   or: "or",
   // learn_more: "Learn more",
   report: "Report",
+  unknown_error: "Unknown error",
 };

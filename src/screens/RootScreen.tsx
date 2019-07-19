@@ -5,6 +5,7 @@ import SplashScreen from "react-native-splash-screen";
 import { createAppContainer } from "react-navigation";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
+import { getTokenFromStorage, getUserFromStorage } from "../actions/authActions";
 import { getGuideTipsFromStorage } from "../actions/guideActions";
 import { getSavedHymnsFromStorage } from "../actions/hymnActions";
 import { getUserPrefsFromStorage } from "../actions/preferencesActions";
@@ -19,6 +20,8 @@ interface ReduxDispatch {
   getHymns: () => void;
   getUserPrefsFromStorage: () => void;
   getGuideFromStorage: () => void;
+  getTokenFromStorage: () => void;
+  getUserFromStorage: () => void;
 }
 
 interface OwnProps {
@@ -32,6 +35,8 @@ class RootScreen extends React.Component<Props> {
     this.props.getHymns();
     this.props.getUserPrefsFromStorage();
     this.props.getGuideFromStorage();
+    this.props.getTokenFromStorage();
+    this.props.getUserFromStorage();
     this.hideSplashScreen(this.props);
   }
 
@@ -42,7 +47,8 @@ class RootScreen extends React.Component<Props> {
   private isAppReady = (props: Props) => {
     const {isPrefsReady} = props.prefs!;
     const {isGuideReady} = props.guide!;
-    return isPrefsReady && isGuideReady;
+    const {isTokenReady, isUserReady} = props.auth!;
+    return isPrefsReady && isGuideReady && isTokenReady && isUserReady;
   }
 
   private hideSplashScreen = (props: Props) => {
@@ -71,8 +77,8 @@ class RootScreen extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: AppState) => {
-  const {hymns, prefs, guide} = state;
-  return {hymns, prefs, guide};
+  const {hymns, prefs, guide, auth} = state;
+  return {hymns, prefs, guide, auth};
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
@@ -80,6 +86,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => 
     getHymns: () => dispatch(getSavedHymnsFromStorage()),
     getUserPrefsFromStorage: () => dispatch(getUserPrefsFromStorage()),
     getGuideFromStorage: () => dispatch(getGuideTipsFromStorage()),
+    getTokenFromStorage: () => dispatch(getTokenFromStorage()),
+    getUserFromStorage: () => dispatch(getUserFromStorage()),
   };
 };
 
