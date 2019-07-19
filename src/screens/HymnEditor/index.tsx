@@ -196,14 +196,18 @@ class HymnEditor extends React.Component<Props, State> {
             inputTextColor={this.props.prefs!.userPrefs.theme.colors.text}
             ref={(ref: LyricsEditor) => this.lyricsEditorRef = ref}
           />
-          <InfoEditor
-            visible={currentStep === steps.INFO}
-            title={this.hymnToEdit ? this.hymnToEdit.title : undefined}
-            lyricsBy={this.hymnToEdit ? this.hymnToEdit.lyricsBy : undefined}
-            musicBy={this.hymnToEdit ? this.hymnToEdit.musicBy : undefined}
-            hymnCoverImage={this.hymnToEdit ? this.hymnToEdit.hymnCoverImage : undefined}
-            ref={(ref: InfoEditor) => this.infoEditorRef = ref}
-          />
+          {this.hymnToEdit ?
+            <InfoEditor
+              visible={currentStep === steps.INFO}
+              title={this.hymnToEdit.title}
+              lyricsBy={this.hymnToEdit.lyricsBy}
+              musicBy={this.hymnToEdit.musicBy}
+              hymnCoverImage={this.hymnToEdit.hymnCoverImage}
+              ref={(ref: InfoEditor) => this.infoEditorRef = ref}
+            />
+            :
+            <InfoEditor visible={currentStep === steps.INFO} ref={(ref: InfoEditor) => this.infoEditorRef = ref}/>
+          }
 
           {currentStep === steps.LYRICS ?
             <Button style={style.button} onPress={() => this.setState({currentStep: steps.INFO})}>
