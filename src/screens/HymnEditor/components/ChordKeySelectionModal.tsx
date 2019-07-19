@@ -96,6 +96,12 @@ class ChordKeySelectionModal extends PureComponent<Props, State> {
     }).start();
   }
 
+  private onRadioPress = (key: string) => {
+    this.setState({selectedKey: key}, () => {
+      this.onDoneSelecting();
+    });
+  }
+
   private onDoneSelecting = () => {
     const {lyrics, selectedKey} = this.state;
 
@@ -131,7 +137,7 @@ class ChordKeySelectionModal extends PureComponent<Props, State> {
   private renderRadioBtn = (key: string) => {
     return (
       <View key={key}>
-        <TouchableRipple onPress={() => this.setState({selectedKey: key})}>
+        <TouchableRipple onPress={() => this.onRadioPress(key)}>
           <View pointerEvents="none" style={style.radioContainer}>
             <RadioBtn value={this.state.selectedKey === key}/>
             <Text style={style.radioLabel}>{key || i18n.t("no_chords")}</Text>
@@ -163,10 +169,6 @@ class ChordKeySelectionModal extends PureComponent<Props, State> {
           <Dialog.Actions>
             <Button onPress={this.hideDialog}>
               {i18n.t("btn_cancel")}
-            </Button>
-            <Button onPress={this.onDoneSelecting}
-                    disabled={typeof this.state.selectedKey !== "string"}>
-              {i18n.t("btn_done")}
             </Button>
           </Dialog.Actions>
 
