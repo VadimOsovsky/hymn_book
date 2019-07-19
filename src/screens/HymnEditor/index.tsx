@@ -10,6 +10,7 @@ import i18n from "../../i18n";
 import Action from "../../models/Action";
 import HymnItem, { LyricsItem } from "../../models/HymnItem";
 import { AppState } from "../../reducers";
+import LoadingModal from "../../shared/ui/LoadingModal";
 import ThemedView from "../../shared/ui/ThemedView";
 import globalStyles from "../../styles/globalStyles";
 import InfoEditor from "./components/InfoEditor";
@@ -35,6 +36,7 @@ type Props = AppState & ReduxDispatch & OwnProps;
 interface State {
   currentStep: steps;
   lyrics: LyricsItem[];
+  isAddingOrUpdatingHymnLoading: boolean;
 }
 
 class HymnEditor extends React.Component<Props, State> {
@@ -55,6 +57,7 @@ class HymnEditor extends React.Component<Props, State> {
     this.state = {
       currentStep: steps.LYRICS,
       lyrics: this.hymnToEdit ? _.cloneDeep(this.hymnToEdit.lyrics) : [],
+      isAddingOrUpdatingHymnLoading: false,
     };
   }
 
@@ -105,12 +108,19 @@ class HymnEditor extends React.Component<Props, State> {
     });
   }
 
-  private saveAndExit = () => {
+  private saveAndExit = async () => {
     // TODO Save to backend
     if (!this.state.lyrics.length) {
       ToastAndroid.show(i18n.t("error_save_hymn_no_lyrics"), ToastAndroid.LONG);
     } else {
       const newHymn = this.getNewHymn();
+
+      if (this.isAddNew || !newHymn.hymnId) {
+        this.setState({isAddingOrUpdatingHymnLoading: true});
+        newHymn.hymnId = await HymnItem.assignHymnIdForOffline(this.props.hymns!.savedHymns);
+        this.setState({isAddingOrUpdatingHymnLoading: false});
+      }
+
       this.isAddNew ? this.props.addToSavedHymns(newHymn) : this.props.editSavedHymn(newHymn);
       this.props.navigation.goBack();
     }
@@ -135,7 +145,7 @@ class HymnEditor extends React.Component<Props, State> {
     }
 
     return new HymnItem(
-      this.hymnToEdit ? this.hymnToEdit.hymnId : "-1",
+      this.hymnToEdit ? this.hymnToEdit.hymnId : "",
       info.title,
       lyrics,
       info.lyricsBy,
@@ -167,7 +177,7 @@ class HymnEditor extends React.Component<Props, State> {
   }
 
   public render() {
-    const {currentStep, lyrics} = this.state;
+    const {currentStep, lyrics, isAddingOrUpdatingHymnLoading} = this.state;
 
     return (
       <ThemedView style={globalStyles.screen}>
@@ -224,6 +234,8 @@ class HymnEditor extends React.Component<Props, State> {
             </View>
           }
         </ScrollView>
+        <LoadingModal visible={isAddingOrUpdatingHymnLoading}
+                      text={i18n.t(this.isAddNew ? "loader_adding_hymn" : "loader_applying_changes")}/>
       </ThemedView>
     );
   }

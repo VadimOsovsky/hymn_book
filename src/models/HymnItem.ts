@@ -1,4 +1,5 @@
 import LanguageDetect from "languagedetect";
+import _ from "lodash";
 import AwesomeGod from "../seedData/lyrics/AwesomeGod";
 import OurGodIsGreater from "../seedData/lyrics/OurGodIsGreater";
 import { LanguageCodes } from "./LanguageCodes";
@@ -30,7 +31,7 @@ export default class HymnItem {
     hymnCoverImage?: string,
     submittedBy?: string,
   ) {
-    this.hymnId = hymnId || "";
+    this.hymnId = hymnId;
     this.title = title;
     this.lyrics = lyrics;
     this.musicBy = musicBy;
@@ -52,6 +53,16 @@ export default class HymnItem {
 
     return text.replace(/(?:\r\n|\r|\n|\s\s+)/g, " ");
   }
+
+  public static assignHymnIdForOffline = (allSavedHymns: HymnItem[]): Promise<string> => new Promise((resolve) => {
+    setTimeout(() => {
+      let hymnId = 0;
+      while (_.isObject(_.find(allSavedHymns, {hymnId: hymnId.toString()}))) {
+        hymnId++;
+      }
+      resolve(hymnId.toString());
+    });
+  })
 
   public static getDummyHymns(): HymnItem[] {
     const dummyHymns = [];

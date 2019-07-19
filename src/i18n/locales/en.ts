@@ -30,6 +30,11 @@ export default {
   input_password: "Password",
   input_repeat_password: "Repeat Password",
 
+  // Loader text
+  loader_default_text: "Loading...",
+  loader_adding_hymn: "Adding hymn...",
+  loader_applying_changes_hymn: "Applying changes...",
+
   // Navigation
   guest: "Guest",
   enter_wycliffe_account: "Enter your Wycliffe account",
