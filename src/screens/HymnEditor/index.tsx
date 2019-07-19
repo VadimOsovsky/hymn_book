@@ -68,7 +68,7 @@ class HymnEditor extends React.Component<Props, State> {
         ToastAndroid.show(i18n.t("error_save_hymn_no_title"), ToastAndroid.LONG);
       } else if (this.isAddNew) {
         this.saveAndExit();
-      } else if (!this.checkIfHymnChanged() && 1 > 5) {
+      } else if (!this.checkIfHymnChanged()) {
         this.discardAndExit();
       } else {
         Alert.alert(
@@ -93,11 +93,11 @@ class HymnEditor extends React.Component<Props, State> {
       } else {
         Alert.alert(
           i18n.t("discard_changes_title"),
-          i18n.t("discard_changes_message"),
+          i18n.t(this.isAddNew ? "discard_add_message" : "discard_changes_message"),
           [
             {text: i18n.t("btn_cancel")},
-            {text: i18n.t("btn_discard"), onPress: this.discardAndExit},
-            {text: i18n.t("btn_apply"), onPress: this.saveAndExit},
+            {text: i18n.t(this.isAddNew ? "btn_discard_and_exit" : "btn_discard"), onPress: this.discardAndExit},
+            !this.isAddNew ? {text: i18n.t("btn_apply"), onPress: this.saveAndExit} : {},
           ],
         );
       }
@@ -145,14 +145,16 @@ class HymnEditor extends React.Component<Props, State> {
     );
   }
 
-  // private setHymnCoverImage(hymnCoverUri: string) {
-  //   this.setState({hymnCoverUri})
-  // }
-
   private checkIfHymnChanged = (): boolean => {
     // returns true if changed
-    // return JSON.stringify(this.hymnToEdit) !== JSON.stringify(this.getNewHymn());
-    return false;
+    const lyrics = this.lyricsEditorRef!.getLyrics();
+    const info = this.infoEditorRef!.getHymnInfo();
+
+    if (this.isAddNew && !lyrics.length && !info.title && !info.hymnCoverImage && !info.lyricsBy && !info.musicBy) {
+      return false;
+    } else {
+      return JSON.stringify(this.hymnToEdit) !== JSON.stringify(this.getNewHymn());
+    }
   }
 
   private getAppbarTitle = (): string => {
