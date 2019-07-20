@@ -7,17 +7,18 @@ import { ThunkDispatch } from "redux-thunk";
 import { login } from "../../../actions/authActions";
 import i18n from "../../../i18n";
 import Action from "../../../models/Action";
+import { screens } from "../../../navigation/rootStack";
 import { AppState } from "../../../reducers";
+import ErrorText from "../../../shared/ui/ErrorText";
 import MyInput, { inputPresets } from "../../../shared/ui/MyInput";
 import style from "../style";
-import ErrorText from "../../../shared/ui/ErrorText";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 interface ReduxDispatch {
-  login: (email: string, password: string) => void;
+  login: (email: string, password: string, navToMainAppCB: () => void) => void;
 }
 
 type Props = OwnProps & ReduxDispatch & AppState;
@@ -39,7 +40,7 @@ class Login extends React.Component<Props, State> {
 
   private onLogin = () => {
     const {email, password} = this.state;
-    this.props.login(email, password);
+    this.props.login(email, password, () => this.props.navigation.navigate(screens.MAIN_APP));
   }
 
   public render() {
@@ -94,7 +95,9 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
-    login: (email: string, password: string) => dispatch(login(email, password)),
+    login: (email: string, password: string, navToMainAppCB: () => void) => {
+      return dispatch(login(email, password, navToMainAppCB));
+    },
   };
 };
 

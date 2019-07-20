@@ -1,10 +1,7 @@
 import axios from "axios";
 import { getLanguages } from "react-native-i18n";
-import { NavigationActions } from "react-navigation";
 import { ThunkDispatch } from "redux-thunk";
 import User from "../models/User";
-import { screens as rootStackScreens } from "../navigation/rootStack";
-import { screens as savedHymnScreens } from "../navigation/savedHymnsStack";
 import { BASE_URL } from "../utils/config";
 import getErrMsg from "../utils/getErrMsg";
 import StorageUtils from "../utils/StorageUtils";
@@ -13,7 +10,7 @@ export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
 export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
 export const SIGNUP_ERROR = "SIGNUP_ERROR";
 
-export function signup(newUser: User) {
+export function signup(newUser: User, navToMainAppCB: () => void) {
   return async (dispatch: ThunkDispatch<{}, {}, any>) => {
     dispatch({type: SIGNUP_REQUEST});
 
@@ -26,7 +23,7 @@ export function signup(newUser: User) {
       dispatch(setTokenToStorage(res.data.token));
       dispatch(setUserToStorage(res.data.newUser));
 
-      dispatch(NavigationActions.navigate({routeName: savedHymnScreens.SAVED_HYMNS}));
+      navToMainAppCB();
     } catch (err) {
       dispatch({type: SIGNUP_ERROR, payload: {err: getErrMsg(err)}});
     }
@@ -37,7 +34,7 @@ export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_ERROR = "LOGIN_ERROR";
 
-export function login(email: string, password: string) {
+export function login(email: string, password: string, navToMainAppCB: () => void) {
   return async (dispatch: ThunkDispatch<{}, {}, any>) => {
     dispatch({type: LOGIN_REQUEST});
 
@@ -47,7 +44,7 @@ export function login(email: string, password: string) {
       dispatch(setTokenToStorage(res.data.token));
       dispatch(setUserToStorage(res.data.user));
 
-      dispatch(NavigationActions.navigate({routeName: savedHymnScreens.SAVED_HYMNS}));
+      navToMainAppCB();
     } catch (err) {
       dispatch({type: LOGIN_ERROR, payload: {err: getErrMsg(err)}});
     }
@@ -56,13 +53,13 @@ export function login(email: string, password: string) {
 
 export const LOGOUT = "LOGOUT";
 
-export function logout() {
+export function logout(navToAuthCB: () => void) {
   return async (dispatch: ThunkDispatch<{}, {}, any>) => {
     dispatch({type: LOGOUT});
     dispatch(deleteTokenFromStorage());
     dispatch(deleteUserFromStorage());
 
-    dispatch(NavigationActions.navigate({routeName: rootStackScreens.AUTH}));
+    navToAuthCB();
   };
 }
 

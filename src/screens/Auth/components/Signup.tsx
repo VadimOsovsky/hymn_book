@@ -8,17 +8,18 @@ import { signup } from "../../../actions/authActions";
 import i18n from "../../../i18n";
 import Action from "../../../models/Action";
 import User from "../../../models/User";
+import { screens } from "../../../navigation/rootStack";
 import { AppState } from "../../../reducers";
+import ErrorText from "../../../shared/ui/ErrorText";
 import MyInput, { inputPresets } from "../../../shared/ui/MyInput";
 import style from "../style";
-import ErrorText from "../../../shared/ui/ErrorText";
 
 interface OwnProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 interface ReduxDispatch {
-  signup: (newUser: User) => void;
+  signup: (newUser: User, navToMainAppCB: () => void) => void;
 }
 
 type Props = OwnProps & ReduxDispatch & AppState;
@@ -51,7 +52,7 @@ class Signup extends React.Component<Props, State> {
     const {name, email, password} = this.state;
 
     const newUser = new User(email, password, name);
-    this.props.signup(newUser);
+    this.props.signup(newUser, () => this.props.navigation.navigate(screens.MAIN_APP));
   }
 
   public render() {
@@ -111,7 +112,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
-    signup: (newUser: User) => dispatch(signup(newUser)),
+    signup: (newUser: User, navToMainAppCB: () => void) => dispatch(signup(newUser, navToMainAppCB)),
   };
 };
 
