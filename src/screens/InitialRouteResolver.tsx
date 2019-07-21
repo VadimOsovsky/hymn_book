@@ -21,8 +21,9 @@ class InitialRouteResolver extends React.Component<Props> {
   // Fetch the token from storage then navigate to our appropriate place
   private bootstrap = () => {
     const {tipsToShow, isGuideReady} = this.props.guide!;
+    const {token} = this.props.auth!;
     if (isGuideReady) {
-      if (!tipsToShow.GUEST_MODE_WARNING) {
+      if (!tipsToShow.GUEST_MODE_WARNING || token) {
         this.props.navigation.navigate(screens.MAIN_APP);
       } else {
         this.props.navigation.navigate(screens.AUTH);
@@ -39,8 +40,8 @@ class InitialRouteResolver extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: AppState) => {
-  const {guide} = state;
-  return {guide};
+  const {guide, auth} = state;
+  return {guide, auth};
 };
 
 export default connect(mapStateToProps)(InitialRouteResolver);

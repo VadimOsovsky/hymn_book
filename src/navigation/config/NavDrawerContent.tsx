@@ -16,7 +16,7 @@ import { darkTheme, lightTheme, MyTheme } from "../../styles/appTheme";
 import { screens } from "../rootStack";
 
 interface ReduxDispatch {
-  logout: (navToAuthCB: () => void) => void;
+  logout: () => void;
   setTheme: (theme: MyTheme) => void;
 }
 
@@ -43,8 +43,6 @@ class NavDrawerContent extends PureComponent<Props> {
       return i18n.t("guest")[0];
     }
   }
-
-  private navigateToAuth = () => this.props.navigation.navigate(screens.AUTH);
 
   public render() {
     const {user} = this.props.auth!;
@@ -82,13 +80,13 @@ class NavDrawerContent extends PureComponent<Props> {
               <Drawer.Item
                 label={i18n.t("route_logout")}
                 icon="launch"
-                onPress={() => this.props.logout(this.navigateToAuth)}
+                onPress={this.props.logout}
               />
               :
               <Drawer.Item
                 label={i18n.t("route_login")}
                 icon="launch"
-                onPress={this.navigateToAuth}
+                onPress={() => this.props.navigation.navigate(screens.AUTH)}
               />
             }
           </View>
@@ -124,7 +122,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
-    logout: (navToAuthCB: () => void) => dispatch(logout(navToAuthCB)),
+    logout: () => dispatch(logout()),
     setTheme: (theme: MyTheme) => dispatch(setTheme(theme)),
   };
 };

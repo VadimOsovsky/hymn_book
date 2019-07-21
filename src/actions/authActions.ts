@@ -2,15 +2,17 @@ import axios from "axios";
 import { getLanguages } from "react-native-i18n";
 import { ThunkDispatch } from "redux-thunk";
 import User from "../models/User";
+import { screens } from "../navigation/rootStack";
 import { BASE_URL } from "../utils/config";
 import getErrMsg from "../utils/getErrMsg";
+import navService from "../utils/navService";
 import StorageUtils from "../utils/StorageUtils";
 
 export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
 export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
 export const SIGNUP_ERROR = "SIGNUP_ERROR";
 
-export function signup(newUser: User, navToMainAppCB: () => void) {
+export function signup(newUser: User) {
   return async (dispatch: ThunkDispatch<{}, {}, any>) => {
     dispatch({type: SIGNUP_REQUEST});
 
@@ -23,7 +25,7 @@ export function signup(newUser: User, navToMainAppCB: () => void) {
       dispatch(setTokenToStorage(res.data.token));
       dispatch(setUserToStorage(res.data.newUser));
 
-      navToMainAppCB();
+      dispatch(() => navService.navigate(screens.MAIN_APP));
     } catch (err) {
       dispatch({type: SIGNUP_ERROR, payload: {err: getErrMsg(err)}});
     }
@@ -34,7 +36,7 @@ export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_ERROR = "LOGIN_ERROR";
 
-export function login(email: string, password: string, navToMainAppCB: () => void) {
+export function login(email: string, password: string) {
   return async (dispatch: ThunkDispatch<{}, {}, any>) => {
     dispatch({type: LOGIN_REQUEST});
 
@@ -44,7 +46,7 @@ export function login(email: string, password: string, navToMainAppCB: () => voi
       dispatch(setTokenToStorage(res.data.token));
       dispatch(setUserToStorage(res.data.user));
 
-      navToMainAppCB();
+      dispatch(() => navService.navigate(screens.MAIN_APP));
     } catch (err) {
       dispatch({type: LOGIN_ERROR, payload: {err: getErrMsg(err)}});
     }
@@ -53,13 +55,13 @@ export function login(email: string, password: string, navToMainAppCB: () => voi
 
 export const LOGOUT = "LOGOUT";
 
-export function logout(navToAuthCB: () => void) {
+export function logout() {
   return async (dispatch: ThunkDispatch<{}, {}, any>) => {
     dispatch({type: LOGOUT});
     dispatch(deleteTokenFromStorage());
     dispatch(deleteUserFromStorage());
 
-    navToAuthCB();
+    dispatch(() => navService.navigate(screens.AUTH));
   };
 }
 

@@ -53,6 +53,11 @@ class BottomSheet extends React.Component<Props, State> {
     }
   }
 
+  public onActionSelected = (cb: () => void) => {
+    this.RBSheet!.close();
+    setTimeout(cb, this.sheetClosingTime);
+  }
+
   public openSheet = (hymn: HymnItem) => {
     Vibration.vibrate(50);
     this.setState({hymn});
@@ -60,47 +65,31 @@ class BottomSheet extends React.Component<Props, State> {
     StatusBar.setBackgroundColor(STATUS_BAR_DARKENED_COLOR);
   }
 
-  private onSelectHymn = () => {
-    this.RBSheet!.close();
-    setTimeout(() => {
-      this.props.onSelectHymn(this.state.hymn!.hymnId);
-    }, this.sheetClosingTime);
+  private selectHymn = () => {
+    this.props.onSelectHymn(this.state.hymn!.hymnId);
   }
 
-  private onShare = () => {
-    this.RBSheet!.close();
-    setTimeout(() => {
-      ToastAndroid.show("Share WIP", 5);
-    }, this.sheetClosingTime);
+  private share = () => {
+    ToastAndroid.show("Share WIP", 5);
   }
 
-  private onEdit = () => {
-    this.RBSheet!.close();
-    setTimeout(() => {
-      this.props.navigation.navigate(screens.HYMN_EDITOR, {hymnToEdit: this.state.hymn});
-    }, this.sheetClosingTime - 50);
+  private edit = () => {
+    this.props.navigation.navigate(screens.HYMN_EDITOR, {hymnToEdit: this.state.hymn});
   }
 
-  private onRemoveFromSaved = () => {
-    this.RBSheet!.close();
-    // to compensate closing animation
-    setTimeout(() => {
-      Alert.alert(
-        this.state.hymn!.title,
-        i18n.t("delete_selected_message", {count: 1}),
-        [
-          {text: i18n.t("btn_cancel"), style: "cancel"},
-          {text: i18n.t("btn_ok"), onPress: () => this.props.onRemoveFromSaved(this.state.hymn!.hymnId)},
-        ],
-      );
-    }, this.sheetClosingTime);
+  private removeFromSaved = () => {
+    Alert.alert(
+      this.state.hymn!.title,
+      i18n.t("delete_selected_message", {count: 1}),
+      [
+        {text: i18n.t("btn_cancel"), style: "cancel"},
+        {text: i18n.t("btn_ok"), onPress: () => this.props.onRemoveFromSaved(this.state.hymn!.hymnId)},
+      ],
+    );
   }
 
-  private onReport = () => {
-    this.RBSheet!.close();
-    setTimeout(() => {
-      ToastAndroid.show("Report WIP", 5);
-    }, this.sheetClosingTime);
+  private report = () => {
+    ToastAndroid.show("Report WIP", 5);
   }
 
   private getActions = (): SheetAction[] => {
@@ -110,25 +99,25 @@ class BottomSheet extends React.Component<Props, State> {
       actions.push({
         title: "select_hymn",
         icon: "check-circle",
-        onPress: this.onSelectHymn,
+        onPress: () => this.onActionSelected(this.selectHymn),
       });
     }
     actions.push({
       title: "share_hymn",
       icon: "share",
-      onPress: this.onShare,
+      onPress: () => this.onActionSelected(this.share),
     }, {
       title: "edit_hymn",
       icon: "edit",
-      onPress: this.onEdit,
+      onPress: () => this.onActionSelected(this.edit),
     }, {
       title: "delete_from_saved",
       icon: "star-border",
-      onPress: this.onRemoveFromSaved,
+      onPress: () => this.onActionSelected(this.removeFromSaved),
     }, {
       title: "report",
       icon: "error",
-      onPress: this.onReport,
+      onPress: () => this.onActionSelected(this.report),
     });
 
     return actions;

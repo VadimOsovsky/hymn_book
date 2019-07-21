@@ -218,7 +218,7 @@ class SavedHymns extends React.Component<Props, State> {
   }
 
   private renderSavedHymns = () => {
-    if (this.props.hymns!.isSavedHymnsLoading) {
+    if (this.props.hymns!.savedHymnsLoading) {
       return (
         <ActivityIndicator size="large" style={style.noHymns}/>
       );
@@ -227,7 +227,7 @@ class SavedHymns extends React.Component<Props, State> {
         <FlatList
           data={this.getFilteredSavedHymns()}
           onRefresh={this.props.getSavedHymnsFromStorage}
-          refreshing={this.props.hymns!.isSavedHymnsLoading}
+          refreshing={this.props.hymns!.savedHymnsLoading}
           ListEmptyComponent={<Text style={style.noHymns}>{i18n.t("no_hymns")}</Text>}
           keyExtractor={((item: HymnItem) => String(item.hymnId))}
           keyboardShouldPersistTaps="handled"
@@ -250,7 +250,7 @@ class SavedHymns extends React.Component<Props, State> {
   }
 
   private renderFAB = () => {
-    if (!this.props.hymns!.isSavedHymnsLoading && !this.state.selectedHymns.length && !this.state.isSearchMode) {
+    if (!this.props.hymns!.savedHymnsLoading && !this.state.selectedHymns.length && !this.state.isSearchMode) {
       return (
         <SavedHymnsFAB
           navigation={this.props.navigation}

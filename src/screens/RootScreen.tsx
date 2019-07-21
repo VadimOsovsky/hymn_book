@@ -13,6 +13,7 @@ import Action from "../models/Action";
 import rootStack from "../navigation/rootStack";
 import { AppState } from "../reducers";
 import { STATUS_BAR_INITIAL_COLOR } from "../styles/styleVariables";
+import navService from "../utils/navService";
 
 const Navigation = createAppContainer(rootStack);
 
@@ -67,7 +68,9 @@ class RootScreen extends React.Component<Props> {
       return (
         <PaperProvider theme={this.props.prefs!.userPrefs.theme}>
           <StatusBar translucent={true} backgroundColor={STATUS_BAR_INITIAL_COLOR}/>
-          <Navigation/>
+          <Navigation ref={(navigatorRef) => {
+            navService.setTopLevelNavigator(navigatorRef);
+          }}/>
         </PaperProvider>
       );
     } else {

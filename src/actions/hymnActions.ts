@@ -1,49 +1,55 @@
+import axios from "axios";
 import _ from "lodash";
 import { ThunkDispatch } from "redux-thunk";
 import HymnItem from "../models/HymnItem";
+import { screens } from "../navigation/savedHymnsStack";
 import { AppState } from "../reducers";
+import { BASE_URL } from "../utils/config";
+import getErrMsg from "../utils/getErrMsg";
+import navService from "../utils/navService";
 import StorageUtils from "../utils/StorageUtils";
 
-export const GET_SAVED_HYMNS_FROM_STORAGE_REQUEST = "GET_SAVED_HYMNS_FROM_STORAGE_REQUEST";
-export const GET_SAVED_HYMNS_FROM_STORAGE_SUCCESS = "GET_SAVED_HYMNS_FROM_STORAGE_SUCCESS";
-export const GET_SAVED_HYMNS_FROM_STORAGE_ERROR = "GET_SAVED_HYMNS_FROM_STORAGE_ERROR";
+export const GET_SAVED_HYMNS_FROM_STORAGE_REQ = "GET_SAVED_HYMNS_FROM_STORAGE_REQ";
+export const GET_SAVED_HYMNS_FROM_STORAGE_RES = "GET_SAVED_HYMNS_FROM_STORAGE_RES";
+export const GET_SAVED_HYMNS_FROM_STORAGE_ERR = "GET_SAVED_HYMNS_FROM_STORAGE_ERR";
 
 export function getSavedHymnsFromStorage() {
   return async (dispatch: ThunkDispatch<{}, {}, any>) => {
-    dispatch({type: GET_SAVED_HYMNS_FROM_STORAGE_REQUEST});
+    dispatch({type: GET_SAVED_HYMNS_FROM_STORAGE_REQ});
 
     try {
       const savedHymns: string | null = await StorageUtils.getSavedHymns();
       if (savedHymns) {
-        dispatch({type: GET_SAVED_HYMNS_FROM_STORAGE_SUCCESS, payload: JSON.parse(savedHymns)});
+        dispatch({type: GET_SAVED_HYMNS_FROM_STORAGE_RES, payload: {savedHymns: JSON.parse(savedHymns)}});
       } else {
         // else it's the first launch, prepopulate with dummy hymns
         const dummyHymns: HymnItem[] = HymnItem.getDummyHymns();
-        dispatch({type: GET_SAVED_HYMNS_FROM_STORAGE_SUCCESS, payload: dummyHymns});
+        dispatch({type: GET_SAVED_HYMNS_FROM_STORAGE_RES, payload: {savedHymns: dummyHymns}});
         dispatch(setSavedHymnToStorage(dummyHymns));
       }
     } catch (err) {
-      dispatch({type: GET_SAVED_HYMNS_FROM_STORAGE_ERROR, payload: err});
+      dispatch({type: GET_SAVED_HYMNS_FROM_STORAGE_ERR, payload: {error: err}});
     }
   };
 }
 
-export const SET_SAVED_HYMNS_TO_STORAGE_REQUEST = "SET_SAVED_HYMNS_TO_STORAGE_REQUEST";
-export const SET_SAVED_HYMNS_TO_STORAGE_SUCCESS = "SET_SAVED_HYMNS_TO_STORAGE_SUCCESS";
-export const SET_SAVED_HYMNS_TO_STORAGE_ERROR = "SET_SAVED_HYMNS_TO_STORAGE_ERROR";
+export const SET_SAVED_HYMNS_TO_STORAGE_REQ = "SET_SAVED_HYMNS_TO_STORAGE_REQ";
+export const SET_SAVED_HYMNS_TO_STORAGE_RES = "SET_SAVED_HYMNS_TO_STORAGE_RES";
+export const SET_SAVED_HYMNS_TO_STORAGE_ERR = "SET_SAVED_HYMNS_TO_STORAGE_ERR";
 
 export function setSavedHymnToStorage(savedHymns: HymnItem[]) {
   return async (dispatch: ThunkDispatch<{}, {}, any>) => {
-    dispatch({type: SET_SAVED_HYMNS_TO_STORAGE_REQUEST, payload: savedHymns});
+    dispatch({type: SET_SAVED_HYMNS_TO_STORAGE_REQ, payload: {savedHymns}});
     try {
       await StorageUtils.setSavedHymns(savedHymns);
-      dispatch({type: SET_SAVED_HYMNS_TO_STORAGE_SUCCESS});
+      dispatch({type: SET_SAVED_HYMNS_TO_STORAGE_RES});
     } catch (err) {
-      dispatch({type: SET_SAVED_HYMNS_TO_STORAGE_ERROR, payload: err});
+      dispatch({type: SET_SAVED_HYMNS_TO_STORAGE_ERR, payload: {error: err}});
     }
   };
 }
 
+// ==== LOCAL ACTIONS ====
 export const ADD_TO_SAVED_HYMNS = "ADD_TO_SAVED_HYMNS";
 
 export function addToSavedHymns(newHymn: HymnItem) {
@@ -51,7 +57,7 @@ export function addToSavedHymns(newHymn: HymnItem) {
     const updatedSavedHymns: HymnItem[] = [newHymn, ...getState().hymns!.savedHymns];
 
     dispatch(setSavedHymnToStorage(updatedSavedHymns));
-    return {type: ADD_TO_SAVED_HYMNS, payload: updatedSavedHymns};
+    dispatch({type: ADD_TO_SAVED_HYMNS, payload: {savedHymns: updatedSavedHymns}});
   };
 }
 
@@ -68,7 +74,8 @@ export function editSavedHymn(updatedHymn: HymnItem) {
     });
 
     dispatch(setSavedHymnToStorage(savedHymns));
-    return {type: EDIT_SAVED_HYMN, payload: savedHymns};
+    dispatch({type: EDIT_SAVED_HYMN, payload: {savedHymns}});
+    dispatch(() => navService.navigate(screens.SAVED_HYMNS));
   };
 }
 
@@ -94,6 +101,61 @@ export function removeFromSavedHymns(hymnIds: string[]) {
       }
     });
     dispatch(setSavedHymnToStorage(updatedSavedHymns));
-    return {type: REMOVE_FROM_SAVED_HYMNS, payload: updatedSavedHymns};
+    return {type: REMOVE_FROM_SAVED_HYMNS, payload: {savedHymns: updatedSavedHymns}};
+  };
+}
+
+// ==== ONLINE ACTIONS ====
+
+export const PUBLISH_HYMN_REQ = "PUBLISH_HYMN_REQ";
+export const PUBLISH_HYMN_ERR = "PUBLISH_HYMN_ERR";
+
+export function publishNewHymn(newHymn: HymnItem) {
+  return async (dispatch: ThunkDispatch<{}, {}, any>, getState: () => AppState) => {
+    dispatch({type: PUBLISH_HYMN_REQ});
+    try {
+      const res = await axios.post(BASE_URL + "/hymns/addNewHymn", {newHymn});
+      dispatch(addToSavedHymns(res.data.newHymn));
+    } catch (err) {
+      dispatch({type: PUBLISH_HYMN_ERR, payload: {err: getErrMsg(err)}});
+      return;
+    }
+
+    dispatch(() => navService.navigate(screens.SAVED_HYMNS));
+  };
+}
+
+export const PUBLISH_CHANGED_HYMN_REQ = "PUBLISH_CHANGED_HYMN_REQ";
+export const PUBLISH_CHANGED_HYMN_ERR = "PUBLISH_CHANGED_HYMN_ERR";
+
+export function publishChangesToHymn(hymn: HymnItem) {
+  return async (dispatch: ThunkDispatch<{}, {}, any>, getState: () => AppState) => {
+    dispatch({type: PUBLISH_CHANGED_HYMN_REQ});
+    try {
+      const res = await axios.post(BASE_URL + "/hymns/modifyHymn", {hymn});
+      dispatch(editSavedHymn(res.data.updatedHymn));
+    } catch (err) {
+      dispatch({type: PUBLISH_CHANGED_HYMN_ERR, payload: {err: getErrMsg(err)}});
+      return;
+    }
+
+    dispatch(() => navService.navigate(screens.SAVED_HYMNS));
+  };
+}
+
+export const DELETE_HYMN_REQ = "DELETE_HYMN_REQ";
+export const DELETE_HYMN_RES = "DELETE_HYMN_RES";
+export const DELETE_HYMN_ERR = "DELETE_HYMN_ERR";
+
+export function deleteHymnFromServer(hymnId: string) {
+  return async (dispatch: ThunkDispatch<{}, {}, any>, getState: () => AppState) => {
+    dispatch({type: DELETE_HYMN_REQ});
+    try {
+      const res = await axios.post(BASE_URL + "/hymns/deleteHymns", {hymnIdsToDelete: [hymnId]});
+      dispatch({type: DELETE_HYMN_RES});
+    } catch (err) {
+      dispatch({type: DELETE_HYMN_ERR, payload: {err: getErrMsg(err)}});
+      return;
+    }
   };
 }

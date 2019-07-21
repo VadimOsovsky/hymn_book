@@ -4,15 +4,15 @@ export default class User {
   public email: string;
   public password: string;
   public name: string;
-  public language?: string;
-  public profilePicture?: string;
+  public language: string;
+  public profilePicture: string;
   public savedHymns?: string[];
 
   constructor(
     email: string,
     password: string,
     name: string,
-    language?: string,
+    language: string,
     profilePicture?: string,
     savedHymns?: string[],
   ) {
@@ -20,7 +20,7 @@ export default class User {
     this.password = password;
     this.name = name;
     this.language = language;
-    this.profilePicture = profilePicture;
+    this.profilePicture = profilePicture || "";
     this.savedHymns = savedHymns;
   }
 

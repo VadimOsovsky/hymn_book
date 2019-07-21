@@ -1,11 +1,11 @@
 import _ from "lodash";
 import React from "react";
-import { Alert, ScrollView, StatusBar, ToastAndroid, View } from "react-native";
+import { Alert, BackHandler, ScrollView, StatusBar, ToastAndroid, View } from "react-native";
 import { Appbar, Button, Surface } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { addToSavedHymns, editSavedHymn } from "../../actions/hymnActions";
+import { addToSavedHymns, editSavedHymn, publishNewHymn } from "../../actions/hymnActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
 import HymnItem, { LyricsItem } from "../../models/HymnItem";
@@ -13,6 +13,7 @@ import { AppState } from "../../reducers";
 import LoadingModal from "../../shared/ui/LoadingModal";
 import ThemedView from "../../shared/ui/ThemedView";
 import globalStyles from "../../styles/globalStyles";
+import DoneButton from "./components/DoneButton";
 import InfoEditor from "./components/InfoEditor";
 import LyricsEditor from "./components/LyricsEditor";
 import style from "./style";
@@ -28,7 +29,8 @@ interface OwnProps {
 
 interface ReduxDispatch {
   addToSavedHymns: (newHymn: HymnItem) => void;
-  editSavedHymn: (newHymn: HymnItem) => void;
+  editSavedHymn: (updatedHymn: HymnItem) => void;
+  publishNewHymn: (newHymn: HymnItem) => void;
 }
 
 type Props = AppState & ReduxDispatch & OwnProps;
@@ -36,7 +38,6 @@ type Props = AppState & ReduxDispatch & OwnProps;
 interface State {
   currentStep: steps;
   lyrics: LyricsItem[];
-  isAddingOrUpdatingHymnLoading: boolean;
 }
 
 class HymnEditor extends React.Component<Props, State> {
@@ -57,34 +58,15 @@ class HymnEditor extends React.Component<Props, State> {
     this.state = {
       currentStep: steps.LYRICS,
       lyrics: this.hymnToEdit ? _.cloneDeep(this.hymnToEdit.lyrics) : [],
-      isAddingOrUpdatingHymnLoading: false,
     };
   }
 
-  private onDone = () => {
-    const lyrics = this.lyricsEditorRef!.getLyrics();
-    this.setState({lyrics}, () => {
+  public componentDidMount(): void {
+    BackHandler.addEventListener("hardwareBackPress", this.onGoBack);
+  }
 
-      if (!this.state.lyrics.length) {
-        ToastAndroid.show(i18n.t("error_save_hymn_no_lyrics"), ToastAndroid.LONG);
-      } else if (!this.infoEditorRef!.getHymnInfo().title) {
-        ToastAndroid.show(i18n.t("error_save_hymn_no_title"), ToastAndroid.LONG);
-      } else if (this.isAddNew) {
-        this.saveAndExit();
-      } else if (!this.checkIfHymnChanged()) {
-        this.discardAndExit();
-      } else {
-        Alert.alert(
-          i18n.t("save_changes_title"),
-          i18n.t("save_changes_message"),
-          [
-            {text: i18n.t("btn_cancel")},
-            {text: i18n.t("btn_save"), onPress: this.saveAndExit},
-          ],
-        );
-      }
-
-    });
+  public componentWillUnmount(): void {
+    BackHandler.removeEventListener("hardwareBackPress", this.onGoBack);
   }
 
   private onGoBack = () => {
@@ -96,34 +78,18 @@ class HymnEditor extends React.Component<Props, State> {
       } else {
         Alert.alert(
           i18n.t("discard_changes_title"),
-          i18n.t(this.isAddNew ? "discard_add_message" : "discard_changes_message"),
+          i18n.t("discard_changes_message"),
           [
             {text: i18n.t("btn_cancel")},
-            {text: i18n.t(this.isAddNew ? "btn_discard_and_exit" : "btn_discard"), onPress: this.discardAndExit},
-            !this.isAddNew ? {text: i18n.t("btn_apply"), onPress: this.saveAndExit} : {},
+            {text: i18n.t("btn_discard_and_exit"), onPress: this.discardAndExit},
           ],
         );
       }
 
     });
-  }
 
-  private saveAndExit = async () => {
-    // TODO Save to backend
-    if (!this.state.lyrics.length) {
-      ToastAndroid.show(i18n.t("error_save_hymn_no_lyrics"), ToastAndroid.LONG);
-    } else {
-      const newHymn = this.getNewHymn();
-
-      if (this.isAddNew || !newHymn.hymnId) {
-        this.setState({isAddingOrUpdatingHymnLoading: true});
-        newHymn.hymnId = await HymnItem.assignHymnIdForOffline(this.props.hymns!.savedHymns);
-        this.setState({isAddingOrUpdatingHymnLoading: false});
-      }
-
-      this.isAddNew ? this.props.addToSavedHymns(newHymn) : this.props.editSavedHymn(newHymn);
-      this.props.navigation.goBack();
-    }
+    // to prevent default behavior
+    return true;
   }
 
   private discardAndExit = () => {
@@ -177,7 +143,8 @@ class HymnEditor extends React.Component<Props, State> {
   }
 
   public render() {
-    const {currentStep, lyrics, isAddingOrUpdatingHymnLoading} = this.state;
+    const {currentStep, lyrics} = this.state;
+    const {doneHymnEditingLoading} = this.props.hymns!;
 
     return (
       <ThemedView style={globalStyles.screen}>
@@ -225,16 +192,18 @@ class HymnEditor extends React.Component<Props, State> {
             </Button>
             :
             <View>
-              <Button mode="contained" icon="publish" style={style.button} onPress={this.onDone}>
-                {i18n.t(this.isAddNew ? "btn_publish" : "btn_update")}
-              </Button>
+              <DoneButton
+                navigation={this.props.navigation}
+                isAddNew={this.isAddNew}
+                onCheckIfHymnChanged={this.checkIfHymnChanged.bind(this)}
+                onGetNewHymn={this.getNewHymn.bind(this)}/>
               <Button style={style.button} onPress={() => this.setState({currentStep: steps.LYRICS})}>
                 {i18n.t("btn_edit_lyrics")}
               </Button>
             </View>
           }
         </ScrollView>
-        <LoadingModal visible={isAddingOrUpdatingHymnLoading}
+        <LoadingModal visible={doneHymnEditingLoading}
                       text={i18n.t(this.isAddNew ? "loader_adding_hymn" : "loader_applying_changes")}/>
       </ThemedView>
     );
@@ -242,14 +211,15 @@ class HymnEditor extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState) => {
-  const {hymns, prefs} = state;
-  return {hymns, prefs};
+  const {hymns, prefs, auth} = state;
+  return {hymns, prefs, auth};
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
     addToSavedHymns: (newHymn: HymnItem) => dispatch(addToSavedHymns(newHymn)),
-    editSavedHymn: (newHymn: HymnItem) => dispatch(editSavedHymn(newHymn)),
+    editSavedHymn: (updatedHymn: HymnItem) => dispatch(editSavedHymn(updatedHymn)),
+    publishNewHymn: (newHymn: HymnItem) => dispatch(publishNewHymn(newHymn)),
   };
 };
 

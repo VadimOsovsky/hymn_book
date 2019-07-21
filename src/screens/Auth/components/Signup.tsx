@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, ToastAndroid, View } from "react-native";
+import { Text, ToastAndroid, View } from "react-native";
 import { Button, Colors } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
@@ -8,7 +8,6 @@ import { signup } from "../../../actions/authActions";
 import i18n from "../../../i18n";
 import Action from "../../../models/Action";
 import User from "../../../models/User";
-import { screens } from "../../../navigation/rootStack";
 import { AppState } from "../../../reducers";
 import ErrorText from "../../../shared/ui/ErrorText";
 import MyInput, { inputPresets } from "../../../shared/ui/MyInput";
@@ -19,7 +18,7 @@ interface OwnProps {
 }
 
 interface ReduxDispatch {
-  signup: (newUser: User, navToMainAppCB: () => void) => void;
+  signup: (newUser: User) => void;
 }
 
 type Props = OwnProps & ReduxDispatch & AppState;
@@ -52,7 +51,7 @@ class Signup extends React.Component<Props, State> {
     const {name, email, password} = this.state;
 
     const newUser = new User(email, password, name);
-    this.props.signup(newUser, () => this.props.navigation.navigate(screens.MAIN_APP));
+    this.props.signup(newUser);
   }
 
   public render() {
@@ -112,10 +111,8 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
-    signup: (newUser: User, navToMainAppCB: () => void) => dispatch(signup(newUser, navToMainAppCB)),
+    signup: (newUser: User) => dispatch(signup(newUser)),
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
-
-const localStyle = StyleSheet.create({});
