@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { Dialog, Paragraph, Portal } from "react-native-paper";
 import i18n from "../../i18n";
+import dialogStyles from "../../styles/dialogStyles";
 
 interface OwnProps {
   visible: boolean;
@@ -39,7 +40,7 @@ class LoadingModal extends PureComponent<Props, State> {
           dismissable={false}>
           <Dialog.Content style={style.container}>
             <ActivityIndicator size="large" style={style.loader}/>
-            <Paragraph>{text}</Paragraph>
+            <Paragraph style={dialogStyles.description}>{text}</Paragraph>
           </Dialog.Content>
         </Dialog>
       </Portal>

@@ -32,5 +32,5 @@ export default createStackNavigator({
   },
 }, {
   initialRouteName: screens.SAVED_HYMNS,
-  transitionConfig,
+  // transitionConfig,
 });

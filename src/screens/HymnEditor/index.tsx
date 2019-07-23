@@ -1,6 +1,6 @@
 import _ from "lodash";
 import React from "react";
-import { Alert, BackHandler, ScrollView, StatusBar, ToastAndroid, View } from "react-native";
+import { Alert, BackHandler, ScrollView, StatusBar, View } from "react-native";
 import { Appbar, Button, Surface } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
@@ -70,6 +70,11 @@ class HymnEditor extends React.Component<Props, State> {
   }
 
   private onGoBack = () => {
+    if (this.state.currentStep === steps.INFO) {
+      this.setState({currentStep: steps.LYRICS});
+      return true;
+    }
+    // else
     const lyrics = this.lyricsEditorRef!.getLyrics();
     this.setState({lyrics}, () => {
 
@@ -150,7 +155,8 @@ class HymnEditor extends React.Component<Props, State> {
       <ThemedView style={globalStyles.screen}>
         <Surface style={{elevation: 4}}>
           <Appbar.Header statusBarHeight={StatusBar.currentHeight}>
-            <Appbar.BackAction onPress={this.onGoBack}/>
+            <Appbar.BackAction
+              onPress={this.onGoBack}/>
             <Appbar.Content title={i18n.t(this.getAppbarTitle())}/>
             <Appbar.Action
               icon={currentStep === steps.LYRICS ? "lens" : "panorama-fish-eye"}

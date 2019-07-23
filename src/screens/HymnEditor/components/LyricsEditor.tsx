@@ -32,11 +32,15 @@ class LyricsEditor extends PureComponent<Props, State> {
     selectedLyricsItem: this.props.lyrics[0] || null,
   };
 
+  public componentDidMount(): void {
+    this.onNavFocus();
+  }
+
   public getLyrics = (): LyricsItem[] => this.state.lyrics;
 
   private onNavFocus = () => {
     if (!this.state.lyrics.length) {
-      this.chordModalRef!.openDialog();
+      setTimeout(this.chordModalRef!.openDialog, 50);
     }
   }
 
@@ -113,7 +117,7 @@ class LyricsEditor extends PureComponent<Props, State> {
 
     return (
       <View style={{display: this.props.visible ? "flex" : "none"}}>
-        <NavigationEvents onDidFocus={this.onNavFocus}/>
+        {/*<NavigationEvents onDidFocus={this.onNavFocus}/>*/}
         <GuideBanner tipType={guideTips.HYMN_EDITOR_STEP_1}/>
         <View style={style.container}>
           {lyrics.map((item, index) => {

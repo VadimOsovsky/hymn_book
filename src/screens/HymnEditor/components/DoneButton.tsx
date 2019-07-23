@@ -9,6 +9,8 @@ import i18n from "../../../i18n";
 import Action from "../../../models/Action";
 import HymnItem from "../../../models/HymnItem";
 import { AppState } from "../../../reducers";
+import DialogButton from "../../../shared/ui/DialogButton";
+import dialogStyles from "../../../styles/dialogStyles";
 
 interface OwnProps {
   isAddNew: boolean;
@@ -87,12 +89,12 @@ class DoneButton extends PureComponent<Props, State> {
         <View>
           <Dialog.Title>{i18n.t("save_and_exit_title")}</Dialog.Title>
           <Dialog.Content>
-            <Paragraph>{i18n.t("add_hymn_message")}</Paragraph>
+            <Paragraph style={dialogStyles.description}>{i18n.t("add_hymn_message")}</Paragraph>
             {token ? this.renderSwitch(i18n.t("switch_publish_new_hymn")) : null}
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={this.hideDialog}>{i18n.t("btn_cancel")}</Button>
-            <Button onPress={this.addNewHymn}>{i18n.t("btn_save")}</Button>
+            <DialogButton onPress={this.hideDialog} title={i18n.t("btn_cancel")}/>
+            <DialogButton onPress={this.addNewHymn} title={i18n.t("btn_save")}/>
           </Dialog.Actions>
         </View>
       );
@@ -101,12 +103,12 @@ class DoneButton extends PureComponent<Props, State> {
         <View>
           <Dialog.Title>{i18n.t("save_and_exit_title")}</Dialog.Title>
           <Dialog.Content>
-            <Paragraph>{i18n.t("update_hymn_message")}</Paragraph>
+            <Paragraph style={dialogStyles.description}>{i18n.t("update_hymn_message")}</Paragraph>
             {token && newHymn.submittedBy ? this.renderSwitch(i18n.t("switch_publish_updates")) : null}
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={this.hideDialog}>{i18n.t("btn_cancel")}</Button>
-            <Button onPress={this.editHymn}>{i18n.t("btn_save")}</Button>
+            <DialogButton onPress={this.hideDialog} title={i18n.t("btn_cancel")}/>
+            <DialogButton onPress={this.editHymn} title={i18n.t("btn_save")}/>
           </Dialog.Actions>
         </View>
       );

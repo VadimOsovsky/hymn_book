@@ -137,7 +137,7 @@ class HymnView extends React.Component<Props, State> {
           actions={this.getAppBarActions()}
         />
 
-        <ScrollView>
+        <ScrollView contentContainerStyle={{paddingBottom: 150}}>
           <View style={style.lyricsView}>
             <Text style={style.lyricsText}>{this.state.currentLyricsItem.text || i18n.t("no_lyrics")}</Text>
           </View>

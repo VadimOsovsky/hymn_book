@@ -7,6 +7,7 @@ import RadioBtn from "react-native-radio-button-android";
 import i18n from "../../../i18n";
 import { LyricsItem } from "../../../models/HymnItem";
 import { MusicKeys, musicKeysArr } from "../../../models/MusicKeys";
+import DialogButton from "../../../shared/ui/DialogButton";
 
 interface OwnProps {
   lyrics: LyricsItem[];
@@ -167,9 +168,7 @@ class ChordKeySelectionModal extends PureComponent<Props, State> {
           </Dialog.Content>
 
           <Dialog.Actions>
-            <Button onPress={this.hideDialog}>
-              {i18n.t("btn_cancel")}
-            </Button>
+            <DialogButton title={i18n.t("btn_cancel")} onPress={this.hideDialog}/>
           </Dialog.Actions>
 
         </Dialog>
