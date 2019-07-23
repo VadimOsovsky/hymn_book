@@ -139,4 +139,5 @@ export default {
   // learn_more: "Learn more",
   report: "Report",
   unknown_error: "Unknown error",
+  try_again: "Try again",
 };

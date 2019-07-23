@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, ToastAndroid, View } from "react-native";
+import { Keyboard, Text, ToastAndroid, View } from "react-native";
 import { Button, Colors } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
@@ -7,7 +7,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { signup } from "../../../actions/authActions";
 import i18n from "../../../i18n";
 import Action from "../../../models/Action";
-import User from "../../../models/User";
 import { AppState } from "../../../reducers";
 import ErrorText from "../../../shared/ui/ErrorText";
 import MyInput, { inputPresets } from "../../../shared/ui/MyInput";
@@ -18,7 +17,7 @@ interface OwnProps {
 }
 
 interface ReduxDispatch {
-  signup: (newUser: User) => void;
+  signup: (email: string, password: string, name: string) => void;
 }
 
 type Props = OwnProps & ReduxDispatch & AppState;
@@ -49,9 +48,8 @@ class Signup extends React.Component<Props, State> {
 
   private onSignup = async () => {
     const {name, email, password} = this.state;
-
-    const newUser = new User(email, password, name);
-    this.props.signup(newUser);
+    Keyboard.dismiss();
+    this.props.signup(email, password, name);
   }
 
   public render() {
@@ -63,7 +61,7 @@ class Signup extends React.Component<Props, State> {
                 onPress={this.visitOtherProducts}>{i18n.t("link_other_products")}</Text>
         </Text>
         <View style={style.form}>
-          <ErrorText>{this.props.auth!.signupError}</ErrorText>
+          <ErrorText message={this.props.auth!.signupError}/>
 
           <MyInput
             preset={inputPresets.NAME}
@@ -111,7 +109,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
-    signup: (newUser: User) => dispatch(signup(newUser)),
+    signup: (email: string, password: string, name: string) => dispatch(signup(email, password, name)),
   };
 };
 

@@ -11,6 +11,7 @@ import HymnItem from "../../../models/HymnItem";
 import { AppState } from "../../../reducers";
 import DialogButton from "../../../shared/ui/DialogButton";
 import dialogStyles from "../../../styles/dialogStyles";
+import ErrorText from "../../../shared/ui/ErrorText";
 
 interface OwnProps {
   isAddNew: boolean;
@@ -127,11 +128,17 @@ class DoneButton extends PureComponent<Props, State> {
   }
 
   public render() {
+    const {doneHymnEditingLoading, error} = this.props.hymns!;
     const {visible} = this.state;
+
     return (
       <View>
+        <ErrorText message={error}/>
         <Button
-          mode="contained" style={style.button} onPress={this.onDone}>
+          mode="contained" style={style.button}
+          onPress={this.onDone}
+          disabled={doneHymnEditingLoading}
+          loading={doneHymnEditingLoading}>
           {i18n.t("btn_done")}
         </Button>
 

@@ -12,12 +12,13 @@ export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
 export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
 export const SIGNUP_ERROR = "SIGNUP_ERROR";
 
-export function signup(newUser: User) {
+export function signup(email: string, password: string, name: string) {
   return async (dispatch: ThunkDispatch<{}, {}, any>) => {
     dispatch({type: SIGNUP_REQUEST});
 
     const languages = await getLanguages();
-    newUser.language = languages[0].slice(0, 2);
+    const language = languages[0].slice(0, 2);
+    const newUser = new User(email, password, name, language);
 
     try {
       const res = await axios.post(BASE_URL + "/signup", newUser);

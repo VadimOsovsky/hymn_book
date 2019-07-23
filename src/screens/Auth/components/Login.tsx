@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, ToastAndroid, View } from "react-native";
+import { Keyboard, StyleSheet, Text, ToastAndroid, View } from "react-native";
 import { Button, Colors } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
@@ -39,6 +39,7 @@ class Login extends React.Component<Props, State> {
 
   private onLogin = () => {
     const {email, password} = this.state;
+    Keyboard.dismiss();
     this.props.login(email, password);
   }
 
@@ -47,7 +48,7 @@ class Login extends React.Component<Props, State> {
       <View>
         <Text style={style.authInfoText}>{i18n.t("login_info")}</Text>
         <View style={style.form}>
-          <ErrorText>{this.props.auth!.loginError}</ErrorText>
+          <ErrorText message={this.props.auth!.loginError}/>
           <MyInput
             preset={inputPresets.EMAIL}
             inputStyle={style.input}

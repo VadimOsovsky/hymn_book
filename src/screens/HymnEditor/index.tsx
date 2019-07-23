@@ -209,8 +209,8 @@ class HymnEditor extends React.Component<Props, State> {
             </View>
           }
         </ScrollView>
-        <LoadingModal visible={doneHymnEditingLoading}
-                      text={i18n.t(this.isAddNew ? "loader_adding_hymn" : "loader_applying_changes")}/>
+        {/*<LoadingModal visible={doneHymnEditingLoading}*/}
+        {/*              text={i18n.t(this.isAddNew ? "loader_adding_hymn" : "loader_applying_changes")}/>*/}
       </ThemedView>
     );
   }

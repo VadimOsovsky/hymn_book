@@ -1,15 +1,33 @@
-import React, { PureComponent } from "react";
-import {StyleSheet, Text} from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, TextProps, ToastAndroid } from "react-native";
+import Snackbar from 'react-native-snackbar';
 import { lightTheme } from "../../styles/appTheme";
+import i18n from "../../i18n";
+import { Colors } from "react-native-paper";
 
-class ErrorText extends PureComponent {
+interface OwnProps {
+  message?: string;
+}
 
-  public render() {
-    if (this.props.children) {
-      return <Text style={style.errText}>{this.props.children}</Text>;
-    } else {
-      return null;
-    }
+type Props = TextProps & OwnProps;
+
+function ErrorText(props: Props) {
+
+  // const [errText, setErrText] = useState<string>("");
+
+  useEffect(() => {}, [props.message]);
+
+  if (props.message) {
+    Snackbar.show({
+      title: props.message,
+      duration: Snackbar.LENGTH_LONG,
+      backgroundColor: Colors.red800,
+      action: {title: i18n.t("try_again"), onPress: () => {}},
+    });
+    // return <Text style={style.errText}>{props.message}</Text>;
+    return null;
+  } else {
+    return null;
   }
 }
 
