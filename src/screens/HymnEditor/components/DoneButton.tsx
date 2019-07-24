@@ -10,8 +10,8 @@ import Action from "../../../models/Action";
 import HymnItem from "../../../models/HymnItem";
 import { AppState } from "../../../reducers";
 import DialogButton from "../../../shared/ui/DialogButton";
-import dialogStyles from "../../../styles/dialogStyles";
 import ErrorText from "../../../shared/ui/ErrorText";
+import dialogStyles from "../../../styles/dialogStyles";
 
 interface OwnProps {
   isAddNew: boolean;

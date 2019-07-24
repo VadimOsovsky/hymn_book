@@ -46,7 +46,6 @@ class AuthScreen extends React.Component<Props, State> {
   }
 
   private onContinue = () => {
-    console.log("VO: this.props.guide!.tipsToShow", this.props.guide!.tipsToShow);
     if (this.props.guide!.tipsToShow.GUEST_MODE_WARNING) {
       Alert.alert(
         i18n.t("continue_as_guest"),

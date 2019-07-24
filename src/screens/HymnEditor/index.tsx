@@ -123,6 +123,7 @@ class HymnEditor extends React.Component<Props, State> {
       info.musicBy,
       null,
       hymnCoverImage,
+      this.hymnToEdit ? this.hymnToEdit.submittedBy : null,
     );
   }
 

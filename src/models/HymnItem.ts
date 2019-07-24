@@ -29,8 +29,11 @@ export default class HymnItem {
     musicBy: string,
     language: LanguageCodes | null,
     hymnCoverImage?: string,
-    submittedBy?: string,
+    submittedBy?: string | null,
   ) {
+    if (hymnCoverImage && !hymnCoverImage.startsWith("http")) {
+      throw new Error("hymnCoverImage must be a link");
+    }
     this.hymnId = hymnId;
     this.title = title;
     this.lyrics = lyrics;
@@ -64,11 +67,18 @@ export default class HymnItem {
     });
   })
 
+  public static getHymnIdFromDBHymn = (responseHymn: any) => {
+    const hymnWithHymnId = _.clone(responseHymn);
+    hymnWithHymnId.hymnId = responseHymn._id;
+    delete hymnWithHymnId._id;
+    return hymnWithHymnId;
+  }
+
   public static getDummyHymns(): HymnItem[] {
     const dummyHymns = [];
 
     dummyHymns.push(new HymnItem(
-      "0",
+      "-1",
       "Awesome God",
       AwesomeGod,
       "Rich Mullins",
@@ -77,7 +87,7 @@ export default class HymnItem {
     ));
 
     dummyHymns.push(new HymnItem(
-      "1",
+      "-2",
       "Our God is Greater",
       OurGodIsGreater,
       "Chris Tomlin",

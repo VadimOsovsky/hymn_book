@@ -6,15 +6,18 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import i18n from "../../../i18n";
 import HymnItem from "../../../models/HymnItem";
+import User from "../../../models/User";
 import { screens } from "../../../navigation/savedHymnsStack";
 import ThemedView from "../../../shared/ui/ThemedView";
 import { STATUS_BAR_DARKENED_COLOR, STATUS_BAR_INITIAL_COLOR } from "../../../styles/styleVariables";
 
 interface OwnProps {
+  user: User | null;
   isSearchMode: boolean;
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
   onSelectHymn: (hymnId: string) => void;
   onRemoveFromSaved: (hymnId: string) => void;
+  onDeleteHymnFromServer: (hymnId: string) => void;
 }
 
 interface SheetAction {
@@ -37,18 +40,27 @@ class BottomSheet extends React.Component<Props, State> {
 
     this.state = {
       hymn: null,
-      actions: this.getActions(),
+      actions: [],
     };
   }
 
+  private user = this.props.user;
   private isSearchMode = this.props.isSearchMode;
 
   private RBSheet: RBSheet | null = null;
   private sheetClosingTime = 200;
 
+  public componentWillMount(): void {
+    this.setState({actions: this.getActions()});
+  }
+
   public componentWillReceiveProps(nextProps: Readonly<OwnProps>, nextContext: any): void {
     if (_.isBoolean(nextProps.isSearchMode)) {
       this.isSearchMode = nextProps.isSearchMode;
+      this.setState({actions: this.getActions()});
+    }
+    if (nextProps.user) {
+      this.user = nextProps.user;
       this.setState({actions: this.getActions()});
     }
   }
@@ -60,9 +72,11 @@ class BottomSheet extends React.Component<Props, State> {
 
   public openSheet = (hymn: HymnItem) => {
     Vibration.vibrate(50);
-    this.setState({hymn});
-    this.RBSheet!.open();
-    StatusBar.setBackgroundColor(STATUS_BAR_DARKENED_COLOR);
+    this.setState({hymn}, () => {
+      this.RBSheet!.open();
+      this.setState({actions: this.getActions()});
+      StatusBar.setBackgroundColor(STATUS_BAR_DARKENED_COLOR);
+    });
   }
 
   private selectHymn = () => {
@@ -88,12 +102,26 @@ class BottomSheet extends React.Component<Props, State> {
     );
   }
 
+  private removeFromServer = () => {
+    Alert.alert(
+      this.state.hymn!.title,
+      i18n.t("delete_from_server_message"),
+      [
+        {text: i18n.t("btn_cancel"), style: "cancel"},
+        {text: i18n.t("btn_delete"), onPress: () => this.props.onDeleteHymnFromServer!(this.state.hymn!.hymnId)},
+      ],
+    );
+  }
+
   private report = () => {
     ToastAndroid.show("Report WIP", 5);
   }
 
   private getActions = (): SheetAction[] => {
     const actions = [];
+    const {hymn} = this.state;
+    console.log("VO: hymn", hymn);
+    console.log("VO: this.user", this.user);
 
     if (!this.isSearchMode) {
       actions.push({
@@ -106,15 +134,25 @@ class BottomSheet extends React.Component<Props, State> {
       title: "share_hymn",
       icon: "share",
       onPress: () => this.onActionSelected(this.share),
-    }, {
+    });
+    actions.push({
       title: "edit_hymn",
       icon: "edit",
       onPress: () => this.onActionSelected(this.edit),
-    }, {
+    });
+    actions.push({
       title: "delete_from_saved",
       icon: "star-border",
       onPress: () => this.onActionSelected(this.removeFromSaved),
-    }, {
+    });
+    if (this.user && hymn && hymn.submittedBy && this.user._id === hymn.submittedBy) {
+      actions.push({
+        title: "delete_from_server",
+        icon: "delete",
+        onPress: () => this.onActionSelected(this.removeFromServer),
+      });
+    }
+    actions.push({
       title: "report",
       icon: "error",
       onPress: () => this.onActionSelected(this.report),
@@ -124,7 +162,6 @@ class BottomSheet extends React.Component<Props, State> {
   }
 
   public render() {
-    const actions = this.getActions();
     const sheetBottomMargin = 60;
     return (
       <Portal>
@@ -134,7 +171,7 @@ class BottomSheet extends React.Component<Props, State> {
           closeOnPressMask
           onClose={() => StatusBar.setBackgroundColor(STATUS_BAR_INITIAL_COLOR)}
           duration={this.sheetClosingTime}
-          height={46 * (actions.length + 1) + 20 + sheetBottomMargin}
+          height={46 * (this.state.actions.length + 1) + 20 + sheetBottomMargin}
           customStyles={{
             wrapper: {position: "absolute", bottom: -sheetBottomMargin, top: 0, left: 0, right: 0, zIndex: 999},
             container: {borderTopStartRadius: 20, borderTopEndRadius: 20},
@@ -145,7 +182,7 @@ class BottomSheet extends React.Component<Props, State> {
             <List.Section>
               <List.Subheader
                 style={style.menuItem}>{this.state.hymn ? this.state.hymn.title : "no_title"}</List.Subheader>
-              {actions.map((action) => {
+              {this.state.actions.map((action) => {
                 return (
                   <List.Item
                     key={action.title}

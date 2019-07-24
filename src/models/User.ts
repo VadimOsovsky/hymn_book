@@ -1,5 +1,7 @@
 export default class User {
 
+  // tslint:disable-next-line:variable-name
+  public _id?: string;
   public isRootAdmin?: boolean;
   public email: string;
   public password: string;

@@ -12,4 +12,5 @@ export default {
   search: require(path + "search/search.png"),
   select_all: require(path + "select_all/select_all.png"),
   share: require(path + "share/share.png"),
+  unstar: require(path + "unstar/unstar.png"),
 };

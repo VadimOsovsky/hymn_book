@@ -4,7 +4,7 @@ import { Appbar, Searchbar, Surface, Text } from "react-native-paper";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { getSavedHymnsFromStorage, removeFromSavedHymns } from "../../actions/hymnActions";
+import { deleteHymnFromServer, getSavedHymnsFromStorage, removeFromSavedHymns } from "../../actions/hymnActions";
 import i18n from "../../i18n";
 import Action from "../../models/Action";
 import { guideTips } from "../../models/GuideTips";
@@ -25,6 +25,7 @@ import style from "./style";
 interface ReduxDispatch {
   getSavedHymnsFromStorage: () => void;
   removeFromSavedHymns: (hymnIds: string[]) => void;
+  deleteHymnFromServer: (id: string) => void;
 }
 
 interface OwnProps {
@@ -93,11 +94,11 @@ class SavedHymns extends React.Component<Props, State> {
 
   private onHymnLongPress = (hymn: HymnItem) => {
     // if (!this.state.isSearchMode) {
-      if (!this.state.selectedHymns.length) {
-        this.bottomSheetRef!.openSheet(hymn);
-      } else {
-        this.onHymnPress(hymn);
-      }
+    if (!this.state.selectedHymns.length) {
+      this.bottomSheetRef!.openSheet(hymn);
+    } else {
+      this.onHymnPress(hymn);
+    }
     // }
   }
 
@@ -135,7 +136,7 @@ class SavedHymns extends React.Component<Props, State> {
 
     action.push({
       title: i18n.t("delete_from_saved"),
-      icon: icons.delete,
+      icon: icons.unstar,
       show: showAsAction.ALWAYS,
       onActionSelected: this.onDeleteSelectedHymns,
     });
@@ -200,7 +201,7 @@ class SavedHymns extends React.Component<Props, State> {
         {/*MAIN*/}
         <Transition visible={!hymnsLength && !this.state.isSearchMode} fade swappingHeader>
           <AndroidAppBar
-            title={i18n.t("my_saved_hymns")}
+            title={i18n.t("app_name")}
             navIcon={navIcons.MENU}
             onNavIconClick={this.props.navigation.openDrawer}
             actions={this.getMainAppBarActions()}
@@ -268,9 +269,11 @@ class SavedHymns extends React.Component<Props, State> {
         {this.renderSavedHymns()}
         {this.renderFAB()}
         <BottomSheet ref={(ref) => this.bottomSheetRef = ref}
+                     user={this.props.auth!.user}
                      isSearchMode={this.state.isSearchMode}
                      onSelectHymn={this.onSelectHymn}
                      onRemoveFromSaved={(hymnId: string) => this.props.removeFromSavedHymns([hymnId])}
+                     onDeleteHymnFromServer={this.props.deleteHymnFromServer}
                      navigation={this.props.navigation}/>
       </ThemedView>
     );
@@ -279,14 +282,15 @@ class SavedHymns extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState) => {
-  const {hymns, prefs} = state;
-  return {hymns, prefs};
+  const {hymns, prefs, auth} = state;
+  return {hymns, prefs, auth};
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) => {
   return {
     getSavedHymnsFromStorage: () => dispatch(getSavedHymnsFromStorage()),
     removeFromSavedHymns: (ids: string[]) => dispatch(removeFromSavedHymns(ids)),
+    deleteHymnFromServer: (id: string) => dispatch(deleteHymnFromServer(id)),
   };
 };
 

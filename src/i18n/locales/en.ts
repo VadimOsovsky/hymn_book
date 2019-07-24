@@ -1,4 +1,6 @@
 export default {
+  app_name: "Hymn Book",
+
   // Buttons
   btn_cancel: "Cancel",
   btn_ok: "Ok",
@@ -56,7 +58,7 @@ export default {
   forgot_pwd: "Forgot password?",
 
   // Saved Hymns Screen
-  my_saved_hymns: "My Saved Hymns",
+  // my_saved_hymns: "My Saved Hymns",
   no_hymns: "Empty here",
   search: "Search",
   search_results: "Results found for: %{query}",
@@ -64,7 +66,11 @@ export default {
   select_hymn: "Select Hymn",
   select_all: "Select all",
   share_hymn: "Share",
-  delete_selected_title: "Delete Hymns",
+  delete_from_saved: "Delete from Saved",
+  delete_from_server: "Delete Hymn",
+  delete_from_server_message: "Attention, this hymn will be deleted entirely " +
+    "so that other people will not be able to find it. This action cannot be undone.",
+  delete_selected_title: "Delete Hymns from Saved",
   delete_selected_message: {
     one: "Are you sure you want to delete this song from Saved Hymns?",
     other: "Are you sure you want to delete these %{count} songs from Saved Hymns?",
@@ -74,7 +80,6 @@ export default {
 
   // Hymn View
   edit_hymn: "Edit Hymn",
-  delete_from_saved: "Delete from Saved",
   select_chords_version: "Select chords version",
   unknown_title: "Unknown title",
   unknown_author: "Unknown author",
